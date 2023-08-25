@@ -39,13 +39,11 @@ class Config:
             raise ValueError("SARAGUROS_API_TOKEN is not set")
 
 
-# Export a single instance of Config
-config = Config()
-
 if __name__ == "__main__":
-    print("DB_USER (config1):", config.DB_USER)
+    config1 = Config()
+    print("DB_USER (config1):", config1.DB_USER)
 
     config2 = Config()
     print("DB_USER (config2):", config2.DB_USER)
 
-    print("config1 is config2:", config is config2)
+    print("config1 is config2:", config1 is config2)
