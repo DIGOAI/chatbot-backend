@@ -3,11 +3,14 @@ from typing import Any, Optional
 import psycopg2
 from psycopg2.extensions import connection
 
+from src.db import DbConnection
 
-class PostgreSQLConnection:
+
+class PostgreSQLConnection(DbConnection):
     """ Class to manage the connection to the PostgreSQL database. """
 
     def __init__(self, user: str, password: str, host: str, port: str, database: str):
+        super().__init__()
         self._connection: Optional[connection] = None
         self._user = user
         self._password = password
@@ -24,12 +27,13 @@ class PostgreSQLConnection:
         except Exception as e:
             print("Error al conectar a la base de datos:", e)
 
-    def execute_query(self, query: str, params: Optional[tuple[Any, ...]] = None) -> Optional[list[tuple]]:
+    def execute_query(self, query: str, params: Optional[tuple[Any, ...]] = None, single: bool = False) -> Optional[list[tuple] | tuple]:
         """Execute a query to the PostgreSQL database.
 
         Parameters:
         query (str): The query to execute
-        params (tuple[any] | None): The parameters to pass to the query
+        params (tuple[any] | None): The parameters to pass to the query (default None)
+        single (bool): If the query returns a single result or not (default False)
 
         Returns:
         list[tuple] | None: The result of the query
@@ -39,6 +43,14 @@ class PostgreSQLConnection:
                 with self._connection.cursor() as cursor:
                     cursor.execute(query, params)
                     self._connection.commit()
+
+                    if single:
+                        res = cursor.fetchone()
+                        if res:
+                            return res
+
+                        return None
+
                     return cursor.fetchall()
             else:
                 print("No hay conexión a la base de datos.")
@@ -46,6 +58,29 @@ class PostgreSQLConnection:
         except Exception as e:
             print("Error al ejecutar la consulta:", e)
             return None
+
+    def execute_mutation(self, query: str, params: Optional[tuple[Any, ...]] = None) -> bool:
+        """Execute a mutation to the PostgreSQL database.
+
+        Parameters:
+        query (str): The query to execute
+        params (tuple[any] | None): The parameters to pass to the query (default None)
+
+        Returns:
+        bool: If the mutation was successful or not
+        """
+        try:
+            if self._connection:
+                with self._connection.cursor() as cursor:
+                    cursor.execute(query, params)
+                    self._connection.commit()
+                    return True
+            else:
+                print("No hay conexión a la base de datos.")
+                return False
+        except Exception as e:
+            print("Error al ejecutar la consulta:", e)
+            return False
 
     def close(self):
         if self._connection:
