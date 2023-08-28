@@ -13,6 +13,7 @@ class SaragurosServiceEndpoint(str, Enum):
 
     ACTIVATE_SERVICE = "ActiveService"
     NEW_TICKET = "NewTicket"
+    GET_CLIENTS = "GetClientsDetails"
 
 
 class SaragurosService:
@@ -76,6 +77,20 @@ class SaragurosService:
         }
 
         return self._make_request(SaragurosServiceEndpoint.NEW_TICKET, data)
+
+    def getUsuarioData(self, cedula: str):
+        """Get the data of a user.
+
+        Parameters:
+        cedula (str): The cedula of the user to get the data
+
+        Returns:
+        dict[str, Any] | None: The result of the request
+        """
+
+        data = {"cedula": cedula}
+
+        return self._make_request(SaragurosServiceEndpoint.GET_CLIENTS, data)
 
 
 if __name__ == "__main__":
