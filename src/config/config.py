@@ -26,6 +26,8 @@ class Config:
         self.SARAGUROS_API_URL = os.environ.get("SARAGUROS_API_URL", "")
         self.SARAGUROS_API_TOKEN = os.environ.get("SARAGUROS_API_TOKEN", "")
 
+        self.OCR_LAMBDA_URL = os.environ.get("OCR_LAMBDA_URL", "")
+
         self._verify()
 
     def _verify(self):
@@ -37,6 +39,8 @@ class Config:
             raise ValueError("SARAGUROS_API_URL is not set")
         if not self.SARAGUROS_API_TOKEN.strip():
             raise ValueError("SARAGUROS_API_TOKEN is not set")
+        if not self.OCR_LAMBDA_URL.strip():
+            raise ValueError("OCR_LAMBDA_URL is not set")
 
 
 if __name__ == "__main__":
