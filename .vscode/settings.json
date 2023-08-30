@@ -7,5 +7,9 @@
     "editor.wordBasedSuggestions": false,
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "ms-python.python"
-  }
+  },
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.inlayHints.variableTypes": true,
+  "python.analysis.inlayHints.functionReturnTypes": true,
+  "python.analysis.inlayHints.callArgumentNames": true
 }

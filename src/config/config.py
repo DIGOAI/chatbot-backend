@@ -28,6 +28,9 @@ class Config:
 
         self.OCR_LAMBDA_URL = os.environ.get("OCR_LAMBDA_URL", "")
 
+        self.TWILIO_SID = os.environ.get("TWILIO_SID", "")
+        self.TWILIO_TOKEN = os.environ.get("TWILIO_TOKEN", "")
+
         self._verify()
 
     def _verify(self):
@@ -41,6 +44,10 @@ class Config:
             raise ValueError("SARAGUROS_API_TOKEN is not set")
         if not self.OCR_LAMBDA_URL.strip():
             raise ValueError("OCR_LAMBDA_URL is not set")
+        if not self.TWILIO_SID.strip():
+            raise ValueError("TWILIO_SID is not set")
+        if not self.TWILIO_TOKEN.strip():
+            raise ValueError("TWILIO_TOKEN is not set")
 
 
 if __name__ == "__main__":

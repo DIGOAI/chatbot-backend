@@ -8,15 +8,14 @@ twilio = "==8.7.0"
 requests = "==2.31.0"
 psycopg2 = "==2.9.7"
 openai = "==0.27.9"
+typing-extensions = "==4.7.1"
 
 [dev-packages]
 autopep8 = "*"
 packaging = "*"
 
 [scripts]
-test-solution = "python ./main.py"
-test-db-connection = "python ./src/db/postgres.py"
-test-load-config = "python ./src/config.py"
+handler = "python ./handler.py"
 
 [requires]
 python_version = "3.11"
