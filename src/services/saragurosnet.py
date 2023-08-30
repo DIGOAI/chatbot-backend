@@ -4,8 +4,9 @@ from typing import Any, Optional
 
 import requests
 
-from models import Ticket
 from src.config import Config
+from src.logger import Logger
+from src.models.ticket import Ticket
 
 
 class SaragurosServiceEndpoint(str, Enum):
@@ -24,7 +25,7 @@ class SaragurosService:
         self.headers = {"Content-Type": "application/json"}
         self.token = token
 
-    def _make_request(self, endpoint: str, data: dict[str, Any]) -> dict[str, Any]:
+    def _make_request(self, endpoint: SaragurosServiceEndpoint, data: dict[str, Any]) -> Optional[dict[str, Any]]:
         """Make a request to the Saraguros API.
 
         Parameters:
@@ -35,13 +36,24 @@ class SaragurosService:
         dict[str, Any]: The result of the request
         """
 
-        url = f"{self.base_url}/{endpoint}"
+        url = f"{self.base_url}/{endpoint.value}"
         data["token"] = self.token
+
+        Logger.info(f"Making request to {url} with data {data}")
 
         response = requests.post(
             url, headers=self.headers, data=json.dumps(data))
 
-        return response.json()
+        if response.status_code >= 400:
+            Logger.error(f"Error making request to {url} with data {data}")
+            return None
+
+        try:
+            Logger.info(f"Parsing response from {url}")
+            return response.json()
+        except:
+            Logger.error(f"Error parsing response from {url}")
+            return None
 
     def activar_servicio(self, usuario_id: str) -> Optional[dict[str, Any]]:
         """Activate the service for a user.
