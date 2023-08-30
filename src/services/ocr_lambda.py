@@ -5,7 +5,7 @@ from typing import Any, cast
 import requests
 
 from src.config import Config
-from src.models import Receipt
+from src.models.receipt import Receipt
 
 
 class OCRLambdaService(object):
