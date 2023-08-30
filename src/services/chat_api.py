@@ -34,11 +34,15 @@ class ChatApiService(object):
         str | None: The cedula of the user
         """
 
+        self._conn.connect()
+
         res = self._conn.execute_query(
             query=QUERIES["GET_CI_BY_PHONE"],
             params=(phone,),
             single=True
         )
+
+        self._conn.close()
 
         if res:
             return cast(str, res[0])
@@ -55,18 +59,22 @@ class ChatApiService(object):
         tuple[str, int, str]: The status of the user, the hours difference and the user id
         """
 
+        self._conn.connect()
+
         res = self._conn.execute_query(
             query=QUERIES["GET_ESTADO_USUARIO"],
             params=(phone,),
             single=True
         )
 
-        # timestamp in db 2023-04-03 17:52:42.041338
+        self._conn.close()
 
+        # timestamp in db 2023-04-03 17:52:42.041338
         if res:
-            bot_status, updated_at, user_id = cast(tuple[str, str, str], res)
+            bot_status, updated_at, user_id = cast(
+                tuple[str, datetime, str], res)
             hours_diff = int(
-                (datetime.now() - datetime.fromisoformat(updated_at)).seconds / 3600)
+                (datetime.now() - updated_at).seconds / 3600)
 
             return bot_status, hours_diff, user_id
 
@@ -91,20 +99,28 @@ class ChatApiService(object):
         status_updated = False
 
         if bot_status in ["0.0_cliente_visita_primera_vez", "0.1_visita_recurrente", "1.0_nuevo_cliente"]:
+            self._conn.connect()
+
             res = self._conn.execute_mutation(
                 query=QUERIES["INSERT_ESTADO_USUARIO"],
                 params=(ci, phone, bot_status,
                         observations, updated_at, user_id)
             )
 
+            self._conn.close()
+
             info_msg = "[INFO] User status inserted." if res else "[ERROR] User status not inserted."
             status_updated = res
 
         elif bot_status in ["2.0_interesado_pagar_servicio", "2.1_no_valor_pendiente", "1.3_hablar_con_asesor", "1.4_ticket_generado_nousuario", "1.5_vio_promociones", "2.3_servicio_activado_con_evidencia"]:
+            self._conn.connect()
+
             res = self._conn.execute_mutation(
                 query=QUERIES["UPDATE_ESTADO_USUARIO"],
                 params=(ci, bot_status, observations, updated_at, phone, phone)
             )
+
+            self._conn.close()
 
             info_msg = "[INFO] User status updated." if res else "[ERROR] User status not updated."
             status_updated = res
