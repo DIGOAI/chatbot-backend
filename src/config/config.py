@@ -1,5 +1,7 @@
 import os
 
+from src.logger import Logger
+
 
 class Config:
     """ Config class to load environment variables. """
@@ -9,13 +11,12 @@ class Config:
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
+            Logger.info("Loading config...")
             cls._instance._load_config()
         return cls._instance
 
     def _load_config(self):
         """ Load environment variables. """
-
-        print("[INFO] Loading config...")
 
         self.DB_USER = os.environ.get("DB_USER", "postgres")
         self.DB_PASSWORD = os.environ.get("DB_PASSWORD", "")
@@ -31,7 +32,11 @@ class Config:
         self.TWILIO_SID = os.environ.get("TWILIO_SID", "")
         self.TWILIO_TOKEN = os.environ.get("TWILIO_TOKEN", "")
 
-        self._verify()
+        try:
+            self._verify()
+        except ValueError as e:
+            Logger.error(str(e))
+            SystemExit(1)
 
     def _verify(self):
         """ Verify that all required environment variables are set. """

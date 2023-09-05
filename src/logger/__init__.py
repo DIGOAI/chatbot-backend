@@ -56,10 +56,10 @@ class Logger:
         caller_name = caller_frame[3]  # function name
         caller_name = caller_module.__name__ if caller_module else "UNKNOWN"
 
-        if caller_frame[3] != "<module>":
+        if caller_frame[3] != "<module>" and caller_frame[3] != "__call__" and caller_frame[3] != "__new__":
             caller_name = f"{caller_name}.{caller_frame[3]}"
 
-        print(f"[{alert_type:^5}][{caller_name:^10}]: {msg}")
+        print(f"[{alert_type:^5}][{caller_name:^40}]: {msg}")
 
 
 # Ejemplo de uso de la clase Logger

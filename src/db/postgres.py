@@ -8,7 +8,7 @@ from src.logger import Logger
 
 
 class PostgreSQLConnection(DbConnection):
-    """ Class to manage the connection to the PostgreSQL database. """
+    """Class to manage the connection to the PostgreSQL database."""
 
     def __init__(self, user: str, password: str, host: str, port: str, database: str):
         super().__init__()
@@ -24,11 +24,14 @@ class PostgreSQLConnection(DbConnection):
         try:
             conn_string = f"dbname={self._database} user={self._user} password={self._password} host={self._host} port={self._port}"
             self._connection = psycopg2.connect(conn_string)
-            Logger.info("Conexión exitosa a la base de datos.")
+            Logger.info("Database connected")
         except Exception as e:
-            Logger.error(f"Error al conectar a la base de datos: {e}")
+            Logger.error(f"Error connecting to database: {e}")
 
-    def execute_query(self, query: str, params: Optional[tuple[Any, ...]] = None, single: bool = False) -> Optional[list[tuple] | tuple]:
+    def execute_query(self,  # type: ignore
+                      query: str,
+                      params: Optional[tuple[Any, ...]] = None,
+                      single: bool = False) -> Optional[list[tuple[Any, ...]] | tuple[Any, ...]]:
         """Execute a query to the PostgreSQL database.
 
         Parameters:
@@ -43,6 +46,7 @@ class PostgreSQLConnection(DbConnection):
             if self._connection:
                 with self._connection.cursor() as cursor:
                     cursor.execute(query, params)
+                    Logger.info(f"Query executed: {cursor.query}")
                     self._connection.commit()
 
                     if single:
@@ -54,10 +58,10 @@ class PostgreSQLConnection(DbConnection):
 
                     return cursor.fetchall()
             else:
-                Logger.error("No hay conexión a la base de datos.")
+                Logger.error("Not connection to the database")
                 return None
         except Exception as e:
-            Logger.error(f"Error al ejecutar la consulta: {e}")
+            Logger.error(f"Error executing the query: {e}")
             return None
 
     def execute_mutation(self, query: str, params: Optional[tuple[Any, ...]] = None) -> bool:
@@ -77,16 +81,16 @@ class PostgreSQLConnection(DbConnection):
                     self._connection.commit()
                     return True
             else:
-                Logger.error("No hay conexión a la base de datos.")
+                Logger.error("Not connection to the database")
                 return False
         except Exception as e:
-            Logger.error(f"Error al ejecutar la consulta: {e}")
+            Logger.error(f"Error executing the query: {e}")
             return False
 
     def close(self):
         if self._connection:
             self._connection.close()
-            Logger.info("Conexión cerrada correctamente.")
+            Logger.info("Database disconnected")
 
 
 if __name__ == "__main__":

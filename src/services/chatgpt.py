@@ -1,7 +1,7 @@
-from typing import cast
-import openai
-
 from enum import Enum
+from typing import Any, cast
+
+import openai
 
 PROMPT = """El siguiente es un mensaje de un cliente en un canal de sorpote:
 
@@ -67,13 +67,13 @@ class ChatGPTModel(str, Enum):
 class ChatGPTService(object):
     """The ChatGPT service class to interact with OpenAI API."""
 
-    def __init__(self, api_key: str, model=ChatGPTModel.DAVINCI_TEXT_2, temperature=0.5, max_tokens=1024) -> None:
+    def __init__(self, api_key: str, model: ChatGPTModel = ChatGPTModel.DAVINCI_TEXT_2, temperature: float = 0.5, max_tokens: int = 1024) -> None:
         openai.api_key = api_key
         self._model = model
         self._temperature = temperature
         self._max_tokens = max_tokens
 
-    def _make_completion(self, prompt: str, **kwargs):
+    def _make_completion(self, prompt: str, **kwargs: dict[str, Any]):  # type: ignore
         """Make a completion request to OpenAI API.
 
         Parameters:
@@ -83,7 +83,7 @@ class ChatGPTService(object):
         Returns:
         dict: The response from OpenAI API.
         """
-        return openai.Completion.create(
+        return openai.Completion.create(  # type: ignore
             engine=self._model,
             prompt=prompt,
             temperature=self._temperature,
@@ -110,7 +110,7 @@ class ChatGPTService(object):
         completion = self._make_completion(prompt=prompt)
 
         # TODO: Review this casts. Review the replacement of the regex.
-        res = cast(str, cast(dict, completion)[
+        res = cast(str, cast(dict[str, Any], completion)[
                    "choices"][0]['text']).replace(r'[\s\.\n]', '')
 
         # TODO: Review this split.
