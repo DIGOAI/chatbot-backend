@@ -1,20 +1,24 @@
 from datetime import datetime
-from typing import Optional, TypedDict, cast
+from enum import Enum
+from typing import Optional, cast
 
 from src.db import DbConnection
 
-QueriesType = TypedDict("QueriesType", {
-    "GET_CI_BY_PHONE": str,
-    "GET_ESTADO_USUARIO": str,
-    "INSERT_ESTADO_USUARIO": str,
-    "UPDATE_ESTADO_USUARIO": str,
-})
 
-QUERIES: QueriesType = {
-    "GET_CI_BY_PHONE": "SELECT cedula FROM saraguros_net WHERE celular = %s ORDER BY id DESC LIMIT 1",
-    "GET_ESTADO_USUARIO": "SELECT bot_estado, actualizado, usuario_id FROM saraguros_net WHERE celular = %s ORDER BY id DESC LIMIT 1",
-    "INSERT_ESTADO_USUARIO": "INSERT INTO saraguros_net (cedula, celular, bot_estado, observaciones, actualizado, usuario_id) VALUES (%s, %s, %s, %s, %s, %s)",
-    "UPDATE_ESTADO_USUARIO": "UPDATE saraguros_net SET cedula = %s, bot_estado = %s, observaciones = %s, actualizado = %s WHERE celular = %s AND id = (SELECT max(id) FROM saraguros_net WHERE celular = %s)"
+class QueriesOpts(Enum):
+    """QueriesOpts class to handle the queries options."""
+
+    GET_CI_BY_PHONE = "GET_CI_BY_PHONE"
+    GET_ESTADO_USUARIO = "GET_ESTADO_USUARIO"
+    INSERT_ESTADO_USUARIO = "INSERT_ESTADO_USUARIO"
+    UPDATE_ESTADO_USUARIO = "UPDATE_ESTADO_USUARIO"
+
+
+_QUERIES: dict[QueriesOpts, str] = {
+    QueriesOpts.GET_CI_BY_PHONE: "SELECT cedula FROM saraguros_net WHERE celular = %s ORDER BY id DESC LIMIT 1",
+    QueriesOpts.GET_ESTADO_USUARIO: "SELECT bot_estado, actualizado, usuario_id FROM saraguros_net WHERE celular = %s ORDER BY id DESC LIMIT 1",
+    QueriesOpts.INSERT_ESTADO_USUARIO: "INSERT INTO saraguros_net (cedula, celular, bot_estado, observaciones, actualizado, usuario_id) VALUES (%s, %s, %s, %s, %s, %s)",
+    QueriesOpts.UPDATE_ESTADO_USUARIO: "UPDATE saraguros_net SET cedula = %s, bot_estado = %s, observaciones = %s, actualizado = %s WHERE celular = %s AND id = (SELECT max(id) FROM saraguros_net WHERE celular = %s)"
 }
 
 
@@ -37,7 +41,7 @@ class ChatApiService(object):
         self._conn.connect()
 
         res = self._conn.execute_query(
-            query=QUERIES["GET_CI_BY_PHONE"],
+            query=_QUERIES[QueriesOpts.GET_CI_BY_PHONE],
             params=(phone,),
             single=True
         )
@@ -62,7 +66,7 @@ class ChatApiService(object):
         self._conn.connect()
 
         res = self._conn.execute_query(
-            query=QUERIES["GET_ESTADO_USUARIO"],
+            query=_QUERIES[QueriesOpts.GET_ESTADO_USUARIO],
             params=(phone,),
             single=True
         )
@@ -102,7 +106,7 @@ class ChatApiService(object):
             self._conn.connect()
 
             res = self._conn.execute_mutation(
-                query=QUERIES["INSERT_ESTADO_USUARIO"],
+                query=_QUERIES[QueriesOpts.INSERT_ESTADO_USUARIO],
                 params=(ci, phone, bot_status,
                         observations, updated_at, user_id)
             )
@@ -116,7 +120,7 @@ class ChatApiService(object):
             self._conn.connect()
 
             res = self._conn.execute_mutation(
-                query=QUERIES["UPDATE_ESTADO_USUARIO"],
+                query=_QUERIES[QueriesOpts.UPDATE_ESTADO_USUARIO],
                 params=(ci, bot_status, observations, updated_at, phone, phone)
             )
 
