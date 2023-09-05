@@ -15,6 +15,7 @@ autopep8 = "==2.0.4"
 packaging = "==23.1"
 mypy = "==1.5.1"
 twilio-stubs = "==0.2.0"
+types-psycopg2 = "==2.9.21.11"
 
 [scripts]
 handler = "python ./handler.py"
