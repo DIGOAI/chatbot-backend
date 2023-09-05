@@ -11,8 +11,10 @@ openai = "==0.27.9"
 typing-extensions = "==4.7.1"
 
 [dev-packages]
-autopep8 = "*"
-packaging = "*"
+autopep8 = "==2.0.4"
+packaging = "==23.1"
+mypy = "==1.5.1"
+twilio-stubs = "==0.2.0"
 
 [scripts]
 handler = "python ./handler.py"
