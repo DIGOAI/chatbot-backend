@@ -8,7 +8,7 @@ from src.utils import get_phone_and_service
 tree = DecisionsTree[ContextType]()
 
 
-@tree.addActionDecorator('0.0', condition=lambda _: True, end=True)
+@tree.add_action('0.0', condition=lambda _: True, end=True)
 def load_context(context: ContextType) -> None:
     Logger.info("Loading context")
 
@@ -34,7 +34,7 @@ def load_context(context: ContextType) -> None:
     context['DATA_LAST_STATUS'] = user.last_state or "" if user else ""
 
 
-@tree.addActionDecorator('1.0', condition=lambda context: context['DATA_LAST_STATUS'] == "")
+@tree.add_action('1.0', condition=lambda context: context['DATA_LAST_STATUS'] == "")
 def say_welcome(context: ContextType) -> None:
     if not context['DATA_USER_CI']:
         Logger.error(f"ID: {context['DATA_USER_ID']} | User doesn't have a CI")
