@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from src.decisions_tree import DecisionsTree
 from src.logger import Logger
@@ -12,19 +12,26 @@ tree = DecisionsTree[ContextType]()
 def load_context(context: ContextType) -> None:
     Logger.info("Loading context")
 
-    # Get the client phone number in 09XXXXXXXXX format
-    # client_phone = context['EVENT_TWILIO'].from_phone.replace(
-    #     'whatsapp:+593', '0')
+    # Get the client phone number in +5939XXXXXXXXX format and service name exp: twilio
     client_phone, _ = get_phone_and_service(context['EVENT_TWILIO'].from_phone)
 
-    # Get the status, hours difference and user id of the user by the phone if exists
-    last_status, hours_diff, user_id = context['SERVICE_API'].get_estado_usuario(
-        client_phone)
+    user = context['SERVICE_API'].get_user_by_phone(client_phone)
 
-    # Get the cedula of the user by the phone if exists
-    user_ci = context['SERVICE_API'].get_cedula_by_celular(client_phone)
+    if not user:
+        Logger.warn(f"User doesn't exists: {client_phone} | Setting default values")
 
-    Logger.info(f"Context loaded: [ ID: {user_id} | CI: {user_ci} | Status: {last_status} | Hours: {hours_diff}]")
+    user_ci = user.ci if user else None
+    user_id = user.id if user else -1
+    user_last_state = user.last_state or "" if user else ""
+    last_update = user.updated_at if user else datetime.now()
+
+    hours_diff = int((datetime.now(timezone.utc) - last_update).seconds / 3600)
+
+    Logger.info(f"Context loaded: [ ID: {user_id} | CI: {user_ci} | Status: {user_last_state} | Hours: {hours_diff}]")
+
+    context['DATA_USER_CI'] = user.ci if user else None
+    context['DATA_USER_ID'] = user.id if user else -1
+    context['DATA_LAST_STATUS'] = user.last_state or "" if user else ""
 
 
 @tree.addActionDecorator('1.0', condition=lambda context: context['DATA_LAST_STATUS'] == "")
