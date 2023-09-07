@@ -1,5 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import Any, Literal, Optional, overload
+from typing import (Any, Literal, LiteralString, Mapping, Optional, Self,
+                    Sequence, Type, TypeVar, overload)
+
+T = TypeVar('T')
 
 
 class DbConnection(ABC):
@@ -9,27 +12,27 @@ class DbConnection(ABC):
         ...
 
     @abstractmethod
-    def connect(self) -> None:
+    def __enter__(self) -> Self:
         ...
 
     @abstractmethod
     @overload
-    def execute_query(self, query: str, params: Optional[tuple[Any, ...]] = None, single: Literal[False] = False) -> Optional[list[tuple[Any, ...]]]:
+    def execute_query(self, query: LiteralString, params: Optional[Sequence[Any] | Mapping[str, Any]] = None, bound: Type[T] = Type, single: Literal[False] = False) -> list[T]:
         ...
 
     @abstractmethod
     @overload
-    def execute_query(self, query: str, params: Optional[tuple[Any, ...]] = None, single: Literal[True] = True) -> Optional[tuple[Any, ...]]:
+    def execute_query(self, query: LiteralString, params: Optional[Sequence[Any] | Mapping[str, Any]] = None, bound: Type[T] = Type, single: Literal[True] = True) -> T | None:
         ...
 
     @abstractmethod
-    def execute_query(self, query: str, params: Optional[tuple[Any, ...]] = None, single: bool = False) -> Optional[list[tuple[Any, ...]] | tuple[Any, ...]]:
+    def execute_query(self, query: LiteralString, params: Optional[Sequence[Any] | Mapping[str, Any]] = None, bound: Type[T] = Type, single: bool = False) -> list[T] | T | None:
         ...
 
     @abstractmethod
-    def execute_mutation(self, query: str, params: Optional[tuple[Any, ...]] = None) -> bool:
+    def execute_mutation(self, query: LiteralString, params: Optional[Sequence[Any] | Mapping[str, Any]] = None,) -> bool:
         ...
 
     @abstractmethod
-    def close(self) -> None:
+    def __exit__(self, exc_type: Optional[Type[BaseException]], exc_value: Optional[BaseException], traceback: Optional[Any]) -> None:
         ...

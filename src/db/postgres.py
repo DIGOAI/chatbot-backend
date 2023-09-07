@@ -1,10 +1,14 @@
-from typing import Any, Optional
+from typing import (Any, LiteralString, Mapping, Optional, Self, Sequence,
+                    Type, TypeVar)
 
-import psycopg2
-from psycopg2.extensions import connection
+import psycopg
+from psycopg import Connection
+from psycopg.rows import DictRow, class_row, dict_row
 
 from src.db import DbConnection
 from src.logger import Logger
+
+T = TypeVar('T')
 
 
 class PostgreSQLConnection(DbConnection):
@@ -12,31 +16,35 @@ class PostgreSQLConnection(DbConnection):
 
     def __init__(self, user: str, password: str, host: str, port: str, database: str):
         super().__init__()
-        self._connection: Optional[connection] = None
+        self._connection: Optional[Connection[DictRow]] = None
         self._user = user
         self._password = password
         self._host = host
         self._port = port
         self._database = database
 
-    def connect(self):
+    def __enter__(self) -> Self:
         """Connect to the PostgreSQL database."""
         try:
             conn_string = f"dbname={self._database} user={self._user} password={self._password} host={self._host} port={self._port}"
-            self._connection = psycopg2.connect(conn_string)
+            self._connection = psycopg.connect(conn_string, row_factory=dict_row)
             Logger.info("Database connected")
+            return self
         except Exception as e:
             Logger.error(f"Error connecting to database: {e}")
+            raise e
 
     def execute_query(self,  # type: ignore
-                      query: str,
-                      params: Optional[tuple[Any, ...]] = None,
-                      single: bool = False) -> Optional[list[tuple[Any, ...]] | tuple[Any, ...]]:
+                      query: LiteralString,
+                      params: Optional[Sequence[Any] | Mapping[str, Any]] = None,
+                      bound: Type[T] = DictRow,
+                      single: bool = False) -> list[T] | T | None:
         """Execute a query to the PostgreSQL database.
 
         Parameters:
         query (str): The query to execute
-        params (tuple[any] | None): The parameters to pass to the query (default None)
+        params (tuple[any] | list[any] | dict[str, any] | None): The parameters to pass to the query (default None)
+        bound (type): The type of the result of the query (default DictRow)
         single (bool): If the query returns a single result or not (default False)
 
         Returns:
@@ -44,19 +52,15 @@ class PostgreSQLConnection(DbConnection):
         """
         try:
             if self._connection:
-                with self._connection.cursor() as cursor:
-                    cursor.execute(query, params)
-                    Logger.info(f"Query executed: {cursor.query}")
+                with self._connection.cursor(row_factory=class_row(bound)) as cur:
+                    cur.execute(query, params)
+                    Logger.info(f"Query executed: {cur._query.query.decode() if cur._query else query}")  # type: ignore
                     self._connection.commit()
 
                     if single:
-                        res = cursor.fetchone()
-                        if res:
-                            return res
+                        return cur.fetchone()
 
-                        return None
-
-                    return cursor.fetchall()
+                    return cur.fetchall()
             else:
                 Logger.error("Not connection to the database")
                 return None
@@ -64,20 +68,20 @@ class PostgreSQLConnection(DbConnection):
             Logger.error(f"Error executing the query: {e}")
             return None
 
-    def execute_mutation(self, query: str, params: Optional[tuple[Any, ...]] = None) -> bool:
+    def execute_mutation(self, query: LiteralString, params: Optional[Sequence[Any] | Mapping[str, Any]] = None) -> bool:
         """Execute a mutation to the PostgreSQL database.
 
         Parameters:
         query (str): The query to execute
-        params (tuple[any] | None): The parameters to pass to the query (default None)
+        params (tuple[any] | list[any] | dict[str, any] | None): The parameters to pass to the query (default None)
 
         Returns:
         bool: If the mutation was successful or not
         """
         try:
             if self._connection:
-                with self._connection.cursor() as cursor:
-                    cursor.execute(query, params)
+                with self._connection.cursor() as cur:
+                    cur.execute(query, params)
                     self._connection.commit()
                     return True
             else:
@@ -87,22 +91,11 @@ class PostgreSQLConnection(DbConnection):
             Logger.error(f"Error executing the query: {e}")
             return False
 
-    def close(self):
+    def __exit__(self, exc_type: Optional[Type[BaseException]], exc_value: Optional[BaseException], traceback: Optional[Any]):
         if self._connection:
-            self._connection.close()
-            Logger.info("Database disconnected")
-
-
-if __name__ == "__main__":
-    import os
-
-    db = PostgreSQLConnection(
-        user=os.environ.get("DB_USER", "postgres"),
-        password=os.environ.get("DB_PASSWORD", ""),
-        host=os.environ.get("DB_HOST", "localhost"),
-        port=os.environ.get("DB_PORT", "5432"),
-        database=os.environ.get("DB_NAME", "postgres")
-    )
-
-    db.connect()
-    db.close()
+            try:
+                self._connection.close()
+                Logger.info("Database disconnected")
+            except Exception as e:
+                Logger.error(f"Error disconnecting to database: {e}")
+                raise e
