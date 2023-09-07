@@ -3,6 +3,7 @@ from datetime import datetime
 from src.decisions_tree import DecisionsTree
 from src.logger import Logger
 from src.models import ContextType
+from src.utils import get_phone_and_service
 
 tree = DecisionsTree[ContextType]()
 
@@ -12,8 +13,9 @@ def load_context(context: ContextType) -> None:
     Logger.info("Loading context")
 
     # Get the client phone number in 09XXXXXXXXX format
-    client_phone = context['EVENT_TWILIO'].from_phone.replace(
-        'whatsapp:+593', '0')
+    # client_phone = context['EVENT_TWILIO'].from_phone.replace(
+    #     'whatsapp:+593', '0')
+    client_phone, _ = get_phone_and_service(context['EVENT_TWILIO'].from_phone)
 
     # Get the status, hours difference and user id of the user by the phone if exists
     last_status, hours_diff, user_id = context['SERVICE_API'].get_estado_usuario(
