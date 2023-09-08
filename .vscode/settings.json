@@ -11,6 +11,10 @@
     "editor.formatOnType": false,
     "editor.wordBasedSuggestions": false,
     "editor.formatOnSave": true,
-    "editor.defaultFormatter": "ms-python.autopep8"
-  }
+    "editor.defaultFormatter": "ms-python.autopep8",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    }
+  },
+  "isort.args": ["--profile", "autopep8"]
 }
