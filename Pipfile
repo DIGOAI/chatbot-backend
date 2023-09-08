@@ -4,10 +4,22 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+twilio = "==8.7.0"
+requests = "==2.31.0"
+openai = "==0.27.9"
+typing-extensions = "==4.7.1"
+pydantic = "==2.3.0"
+psycopg = {extras = ["binary"], version = "==3.1.10"}
 
 [dev-packages]
-autopep8 = "*"
-packaging = "*"
+autopep8 = "==2.0.4"
+packaging = "==23.1"
+mypy = "==1.5.1"
+twilio-stubs = "==0.2.0"
+
+[scripts]
+handler = "python ./handler.py"
+test_db = "python ./test_db.py"
 
 [requires]
 python_version = "3.11"
