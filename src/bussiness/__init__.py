@@ -8,7 +8,7 @@ from src.utils import get_phone_and_service
 tree = DecisionsTree[ContextType]()
 
 
-@tree.add_action('0.0', condition=lambda _: True, end=True)
+@tree.add_action('0.0', condition=lambda _: True, end=False)
 def load_context(context: ContextType) -> None:
     Logger.info("Loading context")
 
@@ -23,7 +23,7 @@ def load_context(context: ContextType) -> None:
     user_ci = user.ci if user else None
     user_id = user.id if user else -1
     user_last_state = user.last_state or "" if user else ""
-    last_update = user.updated_at if user else datetime.now()
+    last_update = user.updated_at if user else datetime.now(timezone.utc)
 
     hours_diff = int((datetime.now(timezone.utc) - last_update).seconds / 3600)
 
@@ -31,11 +31,25 @@ def load_context(context: ContextType) -> None:
 
     context['DATA_USER_CI'] = user.ci if user else None
     context['DATA_USER_ID'] = user.id if user else -1
-    context['DATA_LAST_STATUS'] = user.last_state or "" if user else ""
+    context['DATA_LAST_STATE'] = user.last_state or "" if user else ""
 
 
-@tree.add_action('1.0', condition=lambda context: context['DATA_LAST_STATUS'] == "")
+@tree.add_action('1.0', condition=lambda context: context["DATA_LAST_STATE"] == "" and context["DATA_USER_CI"] == "")
 def say_welcome(context: ContextType) -> None:
+    JASON_PHONE = "whatsapp:+593939893985"
+    HUMBERTO_PHONE = "whatsapp:+593996739383"
+    JUAN_PHONE = "whatsapp:+593959011576"
+    context['SERVICE_TWILIO'](
+        "¡Hola! 👋\nSoy *SaragurosNet*.\n\nPor favor ingresa tu número de *cédula/RUC* para continuar.", receiver=JUAN_PHONE)
+
+
+# @tree.add_action('1.1', condition=lambda _: True)
+def say_welcome_client(context: ContextType) -> None:
+    pass
+
+
+# @tree.add_action('1.2', condition=lambda context: context['DATA_LAST_STATE'] == "")
+def say_welcome_unknown(context: ContextType) -> None:
     if not context['DATA_USER_CI']:
         Logger.error(f"ID: {context['DATA_USER_ID']} | User doesn't have a CI")
         return

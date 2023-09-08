@@ -41,16 +41,62 @@ class ChatApiService(object):
 
             return res
 
-        # timestamp in db 2023-04-03 17:52:42.041338
-        if res:
-            bot_status, updated_at, user_id = cast(
-                tuple[str, datetime, str], res)
-            hours_diff = int(
-                (datetime.now() - updated_at).seconds / 3600)
+    # TODO: Refactor all this commented code
 
-            return bot_status, hours_diff, user_id
+    # def get_cedula_by_celular(self, phone: str) -> Optional[str]:
+    #     """Get the cedula of a user by the celular.
 
-        return "", 0, ""
+    #     Parameters:
+    #     celular (str): The celular of the user to get the cedula
+
+    #     Returns:
+    #     str | None: The cedula of the user
+    #     """
+
+    #     self._conn.connect()
+
+    #     res = self._conn.execute_query(
+    #         query=_QUERIES[QueriesOpts.GET_CI_BY_PHONE],
+    #         params=(phone,),
+    #         single=True
+    #     )
+
+    #     self._conn.close()
+
+    #     if res:
+    #         return cast(str, res[0])
+
+    #     return None
+
+    # def get_estado_usuario(self, phone: str) -> tuple[str, int, str]:
+    #     """Get the status of a user by the phone.
+
+    #     Parameters:
+    #     phone (str): The phone of the user to get the status
+
+    #     Returns:
+    #     tuple[str, int, str]: The status of the user, the hours difference and the user id
+    #     """
+
+    #     self._conn.connect()
+
+    #     res = self._conn.execute_query(
+    #         query=_QUERIES[QueriesOpts.GET_ESTADO_USUARIO],
+    #         params=(phone,),
+    #         single=True
+    #     )
+
+    #     self._conn.close()
+
+    #     # timestamp in db 2023-04-03 17:52:42.041338
+    #     if res:
+    #         user = User(**res)
+    #         hours_diff = int(
+    #             (datetime.now() - updated_at).seconds / 3600)
+
+    #         return bot_status, hours_diff, user_id
+
+    #     return "", 0, ""
 
     # TODO: Refactor this code to save values in new database model
     def update_estado_usuario(self, ci: str, phone: str, bot_status: str, observations: str, updated_at: str, user_id: str) -> bool:
