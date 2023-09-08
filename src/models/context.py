@@ -13,7 +13,7 @@ class ContextType(TypedDict):
     EVENT_TWILIO: Event
     DATA_USER_ID: int
     DATA_USER_CI: str | None
-    DATA_LAST_STATUS: str
+    DATA_LAST_STATE: str
     SERVICE_API: ChatApiService
     SERVICE_SARAGUROS: SaragurosService
     SERVICE_TWILIO: TwilioService

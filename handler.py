@@ -37,9 +37,9 @@ def lambda_handler(event: dict[str, Any], __context: Any) -> None:
     # Create a global context
     context: ContextType = {
         "EVENT_TWILIO": payload,
-        'DATA_USER_ID': "",
-        'DATA_USER_CI': "0105997001",
-        'DATA_LAST_STATUS': "",  # Set estatus in "1.0" for testing
+        'DATA_USER_ID': -1,
+        'DATA_USER_CI': "",
+        'DATA_LAST_STATE': "",  # Set estatus in "1.0" for testing
         'SERVICE_API': chat_api_service,
         'SERVICE_SARAGUROS': saragurosnet_service,
         'SERVICE_TWILIO': twilio_service
