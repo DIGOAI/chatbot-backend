@@ -1,7 +1,6 @@
 import json
 import os
 import re
-import sys
 from datetime import datetime, timedelta
 
 import openai
@@ -16,7 +15,7 @@ from twilio.rest import Client
 # === COMPLETE ===
 
 
-def ask_chatgpt(text):
+def ask_chatgpt(text: str) -> str:
     asunto = ''
     departamento = ''
     openai.api_key = os.environ['OPENAI_KEY']
@@ -47,7 +46,8 @@ def activar_servicio(usuario_id):
         "idcliente": usuario_id
     }
 
-    response = requests.post(url, headers=headers, data=json.dumps(data))
+    response = requests.post(
+        url, headers=headers, data=json.dumps(data))
     return response.json()
 # === COMPLETE ===
 
@@ -69,7 +69,8 @@ def create_ticket(contenido, asunto, departamento, turno, usuario_id, fechavisit
         "contenido": contenido
     }
 
-    response = requests.post(url, headers=headers, data=json.dumps(data))
+    response = requests.post(
+        url, headers=headers, data=json.dumps(data))
     return response.json()
 # === COMPLETE ===
 
@@ -83,7 +84,8 @@ def parse_transaccion(image_text):
     oficina = ""
     lines = image_text.split('\n')
 
-    match = re.search(r'COAC.*JARDIN AZUAYO', lines[0])
+    match = re.search(
+        r'COAC.*JARDIN AZUAYO', lines[0])
     if match:
         nombre_usuario = lines[4]
         fecha = lines[7]
@@ -126,7 +128,8 @@ def get_cedula_by_celular(celular):
             return ""
 
     except (Exception, psycopg2.Error) as error:
-        print("Error while retrieving data from the table:", error)
+        print(
+            "Error while retrieving data from the table:", error)
         return ""
 
     finally:
@@ -182,7 +185,8 @@ def getEstadoUsuario(celular):
             return "", 0, ""
 
     except (Exception, psycopg2.Error) as error:
-        print("Error while retrieving data from the table:", error)
+        print(
+            "Error while retrieving data from the table:", error)
         return "", 0, ""
 
     finally:
@@ -203,7 +207,8 @@ def getUsuarioData(cedula):
         "token": "R3Z4SlNrWVZvZzFsV1pvTTQ3ci9wZz09",
         "cedula": cedula
     }
-    response = requests.post(url, headers=headers, data=json.dumps(data))
+    response = requests.post(
+        url, headers=headers, data=json.dumps(data))
     return response.json()
 # === COMPLETE ===
 
@@ -243,10 +248,12 @@ def updateEstadoUsuario(cedula, celular, bot_estado, observaciones, actualizado,
         # Commit the transaction
         conn.commit()
 
-        print("Data inserted successfully into the table.")
+        print(
+            "Data inserted successfully into the table.")
 
     except (Exception, psycopg2.Error) as error:
-        print("Error while inserting data into the table:", error)
+        print(
+            "Error while inserting data into the table:", error)
 
     finally:
         # Close the database connection and cursor
@@ -275,12 +282,15 @@ def lambda_handler(event, context):
     ####################################################################
     # 1 - Obtener el estado del usuario a partir del número de cédula  #
     ####################################################################
-    titular_celular = From.replace("whatsapp:+593", "")
+    titular_celular = From.replace(
+        "whatsapp:+593", "")
     titular_celular = "0" + titular_celular
 
     # 1.1. Obtener el último estado del cliente
-    estado_usuario, edad_estado, usuario_id = getEstadoUsuario(titular_celular)
-    print(estado_usuario + " : " + repr(edad_estado))
+    estado_usuario, edad_estado, usuario_id = getEstadoUsuario(
+        titular_celular)
+    print(estado_usuario + " : " +
+          repr(edad_estado))
 
     ####################################################################
     # 1.2 - Onboarding para nuevo usuario y recurrentes                #
@@ -290,7 +300,8 @@ def lambda_handler(event, context):
         if match:
             print("Escribió la cédula")
             data = getUsuarioData(Body)
-            if data['estado'] == "exito":  # El usuario es cliente de SARAGUROS.NET
+            # El usuario es cliente de SARAGUROS.NET
+            if data['estado'] == "exito":
                 for el in data['datos']:
                     usuario_nombre = el['nombre']
                     usuario_id = el['id']
@@ -306,7 +317,8 @@ def lambda_handler(event, context):
                 updateEstadoUsuario(
                     Body, titular_celular, '0.0_cliente_visita_primera_vez', '', timestamp, usuario_id)
 
-            elif data['estado'] == "error":  # El usuario no es cliente de SARAGUROS.NET
+            # El usuario no es cliente de SARAGUROS.NET
+            elif data['estado'] == "error":
 
                 nombre = "Usuario"
                 message = client.messages.create(
@@ -327,10 +339,12 @@ def lambda_handler(event, context):
                 to=From)
     # El usuario es recurrente en este canal y su último estado es un END STATE
     elif (estado_usuario != '1_interesado_contratar') and (estado_usuario == '2.3_servicio_activado_con_evidencia' or estado_usuario == '1.4_ticket_generado_nousuario'):
-        cedula = get_cedula_by_celular(titular_celular)
+        cedula = get_cedula_by_celular(
+            titular_celular)
         print("Cedula: " + cedula)
         data = getUsuarioData(cedula)
-        if data['estado'] == "exito":  # El usuario es cliente de SARAGUROS.NET
+        # El usuario es cliente de SARAGUROS.NET
+        if data['estado'] == "exito":
             for el in data['datos']:
                 usuario_nombre = el['nombre']
                 usuario_id = el['id']
@@ -369,7 +383,8 @@ def lambda_handler(event, context):
             body='Soy tu agente de ventas virtual en Saraguros Net. ¿En qué te puedo ayudar? Escríbeme en un mensaje tu requerimiento. Gracias',
             to=From)
 
-        cedula = get_cedula_by_celular(titular_celular)
+        cedula = get_cedula_by_celular(
+            titular_celular)
         timestamp = datetime.now()
         updateEstadoUsuario(cedula, titular_celular,
                             '1.3_hablar_con_asesor', '', timestamp, usuario_id)
@@ -386,11 +401,13 @@ def lambda_handler(event, context):
         # Campos para el ticket
         # DEBEMOS CREAR UN USUARIO PARA RECEPTAR LOS TICKES DE LOS AUN NO USUARIOS.
         usuario_id = 5591
-        contenido = Body + ". Llamar al usuario al: " + titular_celular
+        contenido = Body + \
+            ". Llamar al usuario al: " + titular_celular
         turno = "TARDE"
         today = datetime.today()
         tomorrow = today + timedelta(days=1)
-        fechavisita = tomorrow.strftime('%Y-%m-%d')
+        fechavisita = tomorrow.strftime(
+            '%Y-%m-%d')
         dep_str = data[1].lstrip()
         dep_str2 = dep_str.replace('.', '')
         departamento = departamentos[dep_str2]
@@ -412,7 +429,8 @@ def lambda_handler(event, context):
             body=f'Su turno ha sido creado con: *{estado_ticket}* y su número de ticket es: *{idticket}* el mismo que será atendido por el departamento de: *{data[1]}*. Ha sido un placer atenderle. Escriba *INICIO* para regresar a las opociones principales. Gracias.',
             to=From)
 
-        cedula = get_cedula_by_celular(titular_celular)
+        cedula = get_cedula_by_celular(
+            titular_celular)
         timestamp = datetime.now()
         updateEstadoUsuario(cedula, titular_celular,
                             '1.4_ticket_generado_nousuario', '', timestamp, usuario_id)
@@ -438,7 +456,8 @@ def lambda_handler(event, context):
             to=From)
 
         timestamp = datetime.now()
-        cedula = get_cedula_by_celular(titular_celular)
+        cedula = get_cedula_by_celular(
+            titular_celular)
         updateEstadoUsuario(cedula, titular_celular, '1.0_nuevo_cliente',
                             'Nuevo lead. ACCION: llamar a celular del lead para cerrar venta', timestamp, usuario_id)
 
@@ -453,7 +472,8 @@ def lambda_handler(event, context):
             to=From)
 
         timestamp = datetime.now()
-        cedula = get_cedula_by_celular(titular_celular)
+        cedula = get_cedula_by_celular(
+            titular_celular)
         updateEstadoUsuario(cedula, titular_celular, '1.5_vio_promociones',
                             'Nuevo lead. ACCION: llamar a celular del lead para cerrar venta', timestamp, usuario_id)
 
@@ -465,7 +485,8 @@ def lambda_handler(event, context):
             to=From)
 
         timestamp = datetime.now()
-        cedula = get_cedula_by_celular(titular_celular)
+        cedula = get_cedula_by_celular(
+            titular_celular)
         updateEstadoUsuario(cedula, titular_celular, '1.0_nuevo_cliente',
                             'Nuevo lead. ACCION: llamar a celular del lead para cerrar venta', timestamp, usuario_id)
 
@@ -473,10 +494,12 @@ def lambda_handler(event, context):
     # 2 - PAGAR SERVICIO                                               #
     ####################################################################
     if Body == 'PAGA TU SERVICIO':
-        cedula = get_cedula_by_celular(titular_celular)
+        cedula = get_cedula_by_celular(
+            titular_celular)
         print(cedula)
         data = getUsuarioData(cedula)
-        if data['estado'] == "exito":  # El usuario es cliente de SARAGUROS.NET
+        # El usuario es cliente de SARAGUROS.NET
+        if data['estado'] == "exito":
             for el in data['datos']:
                 facturacion = el['facturacion']
                 facturas_nopagadas = facturacion['facturas_nopagadas']
@@ -513,11 +536,13 @@ def lambda_handler(event, context):
 
     if MediaUrl0.startswith('https://') and estado_usuario == '2.0_interesado_pagar_servicio':
         url = "https://flr88xbq98.execute-api.us-east-1.amazonaws.com/beta/ocr-helper"
-        headers = {"Content-Type": "application/json"}
+        headers = {
+            "Content-Type": "application/json"}
         data = {
             "image_url": MediaUrl0
         }
-        response = requests.post(url, headers=headers, data=json.dumps(data))
+        response = requests.post(
+            url, headers=headers, data=json.dumps(data))
         image_text = response.json()['image_text']
 
         message = client.messages.create(
@@ -530,7 +555,8 @@ def lambda_handler(event, context):
             body=image_text,
             to=From)
 
-        nombre_usuario, fecha, monto, oficina = parse_transaccion(image_text)
+        nombre_usuario, fecha, monto, oficina = parse_transaccion(
+            image_text)
 
         message = client.messages.create(
             from_='whatsapp:+593993999510',
@@ -549,7 +575,8 @@ def lambda_handler(event, context):
                 body='Lamentablemente no pudimos activar su servicio. Por favor comuníquese al 0000000000. Gracias',
                 to=From)
 
-        cedula = get_cedula_by_celular(titular_celular)
+        cedula = get_cedula_by_celular(
+            titular_celular)
         timestamp = datetime.now()
         updateEstadoUsuario(cedula, titular_celular,
                             '2.3_servicio_activado_con_evidencia', '', timestamp, usuario_id)
@@ -568,12 +595,14 @@ def lambda_handler(event, context):
     if Body == 'ESTADO DEL SERVICIO':
         # Consultar estado del servicio y plan del usuario.
 
-        cedula = get_cedula_by_celular(titular_celular)
+        cedula = get_cedula_by_celular(
+            titular_celular)
         data = getUsuarioData(cedula)
         estado_servicio = ""
         tiposervicio = ""
 
-        if data['estado'] == "exito":  # El usuario es cliente de SARAGUROS.NET
+        # El usuario es cliente de SARAGUROS.NET
+        if data['estado'] == "exito":
             for el in data['datos']:
                 estado_servicio = el['estado']
                 for servicio in el['servicios']:
