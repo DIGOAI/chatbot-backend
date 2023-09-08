@@ -16,5 +16,5 @@
       "source.organizeImports": true
     }
   },
-  "isort.args": ["--profile", "autopep8"]
+  "isort.args": ["--profile", "black"]
 }
