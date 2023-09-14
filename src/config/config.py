@@ -4,7 +4,7 @@ from src.logger import Logger
 
 
 class Config:
-    """ Config class to load environment variables. """
+    """Config class to load environment variables."""
 
     _instance = None
 
@@ -31,12 +31,16 @@ class Config:
 
         self.TWILIO_SID = os.environ.get("TWILIO_SID", "")
         self.TWILIO_TOKEN = os.environ.get("TWILIO_TOKEN", "")
+        self.ALLOWED_ORIGINS = os.environ.get("ALLOWED_ORIGINS", "*").split(",")
+
+        self.JWT_SECRET = os.environ.get("JWT_SECRET", default="")
+        self.JWT_ALGORITHM = os.environ.get("JWT_ALGORITHM", "HS256")
 
         try:
             self._verify()
         except ValueError as e:
             Logger.error(str(e))
-            SystemExit(1)
+            raise SystemExit(1)
 
     def _verify(self):
         """ Verify that all required environment variables are set. """
@@ -53,13 +57,9 @@ class Config:
             raise ValueError("TWILIO_SID is not set")
         if not self.TWILIO_TOKEN.strip():
             raise ValueError("TWILIO_TOKEN is not set")
-
-
-if __name__ == "__main__":
-    config1 = Config()
-    print("DB_USER (config1):", config1.DB_USER)
-
-    config2 = Config()
-    print("DB_USER (config2):", config2.DB_USER)
-
-    print("config1 is config2:", config1 is config2)
+        if not self.ALLOWED_ORIGINS:
+            raise ValueError("ALLOWED_ORIGINS is not set")
+        if not self.JWT_SECRET.strip():
+            raise ValueError("JWT_SECRET is not set")
+        if not self.JWT_ALGORITHM.strip():
+            raise ValueError("JWT_ALGORITHM is not set")

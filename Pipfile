@@ -12,6 +12,7 @@ pydantic = "==2.3.0"
 psycopg = {extras = ["binary"], version = "==3.1.10"}
 fastapi = "==0.103.1"
 uvicorn = {extras = ["standard"], version = "==0.23.2"}
+sqlalchemy = "==2.0.20"
 
 [dev-packages]
 autopep8 = "==2.0.4"
@@ -20,8 +21,7 @@ mypy = "==1.5.1"
 twilio-stubs = "==0.2.0"
 
 [scripts]
-handler = "python ./handler.py"
-test_db = "python ./test_db.py"
+dev = "uvicorn main:app --reload --port 8000"
 
 [requires]
 python_version = "3.11"
