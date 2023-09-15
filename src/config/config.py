@@ -2,16 +2,20 @@ import os
 
 from src.logger import Logger
 
+Logger.add_func_names_to_ignore(["before_cursor_execute"])
+Logger.module_char_length = 25
+
 
 class Config:
     """Config class to load environment variables."""
 
     _instance = None
+    _NAME = "config"
 
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
-            Logger.info("Loading config...")
+            Logger.info("Loading config", caller_name=cls._NAME)
             cls._instance._load_config()
         return cls._instance
 
@@ -39,27 +43,39 @@ class Config:
         try:
             self._verify()
         except ValueError as e:
-            Logger.error(str(e))
+            Logger.error(str(e), caller_name=self._NAME)
             raise SystemExit(1)
 
     def _verify(self):
         """ Verify that all required environment variables are set. """
 
-        if not self.DB_PASSWORD.strip():
-            raise ValueError("DB_PASSWORD is not set")
-        if not self.SARAGUROS_API_URL.strip():
-            raise ValueError("SARAGUROS_API_URL is not set")
-        if not self.SARAGUROS_API_TOKEN.strip():
-            raise ValueError("SARAGUROS_API_TOKEN is not set")
-        if not self.OCR_LAMBDA_URL.strip():
-            raise ValueError("OCR_LAMBDA_URL is not set")
-        if not self.TWILIO_SID.strip():
-            raise ValueError("TWILIO_SID is not set")
-        if not self.TWILIO_TOKEN.strip():
-            raise ValueError("TWILIO_TOKEN is not set")
-        if not self.ALLOWED_ORIGINS:
-            raise ValueError("ALLOWED_ORIGINS is not set")
-        if not self.JWT_SECRET.strip():
-            raise ValueError("JWT_SECRET is not set")
-        if not self.JWT_ALGORITHM.strip():
-            raise ValueError("JWT_ALGORITHM is not set")
+        ATTRIBUTES_TO_VERIFY = [
+            self.DB_PASSWORD,
+            self.SARAGUROS_API_URL,
+            self.SARAGUROS_API_TOKEN,
+            self.OCR_LAMBDA_URL,
+            self.TWILIO_SID,
+            self.TWILIO_TOKEN,
+            self.ALLOWED_ORIGINS,
+            self.JWT_SECRET,
+            self.JWT_ALGORITHM,
+        ]
+
+        # Get attribute names in string format
+        ATTRIBUTES_TO_VERIFY_NAMES = [
+            attr_name
+            for attr_name in dir(self)
+            if not callable(getattr(self, attr_name)) and not attr_name.startswith("__")
+        ]
+
+        # Verify that all attributes are set
+        for attr in ATTRIBUTES_TO_VERIFY:
+            # Get attribute name
+            attr_name = ATTRIBUTES_TO_VERIFY_NAMES[ATTRIBUTES_TO_VERIFY.index(attr)]
+
+            # Verify attributes
+            if isinstance(attr, str):
+                if not attr.strip():
+                    raise ValueError(f"{attr_name} is not set")
+            elif not attr:
+                raise ValueError(f"{attr_name} is not set")

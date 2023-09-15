@@ -21,7 +21,7 @@ mypy = "==1.5.1"
 twilio-stubs = "==0.2.0"
 
 [scripts]
-dev = "uvicorn main:app --reload --port 8000"
+dev = "uvicorn main:app --reload --port 8000 --no-access-log"
 
 [requires]
 python_version = "3.11"
