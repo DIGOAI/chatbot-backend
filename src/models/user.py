@@ -1,7 +1,7 @@
 from datetime import datetime
-from typing import Optional
+from typing import Any, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_serializer
 from sqlalchemy import DateTime, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -38,6 +38,37 @@ class UserModel(Base):
         return f"<UserModel(id={self.id}, ci={self.ci}, name={self.name}, phone={self.phone}, last_state={self.last_state}, saraguros_id={self.saraguros_id}, created_at={self.created_at}, updated_at={self.updated_at})>"
 
 
+class UserInsert(BaseModel):
+    """User class to handle the user model.
+
+    Attributes:
+    ci (str): The cedula of the user
+    name (str): The name of the user
+    phone (str): The phone of the user
+    saraguros_id (int): The id of the user in saragurosnet
+    last_state (str): The last state of the user
+    """
+
+    ci: Optional[str]
+    name: Optional[str]
+    phone: Optional[str]
+    saraguros_id: Optional[int]
+    last_state: Optional[str]
+
+    model_config = {
+        "from_attributes": True,
+        "json_schema_extra": {
+            "example": {
+                "ci": "0105997001",
+                "name": "Juan Perez",
+                "phone": "+593986728536",
+                "saraguros_id": 1,
+                "last_state": "1.0"
+            }
+        }
+    }
+
+
 class User(BaseModel):
     """User class to handle the user model.
 
@@ -60,6 +91,10 @@ class User(BaseModel):
     saraguros_id: Optional[int]
     created_at: datetime
     updated_at: datetime
+
+    @field_serializer("created_at", "updated_at")
+    def serialize_dt(self, dt: datetime, _info: Any) -> float:
+        return self.created_at.timestamp()
 
     model_config = {
         "from_attributes": True,
