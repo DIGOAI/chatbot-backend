@@ -1,14 +1,25 @@
 from datetime import datetime
+from enum import Enum
+
 from sqlalchemy import DateTime
+from sqlalchemy import Enum as EnumType
 from sqlalchemy import ForeignKey, Integer, String, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+
 __all__ = [
     'Base',
     'Client',
+    'Company',
     'Message',
     'User',
+    'UserRole'
 ]
 
+
+class UserRole(str, Enum):
+    WORKER = "WORKER"
+    ADMIN = "ADMIN"
+    SUPPORT = "SUPPORT"
 
 
 class Base(DeclarativeBase):
@@ -94,7 +105,35 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
 
+    role: Mapped[UserRole] = mapped_column(EnumType(UserRole), default=UserRole.WORKER)
+    company_id: Mapped[int] = mapped_column(ForeignKey("companies.id"), nullable=False)
+
+    company: Mapped["Company"] = relationship(back_populates="workers")
 
     def __repr__(self) -> str:
         return f"<UserModel(id={self.id}, email={self.email}, password={self.password}, created_at={self.created_at}, updated_at={self.updated_at})>"
 
+
+class Company(Base):
+    """CompanyModel class to handle the company model.
+
+    Attributes:
+    __tablename__ (str): The name of the table
+    id (int): The id of the company
+    name (str): The name of the company
+    created_at (datetime): The datetime when the company was created
+    updated_at (datetime): The datetime when the company was updated
+    """
+
+    __tablename__ = "companies"
+
+    id: Mapped[int] = mapped_column(String, primary_key=True, index=True)
+    ruc: Mapped[str] = mapped_column(String(13), nullable=False)
+    name: Mapped[str] = mapped_column(String(120), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
+
+    workers: Mapped[list["User"]] = relationship(back_populates="company")
+
+    def __repr__(self) -> str:
+        return f"<CompanyModel(id={self.id}, name={self.name}, created_at={self.created_at}, updated_at={self.updated_at})>"
