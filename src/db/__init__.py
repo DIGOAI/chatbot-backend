@@ -8,7 +8,8 @@ __all__ = [
     'Base',
     'Session',
     'DbConnection',
-    'PostgreSQLConnection'
+    'PostgreSQLConnection',
+    'setup_db'
 ]
 
 
