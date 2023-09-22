@@ -6,6 +6,7 @@ __all__ = [
     'Base',
     'Client',
     'Message',
+    'User',
 ]
 
 
@@ -72,4 +73,28 @@ class Message(Base):
     def __repr__(self) -> str:
         return f"<MessageModel(id={self.id}, sender={self.sender}, message={self.message}, client_id={self.client_id}, created_at={self.created_at})>"
 
+
+class User(Base):
+    """UserModel class to handle the user model.
+
+    Attributes:
+    __tablename__ (str): The name of the table
+    id (int): The id of the user
+    email (str): The email of the user
+    password (str): The password of the user
+    created_at (datetime): The datetime when the user was created
+    updated_at (datetime): The datetime when the user was updated
+    """
+
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    email: Mapped[str] = mapped_column(String(120), nullable=False)
+    password: Mapped[str] = mapped_column(String(255), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
+
+
+    def __repr__(self) -> str:
+        return f"<UserModel(id={self.id}, email={self.email}, password={self.password}, created_at={self.created_at}, updated_at={self.updated_at})>"
 
