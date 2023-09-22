@@ -19,9 +19,13 @@ autopep8 = "==2.0.4"
 packaging = "==23.1"
 mypy = "==1.5.1"
 twilio-stubs = "==0.2.0"
+alembic = "==1.12.0"
+alembic-postgresql-enum = "==0.1.8"
 
 [scripts]
 dev = "uvicorn main:app --reload --port 8000 --no-access-log"
+migrate = "alembic upgrade head"
+make_migrations = "alembic revision --autogenerate -m"
 
 [requires]
 python_version = "3.11"

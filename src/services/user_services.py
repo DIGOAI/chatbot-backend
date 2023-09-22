@@ -1,7 +1,8 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from src.models.user import User, UserInsert, UserModel
+from src.db.models import Client as ClientModel
+from src.models.user import User, UserInsert
 
 
 class UserService():
@@ -9,10 +10,10 @@ class UserService():
         self._session = session
 
     def get_all_users(self):
-        users = self._session.execute(select(UserModel)).scalars().all()
+        users = self._session.execute(select(ClientModel)).scalars().all()
         return [User.model_validate(user) for user in users]
 
     def add_user(self, user: UserInsert):
-        user_model = UserModel(**user.model_dump())
+        user_model = ClientModel(**user.model_dump())
         self._session.add(user_model)
         return user_model

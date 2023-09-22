@@ -4,7 +4,6 @@ from psycopg import Cursor
 from sqlalchemy import Connection, ExecutionContext, create_engine
 from sqlalchemy.engine.url import URL
 from sqlalchemy.event import listens_for
-from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm.session import sessionmaker
 from sqlalchemy.util import immutabledict
 
@@ -51,7 +50,3 @@ def before_cursor_execute(conn: Connection,
 
 
 Session = sessionmaker(bind=engine)
-
-
-class Base(DeclarativeBase):
-    pass

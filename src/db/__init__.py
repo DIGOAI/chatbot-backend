@@ -1,6 +1,7 @@
-from src.db.database import Base, Session
+from src.db.database import Session
 from src.db.database import engine as _engine
 from src.db.db_connnection import DbConnection
+from src.db.models import Base
 from src.db.postgres import PostgreSQLConnection
 
 __all__ = [
