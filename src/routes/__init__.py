@@ -3,8 +3,8 @@ from typing import NotRequired, TypedDict
 
 from fastapi import APIRouter, FastAPI
 
+from src.routes.client_routes import router as client_router
 from src.routes.root_routes import router as root_router
-from src.routes.user_routes import router as user_router
 
 
 class _RoutesType(TypedDict):
@@ -20,7 +20,7 @@ _default_prefix = f"/api/{_APIVersion.v1.value}" + "/{company}"
 
 _routes: list[_RoutesType] = [
     {"router": root_router},
-    {"router": user_router, "prefix": _default_prefix}
+    {"router": client_router, "prefix": _default_prefix}
 ]
 
 

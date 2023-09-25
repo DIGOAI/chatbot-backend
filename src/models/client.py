@@ -4,29 +4,45 @@ from typing import Any, Optional
 from pydantic import BaseModel, field_serializer
 
 
-class UserInsert(BaseModel):
-    """User class to handle the user model.
+class ClientBase(BaseModel):
+    """ClientBase class to handle the user model.
 
     Attributes:
     ci (str): The cedula of the user
-    name (str): The name of the user
+    names (str): The names of the user
+    lastnames (str): The lastnames of the user
     phone (str): The phone of the user
     saraguros_id (int): The id of the user in saragurosnet
     last_state (str): The last state of the user
     """
 
     ci: Optional[str]
-    name: Optional[str]
-    phone: Optional[str]
+    names: Optional[str]
+    lastnames: Optional[str]
+    phone: str
     saraguros_id: Optional[int]
     last_state: Optional[str]
+
+
+class ClientInsert(ClientBase):
+    """ClientInsert class to handle the user model.
+
+    Attributes:
+    ci (str): The cedula of the user
+    names (str): The names of the user
+    lastnames (str): The lastnames of the user
+    phone (str): The phone of the user
+    saraguros_id (int): The id of the user in saragurosnet
+    last_state (str): The last state of the user
+    """
 
     model_config = {
         "from_attributes": True,
         "json_schema_extra": {
             "example": {
                 "ci": "0105997001",
-                "name": "Juan Perez",
+                "names": "Juan",
+                "lastnames": "Perez",
                 "phone": "+593986728536",
                 "saraguros_id": 1,
                 "last_state": "1.0"
@@ -35,13 +51,14 @@ class UserInsert(BaseModel):
     }
 
 
-class User(BaseModel):
-    """User class to handle the user model.
+class Client(ClientBase):
+    """Client class to handle the user model.
 
     Attributes:
     id (int): The id of the user
     ci (str): The cedula of the user
-    name (str): The name of the user
+    names (str): The names of the user
+    lastnames (str): The lastnames of the user
     phone (str): The phone of the user
     last_state (str): The last state of the user
     saraguros_id (int): The id of the user in saragurosnet
@@ -50,11 +67,6 @@ class User(BaseModel):
     """
 
     id: int
-    ci: Optional[str]
-    name: Optional[str]
-    phone: Optional[str]
-    last_state: Optional[str]
-    saraguros_id: Optional[int]
     created_at: datetime
     updated_at: datetime
 
@@ -68,7 +80,8 @@ class User(BaseModel):
             "example": {
                 "id": 1,
                 "ci": "0105997001",
-                "name": "Juan Perez",
+                "names": "Juan",
+                "lastnames": "Perez",
                 "phone": "+593986728536",
                 "last_state": "1.0",
                 "saraguros_id": 1,

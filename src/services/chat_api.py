@@ -2,7 +2,7 @@ from enum import Enum
 from typing import LiteralString, Optional
 
 from src.db import DbConnection
-from src.models.user import User
+from src.models import Client
 
 
 class QueriesOpts(Enum):
@@ -29,13 +29,13 @@ class ChatApiService(object):
     def __init__(self, conn: DbConnection) -> None:
         self._conn = conn
 
-    def get_user_by_phone(self, phone: str) -> Optional[User]:
+    def get_user_by_phone(self, phone: str) -> Optional[Client]:
 
         with self._conn as conn:
             res = conn.execute_query(
                 query=_QUERIES[QueriesOpts.GET_ESTADO_USUARIO],
                 params=(phone,),
-                bound=User,
+                bound=Client,
                 single=True
             )
 
