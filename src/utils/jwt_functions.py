@@ -34,5 +34,5 @@ def decodeJWT(token: str) -> Payload | None:
                              Config.JWT_ALGORITHM], options={"require": ["exp", "iat", "sub"]}))
         print(decoded_token)
         return decoded_token
-    except:
+    except BaseException:
         return None
