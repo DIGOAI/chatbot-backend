@@ -10,28 +10,28 @@ router = APIRouter(prefix="/client", tags=["Client"])
 
 
 @router.get("/")
-def get_users(company: str) -> list[Client]:
+def get_clients(company: str) -> list[Client]:
     Logger.info(f"Company: {company}")
 
     with Session.begin() as session:
-        user_service = ClientService(session)
-        users = user_service.get_all_users()
+        client_service = ClientService(session)
+        clients = client_service.get_all_users()
 
-    return users
+    return clients
 
 
 @router.post("/", response_model=GenericResponse[Client], status_code=STATUS.HTTP_201_CREATED)
-def add_user(user_insert: ClientInsert):
-    Logger.info(f"User: {user_insert}")
+def add_client(client_insert: ClientInsert):
+    Logger.info(f"Client: {client_insert}")
 
     with Session() as session:
-        user_service = ClientService(session)
-        user_inserted = user_service.add_user(user_insert)
+        client_service = ClientService(session)
+        client_inserted = client_service.add_user(client_insert)
         session.commit()
-        session.refresh(user_inserted)
+        session.refresh(client_inserted)
 
-    if not user_inserted:
-        return {"message": "Client Salready exists", "status": "error"}
+    if not client_inserted:
+        return {"message": "Client already exists", "status": "error"}
 
-    user_i = Client.model_validate(user_inserted)
-    return create_response(user_i, "Client added successfully", status_code=STATUS.HTTP_201_CREATED)
+    client = Client.model_validate(client_inserted)
+    return create_response(client, "Client added successfully", status_code=STATUS.HTTP_201_CREATED)
