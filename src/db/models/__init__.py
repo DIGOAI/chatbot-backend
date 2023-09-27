@@ -34,12 +34,13 @@ class Client(Base):
     __tablename__ (str): The name of the table
     id (int): The id of the client
     ci (str): The cedula of the client
-    name (str): The name of the client
+    names (str): The names of the client
+    lastnames (str): The lastnames of the client
     phone (str): The phone of the client
     last_state (str): The last state of the client
-    saraguros_id (int): The id of the client in saragurosnet
     created_at (datetime): The datetime when the client was created
     updated_at (datetime): The datetime when the client was updated
+    meta (dict): The meta of the client
     """
 
     __tablename__ = "clients"
@@ -52,10 +53,11 @@ class Client(Base):
     last_state: Mapped[str] = mapped_column(String(10), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-
     meta: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=True)
+    company_id: Mapped[int] = mapped_column(ForeignKey("companies.id"), nullable=False)
 
     messages: Mapped[list["Message"]] = relationship(back_populates="client")
+    company: Mapped["Company"] = relationship(back_populates="clients")
 
     def __repr__(self) -> str:
         return f"<UserModel(id={self.id}, ci={self.ci}, name={self.names}, lastnames={self.lastnames}, phone={self.phone}, last_state={self.last_state}, created_at={self.created_at}, updated_at={self.updated_at})>"
@@ -136,6 +138,7 @@ class Company(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
 
     workers: Mapped[list["User"]] = relationship(back_populates="company")
+    clients: Mapped[list["Client"]] = relationship(back_populates="company")
 
     def __repr__(self) -> str:
         return f"<CompanyModel(id={self.id}, name={self.name}, created_at={self.created_at}, updated_at={self.updated_at})>"
