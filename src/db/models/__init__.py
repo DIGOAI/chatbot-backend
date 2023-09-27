@@ -1,7 +1,8 @@
 from datetime import datetime
 from enum import Enum
+from typing import Any
 
-from sqlalchemy import DateTime
+from sqlalchemy import JSON, DateTime
 from sqlalchemy import Enum as EnumType
 from sqlalchemy import ForeignKey, Integer, String, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -49,14 +50,15 @@ class Client(Base):
     lastnames: Mapped[str] = mapped_column(String(40), nullable=True)
     phone: Mapped[str] = mapped_column(String(13), nullable=False)
     last_state: Mapped[str] = mapped_column(String(10), nullable=True)
-    saraguros_id: Mapped[int] = mapped_column(Integer, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    meta: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=True)
 
     messages: Mapped[list["Message"]] = relationship(back_populates="client")
 
     def __repr__(self) -> str:
-        return f"<UserModel(id={self.id}, ci={self.ci}, name={self.names}, lastnames={self.lastnames}, phone={self.phone}, last_state={self.last_state}, saraguros_id={self.saraguros_id}, created_at={self.created_at}, updated_at={self.updated_at})>"
+        return f"<UserModel(id={self.id}, ci={self.ci}, name={self.names}, lastnames={self.lastnames}, phone={self.phone}, last_state={self.last_state}, created_at={self.created_at}, updated_at={self.updated_at})>"
 
 
 class Message(Base):
