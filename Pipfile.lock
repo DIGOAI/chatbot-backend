@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "20b29e7338947f79c9543559fbf28f3965abe8e86a9adf94a06dd7ed8766120c"
+            "sha256": "790fd6a2a1450c1b664ed3615bbd328fca6f6774e574bfcd5c9dd790752480eb"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -813,6 +813,15 @@
                 "sha256:f5971a9226b701070a4bf2c38c89e5a3f0d64de8debda981d1db98583009122a"
             ],
             "version": "==1.0.0"
+        },
+        "python-multipart": {
+            "hashes": [
+                "sha256:e9925a80bb668529f1b67c7fdb0a5dacdd7cbfc6fb0bff3ea443fe22bdd62132",
+                "sha256:ee698bab5ef148b0a760751c261902cd096e57e10558e11aca17646b74ee1c18"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.7'",
+            "version": "==0.0.6"
         },
         "pytz": {
             "hashes": [
