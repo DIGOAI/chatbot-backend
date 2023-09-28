@@ -10,14 +10,15 @@ T = TypeVar("T")
 class GenericResponse(BaseModel, Generic[T]):
     message: str
     status: Literal["ok"] | Literal["error"]
-    data: T
+    data: Optional[T]
     error: Optional[str] = None
 
 
-def create_response(data: T,  # type: ignore
+def create_response(data: Optional[T],  # type: ignore
                     message: str = "Success",
                     status_code: int = STATUS.HTTP_200_OK,
-                    status: Literal["ok"] | Literal["error"] = "ok", error: str | None = None) -> JSONResponse:
+                    status: Literal["ok"] | Literal["error"] = "ok",
+                    error: str | None = None) -> JSONResponse:
     """Return a success response
 
     Parameters:
