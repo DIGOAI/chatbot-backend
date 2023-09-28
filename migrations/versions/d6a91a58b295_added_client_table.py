@@ -28,8 +28,8 @@ def upgrade() -> None:
                     sa.Column('phone', sa.String(length=13), nullable=False),
                     sa.Column('last_state', sa.String(length=10), nullable=True),
                     sa.Column('saraguros_id', sa.Integer(), nullable=True),
-                    sa.Column('created_at', sa.DateTime(), nullable=False),
-                    sa.Column('updated_at', sa.DateTime(), nullable=False),
+                    sa.Column('created_at', sa.DateTime(timezone=True), nullable=False),
+                    sa.Column('updated_at', sa.DateTime(timezone=True), nullable=False),
                     sa.PrimaryKeyConstraint('id')
                     )
     op.create_index(op.f('ix_clients_id'), 'clients', ['id'], unique=False)
