@@ -17,7 +17,7 @@ class SaragurosServiceEndpoint(str, Enum):
     GET_CLIENTS = "GetClientsDetails"
 
 
-class SaragurosService:
+class SaragurosNetService:
     """Class to manage the connection to the Saraguros API."""
 
     def __init__(self, token: str):
@@ -55,7 +55,7 @@ class SaragurosService:
             Logger.error(f"Error parsing response from {url}")
             return None
 
-    def activar_servicio(self, usuario_id: str) -> Optional[dict[str, Any]]:
+    def activate_service(self, usuario_id: str) -> Optional[dict[str, Any]]:
         """Activate the service for a user.
 
         Parameters:
@@ -90,7 +90,7 @@ class SaragurosService:
 
         return self._make_request(SaragurosServiceEndpoint.NEW_TICKET, data)
 
-    def getUsuarioData(self, cedula: str):
+    def get_client_data(self, cedula: str):
         """Get the data of a user.
 
         Parameters:
@@ -109,9 +109,9 @@ if __name__ == "__main__":
     token = "R3Z4SlNrWVZvZzFsV1pvTTQ3ci9wZz09"
     usuario_id = "34fdd32g-4f3d-4f3d-4f3d-4f3d4f3d4f3d"
 
-    service = SaragurosService(token)
+    service = SaragurosNetService(token)
 
-    activar_result = service.activar_servicio(usuario_id)
+    activar_result = service.activate_service(usuario_id)
     print("Resultado de activar_servicio:", activar_result)
 
     nuevo_ticket = Ticket(

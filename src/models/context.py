@@ -2,7 +2,7 @@ from typing import TypedDict
 
 from src.models.event import Event
 from src.services.chat_api import ChatApiService
-from src.services.saragurosnet import SaragurosService
+from src.services.saragurosnet import SaragurosNetService
 from src.services.twilio import TwilioService
 
 
@@ -15,5 +15,5 @@ class ContextType(TypedDict):
     DATA_USER_CI: str | None
     DATA_LAST_STATE: str
     SERVICE_API: ChatApiService
-    SERVICE_SARAGUROS: SaragurosService
+    SERVICE_SARAGUROS: SaragurosNetService
     SERVICE_TWILIO: TwilioService
