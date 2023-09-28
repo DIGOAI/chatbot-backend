@@ -1,9 +1,9 @@
 from fastapi import status as STATUS
 
-from src.db import Session
 from src.models import LoginSchema, RegisterSchema, TokenSchema, User, create_response
 from src.models.user import UserRole
 from src.repositories import UserRepository
+from src.use_cases.base_use_cases import UseCaseBase
 from src.utils import decrypt, signJWT
 
 
@@ -36,11 +36,6 @@ def create_token_data(user: User) -> TokenSchema:
     )
 
     return TokenSchema(access_token=access_token)
-
-
-class UseCaseBase():
-    def __init__(self):
-        self._session = Session
 
 
 class RegisterNewUser(UseCaseBase):

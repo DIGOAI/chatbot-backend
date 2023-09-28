@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any, Optional
 
-from pydantic import BaseModel, field_serializer
+from pydantic import BaseModel, Field, field_serializer
 
 
 class ClientBase(BaseModel):
@@ -16,12 +16,12 @@ class ClientBase(BaseModel):
     last_state (str): The last state of the user
     """
 
-    ci: Optional[str]
-    names: Optional[str]
-    lastnames: Optional[str]
-    phone: str
-    saraguros_id: Optional[int]
-    last_state: Optional[str]
+    ci: Optional[str] = Field(None)
+    names: Optional[str] = Field(None)
+    lastnames: Optional[str] = Field(None)
+    phone: str = Field(...)
+    saraguros_id: Optional[int] = Field(None)
+    last_state: Optional[str] = Field(None)
 
 
 class ClientInsert(ClientBase):
