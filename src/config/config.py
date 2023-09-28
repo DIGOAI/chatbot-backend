@@ -22,11 +22,11 @@ class Config:
     def _load_config(self):
         """ Load environment variables. """
 
-        self.DB_USER = os.environ.get("DB_USER", "postgres")
-        self.DB_PASSWORD = os.environ.get("DB_PASSWORD", "")
-        self.DB_HOST = os.environ.get("DB_HOST", "localhost")
-        self.DB_PORT = os.environ.get("DB_PORT", "5432")
-        self.DB_NAME = os.environ.get("DB_NAME", "postgres")
+        self.DB_USER = os.environ.get("PGUSER", "postgres")
+        self.DB_PASSWORD = os.environ.get("PGPASSWORD", "")
+        self.DB_HOST = os.environ.get("PGHOST", "localhost")
+        self.DB_PORT = os.environ.get("PGPORT", "5432")
+        self.DB_NAME = os.environ.get("PGDATABASE", "postgres")
 
         self.SARAGUROS_API_URL = os.environ.get("SARAGUROS_API_URL", "")
         self.SARAGUROS_API_TOKEN = os.environ.get("SARAGUROS_API_TOKEN", "")
