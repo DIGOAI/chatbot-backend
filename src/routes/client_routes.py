@@ -1,15 +1,17 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi import status as STATUS
 
 from src.db import Session
 from src.logger import Logger
+from src.middlewares import APITokenAuth, JWTBearer
+from src.middlewares.jwt_bearer import Role
 from src.models import Client, ClientInsert, GenericResponse, create_response
 from src.services import ClientService
 
 router = APIRouter(prefix="/client", tags=["Client"])
 
 
-@router.get("/")
+@router.get("/", dependencies=[Depends(JWTBearer(Role.ADMIN))])
 def get_clients() -> list[Client]:
     with Session.begin() as session:
         client_service = ClientService(session)
@@ -18,7 +20,7 @@ def get_clients() -> list[Client]:
     return clients
 
 
-@router.post("/", response_model=GenericResponse[Client], status_code=STATUS.HTTP_201_CREATED)
+@router.post("/", response_model=GenericResponse[Client], status_code=STATUS.HTTP_201_CREATED, dependencies=[Depends(APITokenAuth())])
 def add_client(client_insert: ClientInsert):
     Logger.info(f"Client: {client_insert}")
 
