@@ -40,6 +40,8 @@ class Config:
         self.JWT_SECRET = os.environ.get("JWT_SECRET", default="")
         self.JWT_ALGORITHM = os.environ.get("JWT_ALGORITHM", "HS256")
 
+        self.X_API_KEY = os.environ.get("X_API_KEY", "x-api-key")
+
         try:
             self._verify()
         except ValueError as e:
@@ -59,6 +61,7 @@ class Config:
             self.ALLOWED_ORIGINS,
             self.JWT_SECRET,
             self.JWT_ALGORITHM,
+            self.X_API_KEY
         ]
 
         # Get attribute names in string format
