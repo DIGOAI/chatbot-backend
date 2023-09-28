@@ -5,6 +5,7 @@ from fastapi import APIRouter, FastAPI
 
 from src.routes.auth_routes import router as auth_router
 from src.routes.client_routes import router as client_router
+from src.routes.external_routes import router as external_router
 from src.routes.message_routes import router as message_router
 from src.routes.root_routes import router as root_router
 
@@ -25,6 +26,7 @@ _routes: list[_RoutesType] = [
     {"router": auth_router},
     {"router": client_router, "prefix": _default_prefix},
     {"router": message_router, "prefix": _default_prefix},
+    {"router": external_router, "prefix": _default_prefix},
 ]
 
 
