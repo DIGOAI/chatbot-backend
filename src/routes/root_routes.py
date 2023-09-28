@@ -17,3 +17,11 @@ async def swagger_ui_html():
 @router.get("/", tags=["Default"], include_in_schema=True)
 def index():
     return RedirectResponse(url="/api/v1")
+
+
+@router.get("/api/v1", tags=["Default"], include_in_schema=True)
+def index_v1():
+    return {
+        "message": "Welcome to the DIGO Chatbot-API",
+        "documentation": "/docs"
+    }
