@@ -28,9 +28,8 @@ class MessageRepository:
         messages = self._session.scalars(stmt).all()
         return [Message.model_validate(message) for message in messages]
 
-    def get_messages_by_company(self, company_id: str, limit: int | None = None) -> list[Message]:
-        stmt = select(MessageModel).join(MessageModel.client).filter(
-            MessageModel.client.has(company_id=company_id)).limit(limit)
+    def get_last_messages(self, limit: int | None = None) -> list[Message]:
+        stmt = select(MessageModel).limit(limit)
         messages = self._session.scalars(stmt).all()
         return [Message.model_validate(message) for message in messages]
 

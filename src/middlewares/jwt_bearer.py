@@ -7,9 +7,9 @@ from src.utils import decodeJWT
 
 
 class Role(IntEnum):
-    PUBLIC = 1
-    USER = 2
-    ADMIN = 3
+    WORKER = 1
+    ADMIN = 2
+    SUPPORT = 3
 
 
 class AuthCredentials:
@@ -19,7 +19,7 @@ class AuthCredentials:
 
 
 class JWTBearer(HTTPBearer):
-    def __init__(self, min_role: Role = Role.PUBLIC, auto_error: bool = True):
+    def __init__(self, min_role: Role = Role.WORKER, auto_error: bool = True):
         super(JWTBearer, self).__init__(auto_error=auto_error)
         self.min_role = min_role
 
