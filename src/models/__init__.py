@@ -5,6 +5,7 @@ from src.models.message import Message, MessageInsert
 from src.models.receipt import Receipt
 from src.models.responses import GenericResponse, create_response
 from src.models.ticket import Ticket
+from src.models.user import User, UserRole
 
 __all__ = [
     "Client",
@@ -17,4 +18,6 @@ __all__ = [
     "MessageInsert",
     "Receipt",
     "Ticket",
+    "User",
+    "UserRole",
 ]
