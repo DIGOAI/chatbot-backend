@@ -18,7 +18,7 @@ class _APIVersion(str, Enum):
     v1 = "v1"
 
 
-_default_prefix = f"/api/{_APIVersion.v1.value}" + "/{company}"
+_default_prefix = f"/api/{_APIVersion.v1.value}"
 
 _routes: list[_RoutesType] = [
     {"router": root_router},
