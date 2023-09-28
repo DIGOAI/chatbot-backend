@@ -1,3 +1,4 @@
+from src.models.auth import LoginSchema, RegisterSchema, TokenSchema
 from src.models.client import Client, ClientInsert
 from src.models.context import ContextType
 from src.models.event import Event
@@ -14,10 +15,13 @@ __all__ = [
     "create_response",
     "Event",
     "GenericResponse",
+    "LoginSchema",
     "Message",
     "MessageInsert",
     "Receipt",
+    "RegisterSchema",
     "Ticket",
+    "TokenSchema",
     "User",
     "UserRole",
 ]
