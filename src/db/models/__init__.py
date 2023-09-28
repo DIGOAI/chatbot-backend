@@ -1,24 +1,18 @@
 from datetime import datetime
-from enum import Enum
 
 from sqlalchemy import DateTime
 from sqlalchemy import Enum as EnumType
 from sqlalchemy import ForeignKey, Integer, String, Text, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
+from src.models.user import UserRole
+
 __all__ = [
     'Base',
     'Client',
     'Message',
-    'User',
-    'UserRole'
+    'User'
 ]
-
-
-class UserRole(str, Enum):
-    WORKER = "WORKER"
-    ADMIN = "ADMIN"
-    SUPPORT = "SUPPORT"
 
 
 class Base(DeclarativeBase):
