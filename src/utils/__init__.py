@@ -1,5 +1,3 @@
-from src.utils.strings_utils import get_phone_and_service
+from src.utils.jwt_functions import decodeJWT, signJWT
 
-__all__ = [
-    'get_phone_and_service'
-]
+__all__ = ["decodeJWT", "signJWT"]

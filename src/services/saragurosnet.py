@@ -51,7 +51,7 @@ class SaragurosService:
         try:
             Logger.info(f"Parsing response from {url}")
             return response.json()
-        except:
+        except BaseException:
             Logger.error(f"Error parsing response from {url}")
             return None
 

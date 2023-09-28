@@ -4,24 +4,28 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-twilio = "==8.7.0"
+twilio = "==8.9.0"
 requests = "==2.31.0"
-openai = "==0.27.9"
-typing-extensions = "==4.7.1"
+openai = "==0.28.0"
+typing-extensions = "==4.8.0"
 pydantic = "==2.3.0"
 psycopg = {extras = ["binary"], version = "==3.1.10"}
 fastapi = "==0.103.1"
 uvicorn = {extras = ["standard"], version = "==0.23.2"}
+sqlalchemy = "==2.0.21"
 
 [dev-packages]
 autopep8 = "==2.0.4"
 packaging = "==23.1"
 mypy = "==1.5.1"
 twilio-stubs = "==0.2.0"
+alembic = "==1.12.0"
+alembic-postgresql-enum = "==0.1.8"
 
 [scripts]
-handler = "python ./handler.py"
-test_db = "python ./test_db.py"
+dev = "uvicorn main:app --reload --port 8000 --no-access-log"
+migrate = "alembic upgrade head"
+make_migrations = "alembic revision --autogenerate -m"
 
 [requires]
 python_version = "3.11"
