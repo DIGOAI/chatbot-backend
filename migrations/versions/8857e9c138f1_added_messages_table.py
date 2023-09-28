@@ -25,8 +25,8 @@ def upgrade() -> None:
                     sa.Column('sender', sa.String(length=13), nullable=False),
                     sa.Column('message', sa.Text(), nullable=False),
                     sa.Column('client_id', sa.Integer(), nullable=False),
-                    sa.Column('created_at', sa.DateTime(), nullable=False),
-                    sa.ForeignKeyConstraint(['client_id'], ['clients.id'], ),
+                    sa.Column('created_at', sa.DateTime(timezone=True), nullable=False),
+                    sa.ForeignKeyConstraint(['client_id'], ['clients.id'], ondelete='CASCADE'),
                     sa.PrimaryKeyConstraint('id')
                     )
     op.create_index(op.f('ix_messages_id'), 'messages', ['id'], unique=False)
