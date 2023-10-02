@@ -21,3 +21,8 @@ class ClientRepository():
         self._session.refresh(client_model)
         client_created = Client.model_validate(client_model)
         return client_created
+
+    def get_client_by_phone(self, client_phone: str):
+        stmt = select(ClientModel).where(ClientModel.phone == client_phone)
+        client = self._session.scalars(stmt).first()
+        return Client.model_validate(client)
