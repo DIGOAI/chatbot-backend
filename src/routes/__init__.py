@@ -8,6 +8,7 @@ from src.routes.client_routes import router as client_router
 from src.routes.external_routes import router as external_router
 from src.routes.message_routes import router as message_router
 from src.routes.root_routes import router as root_router
+from src.routes.twilio_routes import router as twilio_router
 
 
 class _RoutesType(TypedDict):
@@ -23,10 +24,11 @@ _default_prefix = f"/api/{_APIVersion.v1.value}"
 
 _routes: list[_RoutesType] = [
     {"router": root_router},
-    {"router": auth_router},
+    {"router": auth_router, "prefix": _default_prefix},
     {"router": client_router, "prefix": _default_prefix},
     {"router": message_router, "prefix": _default_prefix},
     {"router": external_router, "prefix": _default_prefix},
+    {"router": twilio_router, "prefix": _default_prefix},
 ]
 
 
