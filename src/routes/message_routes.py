@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends
+from typing import Annotated
+
+from fastapi import APIRouter, Body, Depends, HTTPException
 
 from src.middlewares import APITokenAuth, JWTBearer
 from src.middlewares.jwt_bearer import Role
@@ -16,3 +18,8 @@ def get_messages(limit: int = 10):
 @router.post("/", response_model=GenericResponse[Message], dependencies=[Depends(APITokenAuth())])
 def save_message(message: MessageInsert):
     return write_message(message)
+
+
+@router.post("/messages/send", dependencies=[Depends(APITokenAuth())])
+def send_message(client_id: Annotated[str, Body(...)], message: Annotated[str, Body(...)]):
+    raise HTTPException(status_code=501, detail="Not implemented")

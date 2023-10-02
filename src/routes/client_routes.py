@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends
+from typing import Annotated
+
+from fastapi import APIRouter, Body, Depends, HTTPException
 from fastapi import status as STATUS
 
 from src.middlewares import APITokenAuth, JWTBearer
@@ -25,3 +27,13 @@ def add_client(client_insert: ClientInsert):
 def get_client_by_phone(client_phone: str):
     get_client_by_phone = GetClientByPhone()
     return get_client_by_phone(client_phone)
+
+
+@router.post("/activate", dependencies=[Depends(APITokenAuth())])
+def activate_client(client_id: Annotated[str, Body(...)]):
+    raise HTTPException(status_code=501, detail="Not implemented")
+
+
+@router.post("/deactivate", dependencies=[Depends(APITokenAuth())])
+def deactivate_client(client_id: Annotated[str, Body(...)]):
+    raise HTTPException(status_code=501, detail="Not implemented")
