@@ -2,6 +2,8 @@ from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 
+from src.logger import Logger
+
 
 class ErrorHandler(BaseHTTPMiddleware):
     def __init__(self, app: FastAPI) -> None:
@@ -11,6 +13,8 @@ class ErrorHandler(BaseHTTPMiddleware):
         try:
             return await call_next(request)
         except Exception as e:
+            Logger.error(f"Error {e.__class__.__name__}: {str(e)}", "error-handler")
+
             return JSONResponse(
                 status_code=500,
                 content={
