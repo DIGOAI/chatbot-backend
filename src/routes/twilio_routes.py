@@ -20,4 +20,4 @@ def twilio_hook(webhook: Annotated[TwilioWebHook, Depends()]):
 
     content = response_content.format(message=json.dumps(webhook.__dict__, indent=2))
 
-    return Response(content, media_type="application/xml")
+    return Response(content, media_type="text/xml")
