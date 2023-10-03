@@ -24,7 +24,7 @@ jobs:
           architecture: x64
 
       - name: Print Python 3.11.5 path content
-        run: ls ${{env.Python_ROOT_DIR}}
+        run: ls -al ${{env.Python_ROOT_DIR}}
 
       - name: Setup Pipenv with Python 3.11.5
         uses: VaultVulp/action-pipenv@v2.0.1
