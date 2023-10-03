@@ -1,0 +1,23 @@
+name: Deploy Migrations to Staging
+
+on:
+  push:
+    branches:
+      - development
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: development
+
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Apply migrations to DB dev
+        uses: VaultVulp/action-pipenv@v2.0.1
+        with:
+          command: migrate
