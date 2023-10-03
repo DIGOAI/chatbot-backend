@@ -17,7 +17,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Install all packages
+        uses: VaultVulp/action-pipenv@v2.0.1
+        with:
+          command: install --dev
+
       - name: Apply migrations to DB dev
         uses: VaultVulp/action-pipenv@v2.0.1
         with:
-          command: migrate
+          command: run migrate
