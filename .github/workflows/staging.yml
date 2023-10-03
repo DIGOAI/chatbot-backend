@@ -26,7 +26,7 @@ jobs:
       - name: Setup Pipenv with Python 3.11.5
         uses: VaultVulp/action-pipenv@v2.0.1
         with:
-          command: pipenv --python {{env.Python_ROOT_DIR}}
+          command: --python {{env.Python_ROOT_DIR}}
 
       - name: Install all packages
         uses: VaultVulp/action-pipenv@v2.0.1
