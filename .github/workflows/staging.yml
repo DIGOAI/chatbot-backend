@@ -4,12 +4,11 @@ on:
   push:
     branches:
       - development
-  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: development
+    environment: developmet
 
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
@@ -21,7 +20,6 @@ jobs:
         uses: palewire/install-python-pipenv-pipfile@v3
         with:
           python-version: 3.11.5
-          architecture: x64
 
       - name: Install all packages
         run: pipenv install --dev
