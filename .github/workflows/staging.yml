@@ -28,6 +28,9 @@ jobs:
         with:
           command: --python ${{env.Python_ROOT_DIR}}/python.exe
 
+      - name: Print Python 3.11.5 path content
+        run: ls ${{env.Python_ROOT_DIR}}
+
       - name: Install all packages
         uses: VaultVulp/action-pipenv@v2.0.1
         with:
