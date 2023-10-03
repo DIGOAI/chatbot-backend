@@ -22,11 +22,7 @@ class Config:
     def _load_config(self):
         """ Load environment variables. """
 
-        self.DB_USER = os.environ.get("PGUSER", "postgres")
-        self.DB_PASSWORD = os.environ.get("PGPASSWORD", "")
-        self.DB_HOST = os.environ.get("PGHOST", "localhost")
-        self.DB_PORT = os.environ.get("PGPORT", "5432")
-        self.DB_NAME = os.environ.get("PGDATABASE", "postgres")
+        self.DATABASE_URL = os.environ.get("DATABASE_URL", "")
 
         self.SARAGUROS_API_URL = os.environ.get("SARAGUROS_API_URL", "")
         self.SARAGUROS_API_TOKEN = os.environ.get("SARAGUROS_API_TOKEN", "")
@@ -40,7 +36,7 @@ class Config:
         self.JWT_SECRET = os.environ.get("JWT_SECRET", default="")
         self.JWT_ALGORITHM = os.environ.get("JWT_ALGORITHM", "HS256")
 
-        self.X_API_KEY = os.environ.get("X_API_KEY", "x-api-key")
+        self.X_API_KEY = os.environ.get("X_API_KEY", "")
 
         try:
             self._verify()
@@ -52,33 +48,23 @@ class Config:
         """ Verify that all required environment variables are set. """
 
         ATTRIBUTES_TO_VERIFY = [
-            self.DB_PASSWORD,
-            self.SARAGUROS_API_URL,
-            self.SARAGUROS_API_TOKEN,
-            self.OCR_LAMBDA_URL,
-            self.TWILIO_SID,
-            self.TWILIO_TOKEN,
-            self.ALLOWED_ORIGINS,
-            self.JWT_SECRET,
-            self.JWT_ALGORITHM,
-            self.X_API_KEY
-        ]
-
-        # Get attribute names in string format
-        ATTRIBUTES_TO_VERIFY_NAMES = [
-            attr_name
-            for attr_name in dir(self)
-            if not callable(getattr(self, attr_name)) and not attr_name.startswith("__")
+            "DATABASE_URL",
+            "SARAGUROS_API_URL",
+            "SARAGUROS_API_TOKEN",
+            "OCR_LAMBDA_URL",
+            "TWILIO_SID",
+            "TWILIO_TOKEN",
+            "JWT_SECRET",
+            "X_API_KEY"
         ]
 
         # Verify that all attributes are set
-        for attr in ATTRIBUTES_TO_VERIFY:
-            # Get attribute name
-            attr_name = ATTRIBUTES_TO_VERIFY_NAMES[ATTRIBUTES_TO_VERIFY.index(attr)]
+        for attr_name in ATTRIBUTES_TO_VERIFY:
+            # Get attribute
+            attr = getattr(self, attr_name)
 
             # Verify attributes
-            if isinstance(attr, str):
-                if not attr.strip():
-                    raise ValueError(f"{attr_name} is not set")
+            if isinstance(attr, str) and attr.strip():  # type: ignore
+                pass
             elif not attr:
                 raise ValueError(f"{attr_name} is not set")
