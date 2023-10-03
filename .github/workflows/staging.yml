@@ -12,6 +12,15 @@ jobs:
 
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SARAGUROS_API_URL: ${{ vars.SARAGUROS_API_URL }}
+      SARAGUROS_API_TOKEN: ${{ vars.SARAGUROS_API_TOKEN }}
+      OCR_LAMBDA_URL: ${{ vars.OCR_LAMBDA_URL }}
+      OPENAI_KEY: ${{ vars.OPENAI_KEY }}
+      TWILIO_SID: ${{ vars.TWILIO_SID }}
+      TWILIO_TOKEN: ${{ vars.TWILIO_TOKEN }}
+      ALLOWED_ORIGINS: ${{ vars.ALLOWED_ORIGINS }}
+      JWT_SECRET: ${{ vars.JWT_SECRET }}
+      X_API_KEY: ${{ vars.X_API_KEY }}
 
     steps:
       - uses: actions/checkout@v3
