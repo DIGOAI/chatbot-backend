@@ -27,4 +27,4 @@ jobs:
         run: pipenv install --dev
 
       - name: Apply migrations to DB dev
-        run: run migrate
+        run: pipenv run migrate
