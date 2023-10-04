@@ -2,10 +2,9 @@ from typing import Annotated
 
 from fastapi import APIRouter, Body, Depends, HTTPException
 
-from src.middlewares import APITokenAuth, JWTBearer
-from src.middlewares.jwt_bearer import Role
-from src.models import GenericResponse, Message, MessageInsert
-from src.use_cases import get_last_messages, write_message
+from src.api.cases import get_last_messages, write_message
+from src.api.middlewares import APITokenAuth, JWTBearer
+from src.common.models import GenericResponse, Message, MessageInsert
 
 router = APIRouter(prefix="/message", tags=["Message"])
 

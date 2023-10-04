@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Body, Depends, HTTPException, UploadFile
 
-from src.middlewares import APITokenAuth
+from src.api.middlewares import APITokenAuth
 
 router = APIRouter(prefix="/external", tags=["External"])
 

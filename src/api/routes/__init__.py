@@ -3,12 +3,12 @@ from typing import NotRequired, TypedDict
 
 from fastapi import APIRouter, FastAPI
 
-from src.routes.auth_routes import router as auth_router
-from src.routes.client_routes import router as client_router
-from src.routes.external_routes import router as external_router
-from src.routes.message_routes import router as message_router
-from src.routes.root_routes import router as root_router
-from src.routes.twilio_routes import router as twilio_router
+from src.api.routes.auth_routes import router as auth_router
+from src.api.routes.client_routes import router as client_router
+from src.api.routes.external_routes import router as external_router
+from src.api.routes.message_routes import router as message_router
+from src.api.routes.root_routes import router as root_router
+from src.api.routes.twilio_routes import router as twilio_router
 
 
 class _RoutesType(TypedDict):

@@ -3,10 +3,10 @@ from typing import Annotated
 from fastapi import APIRouter, Body, Depends, HTTPException
 from fastapi import status as STATUS
 
-from src.middlewares import APITokenAuth, JWTBearer
-from src.middlewares.jwt_bearer import Role
-from src.models import Client, ClientInsert, GenericResponse
-from src.use_cases import GetClientByPhone, GetClients, RegisterNewClient
+from src.api.cases import GetClientByPhone, GetClients, RegisterNewClient
+from src.api.middlewares import APITokenAuth, JWTBearer
+from src.api.middlewares.jwt_bearer import Role
+from src.common.models import Client, ClientInsert, GenericResponse
 
 router = APIRouter(prefix="/client", tags=["Client"])
 

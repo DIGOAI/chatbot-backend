@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Body
 
-from src.models import GenericResponse, LoginSchema, RegisterSchema, TokenSchema
-from src.use_cases import LoginUser, RegisterNewUser
+from src.api.cases import LoginUser, RegisterNewUser
+from src.common.models import GenericResponse, LoginSchema, RegisterSchema, TokenSchema
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 

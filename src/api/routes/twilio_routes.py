@@ -3,7 +3,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Response
 
-from src.models import TwilioWebHook
+from src.common.models import TwilioWebHook
 
 router = APIRouter(prefix="/twilio", tags=["Twilio"])
 
