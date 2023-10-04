@@ -19,7 +19,7 @@ def say_goodbye(name: str, receiver: str):
     twilio.send_message(MessageType.END_CONVERSATION.format(name=name), receiver=receiver)
 
 
-@tree.add_action("0.0", condition=lambda _: True, end=False)
+@tree.add_action("0.0", condition=lambda ctx: ctx.client.id == -1, end=False)
 def load_context(context: Context):
     Logger.info("Loading context")
 
