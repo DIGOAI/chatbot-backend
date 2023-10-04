@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 
-from src.logger import Logger
+from src.common.logger import Logger
 
 
 class LoggerHandler(BaseHTTPMiddleware):

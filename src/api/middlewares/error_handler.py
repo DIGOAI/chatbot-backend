@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 
-from src.logger import Logger
+from src.common.logger import Logger
 
 
 class ErrorHandler(BaseHTTPMiddleware):

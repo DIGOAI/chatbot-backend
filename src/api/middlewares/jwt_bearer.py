@@ -3,7 +3,7 @@ from enum import IntEnum
 from fastapi import HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from src.utils import decodeJWT
+from src.api.utils import decodeJWT
 
 
 class Role(IntEnum):
