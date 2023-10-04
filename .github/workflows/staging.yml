@@ -22,7 +22,7 @@ jobs:
       JWT_SECRET: ${{ vars.JWT_SECRET }}
       X_API_KEY: ${{ vars.X_API_KEY }}
       TWILIO_SENDER: ${{ vars.TWILIO_SENDER }}
-      BACKEND_URL: ${{ vars.BACKEND_URL }}
+      RAILWAY_PUBLIC_DOMAIN: ${{ vars.RAILWAY_PUBLIC_DOMAIN }}
 
     steps:
       - uses: actions/checkout@v3

@@ -23,7 +23,7 @@ class Config:
         """ Load environment variables. """
 
         self.DATABASE_URL = os.environ.get("DATABASE_URL", "")
-        self.BACKEND_URL = os.environ.get("BACKEND_URL", "")
+        self.BACKEND_URL = os.environ.get("RAILWAY_PUBLIC_DOMAIN", "")
 
         self.SARAGUROS_API_URL = os.environ.get("SARAGUROS_API_URL", "")
         self.SARAGUROS_API_TOKEN = os.environ.get("SARAGUROS_API_TOKEN", "")
