@@ -4,9 +4,9 @@ from typing import Any, Optional
 
 import requests
 
+from src.common.logger import Logger
+from src.common.models.ticket import Ticket
 from src.config import Config
-from src.logger import Logger
-from src.models.ticket import Ticket
 
 
 class SaragurosServiceEndpoint(str, Enum):

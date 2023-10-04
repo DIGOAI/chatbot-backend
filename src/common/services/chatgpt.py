@@ -107,7 +107,7 @@ class ChatGPTService(object):
 
         prompt = PROMPT.format(message=msg)
 
-        completion = self._make_completion(prompt=prompt)
+        completion = self._make_completion(prompt=prompt)  # type: ignore
 
         # TODO: Review this casts. Review the replacement of the regex.
         res = cast(str, cast(dict[str, Any], completion)[

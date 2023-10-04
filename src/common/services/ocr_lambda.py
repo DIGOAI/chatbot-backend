@@ -4,8 +4,8 @@ from typing import Any, cast
 
 import requests
 
+from src.common.models.receipt import Receipt
 from src.config import Config
-from src.models.receipt import Receipt
 
 
 class OCRLambdaService(object):
