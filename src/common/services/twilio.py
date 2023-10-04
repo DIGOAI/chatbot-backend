@@ -37,14 +37,23 @@ class TwilioService(object):
     def receiver(self, value: str) -> None:
         self._receiver = value
 
-    def __call__(self, msg: str, sender: Optional[str] = None, receiver: Optional[str] = None) -> MessageInstance:
+    def send_message(self, msg: str, sender: Optional[str] = None, receiver: Optional[str] = None, media_url: Optional[str | list[str]] = None) -> MessageInstance:
         """Send a message.
 
         Parameters:
         msg (str): The message to send
         sender (str): The sender phone number
         receiver (str): The receiver phone number
+        media_url (str | list[str]): The media url to send JPEG, JPG, PNG, or GIF (5Mb max)
         """
+        if media_url:
+            return cast(MessageInstance, self._client.messages.create(  # type: ignore
+                body=msg,
+                from_=sender or self._sender,
+                to=receiver or self._receiver,
+                media_url=media_url
+            ))
+
         return cast(MessageInstance, self._client.messages.create(  # type: ignore
             body=msg,
             from_=sender or self._sender,
