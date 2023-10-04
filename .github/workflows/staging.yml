@@ -21,6 +21,8 @@ jobs:
       ALLOWED_ORIGINS: ${{ vars.ALLOWED_ORIGINS }}
       JWT_SECRET: ${{ vars.JWT_SECRET }}
       X_API_KEY: ${{ vars.X_API_KEY }}
+      TWILIO_SENDER: ${{ vars.TWILIO_SENDER }}
+      BACKEND_URL: ${{ vars.BACKEND_URL }}
 
     steps:
       - uses: actions/checkout@v3
