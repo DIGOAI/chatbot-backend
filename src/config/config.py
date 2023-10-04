@@ -1,6 +1,6 @@
 import os
 
-from src.logger import Logger
+from src.common.logger import Logger
 
 Logger.add_func_names_to_ignore(["before_cursor_execute"])
 Logger.module_char_length = 25
@@ -23,6 +23,7 @@ class Config:
         """ Load environment variables. """
 
         self.DATABASE_URL = os.environ.get("DATABASE_URL", "")
+        self.BACKEND_URL = os.environ.get("BACKEND_URL", "")
 
         self.SARAGUROS_API_URL = os.environ.get("SARAGUROS_API_URL", "")
         self.SARAGUROS_API_TOKEN = os.environ.get("SARAGUROS_API_TOKEN", "")
@@ -31,6 +32,8 @@ class Config:
 
         self.TWILIO_SID = os.environ.get("TWILIO_SID", "")
         self.TWILIO_TOKEN = os.environ.get("TWILIO_TOKEN", "")
+        self.TWILIO_SENDER: str = os.environ.get("TWILIO_SENDER", "")
+
         self.ALLOWED_ORIGINS = os.environ.get("ALLOWED_ORIGINS", "*").split(",")
 
         self.JWT_SECRET = os.environ.get("JWT_SECRET", default="")
@@ -49,12 +52,13 @@ class Config:
 
         ATTRIBUTES_TO_VERIFY = [
             "DATABASE_URL",
-            "SARAGUROS_API_URL",
-            "SARAGUROS_API_TOKEN",
+            "JWT_SECRET",
             "OCR_LAMBDA_URL",
+            "SARAGUROS_API_TOKEN",
+            "SARAGUROS_API_URL",
+            "TWILIO_SENDER",
             "TWILIO_SID",
             "TWILIO_TOKEN",
-            "JWT_SECRET",
             "X_API_KEY"
         ]
 

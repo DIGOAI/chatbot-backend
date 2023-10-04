@@ -1,8 +1,8 @@
-from src import create_app
-from src.version import __VERSION__
+from src import api, chatbot
 
-app = create_app(
+app = api.create_app(
     title="ChatbotAPI | DIGO",
-    version=__VERSION__,
-    description="This is the API for the Chatbot project.",
+    version=api.__VERSION__,
+    description=f"""Welcome to the **REST API** for the **Saragurosnet - Chatbot** service.
+    \n\nPowered by `Digo-chatbot v{chatbot.__VERSION__}`""",
 )
