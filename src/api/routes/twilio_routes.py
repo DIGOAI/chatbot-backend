@@ -1,23 +1,18 @@
-import json
+from datetime import datetime
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Response
+from fastapi import APIRouter, Depends
 
-from src.common.models import TwilioWebHook
+from src.common.models import Client, TwilioWebHook
+from src.saragurosnet.bussiness import Context, tree
 
 router = APIRouter(prefix="/twilio", tags=["Twilio"])
 
 
 @router.post("/hook")
 def twilio_hook(webhook: Annotated[TwilioWebHook, Depends()]):
-    response_content = """<?xml version="1.0" encoding="UTF-8"?>
-    <Response>
-        <Message>
-        {message}
-        </Message>
-    </Response>
-    """
+    default_user = Client(id=-1, ci="", names="", lastnames="", phone="", last_state="",
+                          saraguros_id=-1, created_at=datetime.utcnow(), updated_at=datetime.utcnow())
 
-    content = response_content.format(message=json.dumps(webhook.__dict__, indent=2))
-
-    return Response(content, media_type="text/xml")
+    tree.context = Context(webhook, default_user)
+    tree()
