@@ -1,10 +1,16 @@
 from fastapi import status as STATUS
 
-from src.models import LoginSchema, RegisterSchema, TokenSchema, User, create_response
-from src.models.user import UserRole
-from src.repositories import UserRepository
-from src.use_cases.base_use_cases import UseCaseBase
-from src.utils import decrypt, signJWT
+from src.api.cases.base_use_cases import UseCaseBase
+from src.api.repositories import UserRepository
+from src.api.utils import decrypt, signJWT
+from src.common.models import (
+    LoginSchema,
+    RegisterSchema,
+    TokenSchema,
+    User,
+    create_response,
+)
+from src.common.models.user import UserRole
 
 
 def create_token_data(user: User) -> TokenSchema:

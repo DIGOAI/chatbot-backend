@@ -1,8 +1,8 @@
 from fastapi import status as STATUS
 
-from src.db import Session
-from src.models import MessageInsert, create_response
-from src.repositories import MessageRepository
+from src.api.db import Session
+from src.api.repositories import MessageRepository
+from src.common.models import MessageInsert, create_response
 
 
 def write_message(new_message: MessageInsert):

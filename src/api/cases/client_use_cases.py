@@ -1,8 +1,8 @@
 from fastapi import status as STATUS
 
-from src.models import ClientInsert, create_response
-from src.repositories import ClientRepository
-from src.use_cases.base_use_cases import UseCaseBase
+from src.api.cases.base_use_cases import UseCaseBase
+from src.api.repositories import ClientRepository
+from src.common.models import ClientInsert, create_response
 
 
 class RegisterNewClient(UseCaseBase):
