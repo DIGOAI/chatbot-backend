@@ -1,9 +1,9 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from src.db.models import User as UserModel
-from src.models import RegisterSchema, User
-from src.utils import encrypt
+from src.api.db.models import User as UserModel
+from src.api.utils import encrypt
+from src.common.models import RegisterSchema, User
 
 
 class UserRepository():

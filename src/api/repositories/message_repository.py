@@ -1,8 +1,8 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from src.db.models import Message as MessageModel
-from src.models import Message, MessageInsert
+from src.api.db.models import Message as MessageModel
+from src.common.models import Message, MessageInsert
 
 
 class MessageRepository:
