@@ -7,6 +7,7 @@ from src.common.services import BackendService, TwilioService
 from src.config import Config
 from src.saragurosnet.bussiness.context import Context
 from src.saragurosnet.bussiness.types import MediaUrlType, MessageType, OptionType
+from src.saragurosnet.cases import GetClientByPhone
 
 tree = DecisionsTree[Context]()
 
@@ -23,12 +24,12 @@ def load_context(context: Context):
     Logger.info("Loading context")
 
     # Instace the services
-    backend = BackendService(Config.BACKEND_URL, Config.X_API_KEY)
+    get_client_by_phone = GetClientByPhone()
 
     # Get the client phone number in +5939XXXXXXXXX format and service name exp: twilio
     client_phone, _ = get_phone_and_service(context.event_twilio.from_number)
 
-    user = backend.get_user_by_phone(client_phone)
+    user = get_client_by_phone(client_phone)
 
     if not user:
         Logger.warn(f"User doesn't exists: {client_phone}")
