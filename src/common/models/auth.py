@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr, Field
 
-from src.models.user import UserRole
-from src.utils import PASSWORD_PATTERN
+from src.common.models.user import UserRole
+from src.common.utils import PASSWORD_PATTERN
 
 
 class TokenSchema(BaseModel):
