@@ -1,6 +1,6 @@
 import os
 
-from src.logger import Logger
+from src.common.logger import Logger
 
 Logger.add_func_names_to_ignore(["before_cursor_execute"])
 Logger.module_char_length = 25

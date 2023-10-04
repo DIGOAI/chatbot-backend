@@ -1,10 +1,10 @@
 from logging.config import fileConfig
 
-import alembic_postgresql_enum
+import alembic_postgresql_enum  # type: ignore
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from src.db.models import Base
+from src.api.db.models import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -39,7 +39,7 @@ def run_migrations_offline() -> None:
 
     """
     url = config.get_main_option("sqlalchemy.url")
-    context.configure(
+    context.configure(  # type: ignore
         url=url,
         target_metadata=target_metadata,
         literal_binds=True,
@@ -64,7 +64,7 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
+        context.configure(  # type: ignore
             connection=connection, target_metadata=target_metadata
         )
 

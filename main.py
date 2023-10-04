@@ -1,8 +1,7 @@
-from src import create_app
-from src.version import __VERSION__
+from src import api
 
-app = create_app(
+app = api.create_app(
     title="ChatbotAPI | DIGO",
-    version=__VERSION__,
+    version=api.__VERSION__,
     description="This is the API for the Chatbot project.",
 )
