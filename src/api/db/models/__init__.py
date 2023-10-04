@@ -5,7 +5,7 @@ from sqlalchemy import Enum as EnumType
 from sqlalchemy import ForeignKey, Integer, String, Text, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
-from src.models.user import UserRole
+from src.common.models.user import UserRole
 
 __all__ = [
     'Base',
