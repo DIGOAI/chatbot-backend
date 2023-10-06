@@ -6,6 +6,7 @@ from src.api.db.models.user import User
 
 __all__ = [
     "Base",
+    "Client",
     "Department",
     "JobRole",
     "User",
