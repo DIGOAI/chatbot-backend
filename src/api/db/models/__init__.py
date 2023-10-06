@@ -2,11 +2,13 @@ from src.api.db.models.base import Base
 from src.api.db.models.client import Client
 from src.api.db.models.department import Department
 from src.api.db.models.job_role import JobRole
+from src.api.db.models.user import User
 
 __all__ = [
     "Base",
     "Department",
     "JobRole",
+    "User",
 ]
 
 
