@@ -10,7 +10,7 @@ from src.common.models import (
     User,
     create_response,
 )
-from src.common.models.user import UserRole
+from src.common.models.user import SystemRole
 
 
 def create_token_data(user: User) -> TokenSchema:
@@ -22,17 +22,21 @@ def create_token_data(user: User) -> TokenSchema:
     }
 
     match user.role:
-        case UserRole.ADMIN:
+        case SystemRole.ADMIN:
             payload["keyType"] = "PRIVATE"
             payload["exp_time_sec"] = 60 * 60
 
-        case UserRole.WORKER:
+        case SystemRole.WORKER:
             payload["keyType"] = "PRIVATE"
             payload["exp_time_sec"] = 60 * 10
 
-        case UserRole.SUPPORT:
+        case SystemRole.SUPPORT:
             payload["keyType"] = "SERVICE"
             payload["exp_time_sec"] = 60 * 60 * 24 * 365
+
+        case SystemRole.OTHER:
+            payload["keyType"] = "SERVICE"
+            payload["exp_time_sec"] = 60 * 1
 
     access_token, _ = signJWT(
         user_id=user.email,

@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr, Field
 
-from src.common.models.user import UserRole
+from src.common.models.user import SystemRole
 from src.common.utils import PASSWORD_PATTERN
 
 
@@ -16,5 +16,5 @@ class LoginSchema(BaseModel):
 
 class RegisterSchema(BaseModel):
     email: EmailStr
-    role: UserRole = Field(default=UserRole.WORKER)
+    role: SystemRole = Field(default=SystemRole.WORKER)
     password: str = Field(min_length=8, max_length=32, pattern=PASSWORD_PATTERN)

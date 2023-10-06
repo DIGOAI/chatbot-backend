@@ -5,7 +5,8 @@ from typing import Any
 from pydantic import BaseModel, EmailStr, Field, field_serializer
 
 
-class UserRole(str, Enum):
+class SystemRole(str, Enum):
+    OTHER = "OTHER"
     WORKER = "WORKER"
     ADMIN = "ADMIN"
     SUPPORT = "SUPPORT"
@@ -14,7 +15,7 @@ class UserRole(str, Enum):
 class User(BaseModel):
     id: int
     email: EmailStr
-    role: UserRole = Field(default=UserRole.WORKER)
+    role: SystemRole = Field(default=SystemRole.WORKER)
     password: str
     created_at: datetime
     updated_at: datetime
