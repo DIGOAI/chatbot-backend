@@ -1,8 +1,10 @@
 from src.api.db.models.base import Base
 from src.api.db.models.client import Client
+from src.api.db.models.department import Department
 
 __all__ = [
     "Base",
+    "Department",
 ]
 
 
