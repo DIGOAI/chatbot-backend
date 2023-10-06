@@ -1,17 +1,8 @@
-from datetime import datetime
-
-from sqlalchemy import DateTime
-from sqlalchemy import Enum as EnumType
-from sqlalchemy import ForeignKey, Integer, String, Text, func
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-
-from src.common.models.user import UserRole
+from src.api.db.models.base import Base
+from src.api.db.models.client import Client
 
 __all__ = [
-    'Base',
-    'Client',
-    'Message',
-    'User'
+    "Base",
 ]
 
 
