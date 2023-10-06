@@ -1,7 +1,15 @@
 from datetime import datetime
+from enum import Enum
 from typing import Any, Optional
 
 from pydantic import BaseModel, field_serializer
+
+
+class MessageType(str, Enum):
+    """MessageType class to handle the message type enum."""
+
+    IN = "IN"
+    OUT = "OUT"
 
 
 class MessageBase(BaseModel):
