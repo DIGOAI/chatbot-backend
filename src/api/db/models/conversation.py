@@ -11,6 +11,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.api.db.models.base import Base, ITimeControl, IUuidPk
 
 if TYPE_CHECKING:
+    from src.api.db.models.message import Message
     from src.common.models.client import Client
 
 
@@ -44,6 +45,7 @@ class Conversation(Base, IUuidPk, ITimeControl):
     finished_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
 
     client: Mapped["Client"] = relationship(back_populates="conversations")
+    messages: Mapped[list["Message"]] = relationship(back_populates="messages")
 
     def __repr__(self) -> str:
-        return f"<Conversation(id={self.id}, client_phone={self.client_phone}, assistant_phone={self.assistant_phone}, client={self.client}, status={self.status}, created_at={self.created_at}, updated_at={self.updated_at}, finished_at={self.finished_at})>"
+        return f"<Conversation(id={self.id}, client_phone={self.client_phone}, assistant_phone={self.assistant_phone}, client={self.client}, status={self.status}, messages={self.messages}, created_at={self.created_at}, updated_at={self.updated_at}, finished_at={self.finished_at})>"
