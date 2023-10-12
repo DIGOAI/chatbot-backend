@@ -16,12 +16,12 @@ from src.db.repositories import UserRepository
 def create_token_data(user: User) -> TokenSchema:
     payload = {
         "user_id": str(user.email),
-        "role": user.role.value,
+        "role": user.system_role.value,
         "keyType": "PRIVATE",
         "exp_time_sec": 60 * 10
     }
 
-    match user.role:
+    match user.system_role:
         case SystemRole.ADMIN:
             payload["keyType"] = "PRIVATE"
             payload["exp_time_sec"] = 60 * 60

@@ -17,16 +17,20 @@ class User(Base, IUuidPk, ITimeControl):
     """UserModel class to handle the user model.
 
     Attributes:
-    __tablename__ (str): The name of the table
-    id (int): The id of the user
+    id (uuid): The id of the user
     email (str): The email of the user
     password (str): The password of the user
     names (str): The names of the user
     lastnames (str): The lastnames of the user
-    system_role (str): The system role of the user
+    system_role (SystemRole): The system role of the user
+    job_role_id (uuid): The job role id of the user
     active (bool): The active status of the user
     created_at (datetime): The datetime when the user was created
     updated_at (datetime): The datetime when the user was updated
+
+    job_role (JobRole): The job role of the user
+
+    __tablename__ (str): The name of the table
     """
 
     __tablename__ = "users"
@@ -41,8 +45,6 @@ class User(Base, IUuidPk, ITimeControl):
     active: Mapped[bool] = mapped_column(Boolean, default=True, server_default="true")
 
     job_role: Mapped["JobRole"] = relationship(back_populates="users")
-    # company_id: Mapped[int] = mapped_column(ForeignKey("companies.id", ondelete="CASCADE"), nullable=False)
-    # company: Mapped["Company"] = relationship(cascade="all,delete", back_populates="workers")
 
     def __repr__(self) -> str:
         return f"<UserModel(id={self.id}, email={self.email}, password={self.password}, names={self.names}, lastnames={self.lastnames}, system_role={self.system_role}, job_role={self.job_role}, active={self.active}, created_at={self.created_at}, updated_at={self.updated_at})>"
