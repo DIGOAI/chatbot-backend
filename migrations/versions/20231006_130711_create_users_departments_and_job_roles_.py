@@ -66,6 +66,7 @@ def upgrade() -> None:
                     sa.Column('updated_at', sa.DateTime(timezone=True),
                               server_default=sa.text('now()'), nullable=False),
                     sa.ForeignKeyConstraint(['job_role_id'], ['job_roles.id'], ondelete='CASCADE'),
+
                     sa.PrimaryKeyConstraint('id')
                     )
     op.create_index(op.f('ix_users_id'), 'users', ['id'], unique=False)
@@ -76,10 +77,7 @@ def downgrade() -> None:
     op.drop_table('users')
     op.drop_index(op.f('ix_job_roles_id'), table_name='job_roles')
     op.drop_table('job_roles')
-    op.drop_index(op.f('ix_messages_id'), table_name='messages')
-    op.drop_table('messages')
     op.drop_index(op.f('ix_departments_id'), table_name='departments')
     op.drop_table('departments')
-    op.drop_index(op.f('ix_clients_id'), table_name='clients')
-    op.drop_table('clients')
+
     sa.Enum('OTHER', 'WORKER', 'ADMIN', 'SUPPORT', name='systemrole').drop(op.get_bind())  # type: ignore
