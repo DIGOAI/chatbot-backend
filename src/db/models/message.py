@@ -5,18 +5,18 @@ from sqlalchemy import Enum as EnumType
 from sqlalchemy import ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.api.db.models.base import Base, ICreatedAt
 from src.common.models import MessageType
+from src.db.models.base import Base, ICreatedAt
 
 if TYPE_CHECKING:
-    from src.api.db.models.conversation import Conversation
+    from src.db.models.conversation import Conversation
 
 
 class Message(Base, ICreatedAt):
     """MessageModel class to handle the message model.
 
     Attributes:
-    id: (str): The Twilio Message SID (MSXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX) of the message
+    id (str): The Twilio Message SID (MSXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX) of the message
     sender (str): The phone sender of the message
     receiver (str): The phone receiver of the message
     message (str): The message of the message

@@ -8,12 +8,12 @@ from sqlalchemy import Enum as EnumType
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.api.db.models.base import Base, ITimeControl, IUuidPk
+from src.db.models.base import Base, ITimeControl, IUuidPk
 
 if TYPE_CHECKING:
-    from src.api.db.models.message import Message
-    from src.api.db.models.ticket import Ticket
     from src.common.models.client import Client
+    from src.db.models.message import Message
+    from src.db.models.ticket import Ticket
 
 
 class ConversationStatus(str, Enum):

@@ -6,11 +6,11 @@ from sqlalchemy import Enum as EnumType
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.api.db.models.base import Base, ITimeControl, IUuidPk
 from src.common.models import SystemRole
+from src.db.models.base import Base, ITimeControl, IUuidPk
 
 if TYPE_CHECKING:
-    from src.api.db.models.job_role import JobRole
+    from src.db.models.job_role import JobRole
 
 
 class User(Base, IUuidPk, ITimeControl):

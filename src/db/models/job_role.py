@@ -4,11 +4,11 @@ from uuid import UUID
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.api.db.models.base import Base, ITimeControl, IUuidPk
-from src.api.db.models.department import Department
+from src.db.models.base import Base, ITimeControl, IUuidPk
+from src.db.models.department import Department
 
 if TYPE_CHECKING:
-    from src.api.db.models.user import User
+    from src.db.models.user import User
 
 
 class JobRole(Base, IUuidPk, ITimeControl):

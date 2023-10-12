@@ -1,8 +1,8 @@
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
-from src.api.db.models import Client as ClientModel
 from src.common.models import Client, ClientInsert
+from src.db.models import Client as ClientModel
 
 
 class ClientRepository():

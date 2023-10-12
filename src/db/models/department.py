@@ -3,11 +3,11 @@ from typing import TYPE_CHECKING
 from sqlalchemy import Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.api.db.models.base import Base, ITimeControl, IUuidPk
+from src.db.models.base import Base, ITimeControl, IUuidPk
 
 if TYPE_CHECKING:
-    from src.api.db.models.job_role import JobRole
-    from src.api.db.models.ticket import Ticket
+    from src.db.models.job_role import JobRole
+    from src.db.models.ticket import Ticket
 
 
 class Department(Base, IUuidPk, ITimeControl):

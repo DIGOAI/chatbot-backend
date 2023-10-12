@@ -1,7 +1,6 @@
 from fastapi import status as STATUS
 
 from src.api.cases.base_use_cases import UseCaseBase
-from src.api.repositories import UserRepository
 from src.api.utils import decrypt, signJWT
 from src.common.models import (
     LoginSchema,
@@ -11,6 +10,7 @@ from src.common.models import (
     create_response,
 )
 from src.common.models.user import SystemRole
+from src.db.repositories import UserRepository
 
 
 def create_token_data(user: User) -> TokenSchema:

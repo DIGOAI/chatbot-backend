@@ -6,13 +6,13 @@ from sqlalchemy import Enum as EnumType
 from sqlalchemy import ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.api.db.models.base import Base, ITimeControl, IUuidPk
-from src.api.db.models.conversation import Conversation
+from src.db.models.base import Base, ITimeControl, IUuidPk
+from src.db.models.conversation import Conversation
 
 if TYPE_CHECKING:
-    from src.api.db.models.conversation import Conversation
-    from src.api.db.models.department import Department
     from src.common.models.client import Client
+    from src.db.models.conversation import Conversation
+    from src.db.models.department import Department
 
 
 class TicketStatus(str, Enum):
