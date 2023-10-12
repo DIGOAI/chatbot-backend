@@ -1,6 +1,6 @@
 from src.api.cases.base_use_cases import UseCaseBase
-from src.api.repositories import ClientRepository
 from src.common.models import ClientInsert
+from src.db.repositories import ClientRepository
 
 
 class GetClientByPhone(UseCaseBase):
