@@ -7,6 +7,7 @@ from src.api.db.models.base import Base, ITimeControl, IUuidPk
 
 if TYPE_CHECKING:
     from src.api.db.models.job_role import JobRole
+    from src.api.db.models.ticket import Ticket
 
 
 class Department(Base, IUuidPk, ITimeControl):
@@ -26,6 +27,7 @@ class Department(Base, IUuidPk, ITimeControl):
     external_id: Mapped[int] = mapped_column(Integer, nullable=False)
 
     job_roles: Mapped[list["JobRole"]] = relationship(back_populates="department")
+    tickets: Mapped[list["Ticket"]] = relationship(back_populates="department")
 
     def __repr__(self) -> str:
         return f"<DepartmentModel(id={self.id}, name={self.name}, external_id={self.external_id}, job_roles={self.job_roles}, created_at={self.created_at}, updated_at={self.updated_at})>"

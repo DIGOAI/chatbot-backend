@@ -12,6 +12,7 @@ from src.api.db.models.base import Base, ITimeControl, IUuidPk
 
 if TYPE_CHECKING:
     from src.api.db.models.message import Message
+    from src.api.db.models.ticket import Ticket
     from src.common.models.client import Client
 
 
@@ -46,6 +47,7 @@ class Conversation(Base, IUuidPk, ITimeControl):
 
     client: Mapped["Client"] = relationship(back_populates="conversations")
     messages: Mapped[list["Message"]] = relationship(back_populates="messages")
+    ticket: Mapped["Ticket"] = relationship(back_populates="conversation")
 
     def __repr__(self) -> str:
         return f"<Conversation(id={self.id}, client_phone={self.client_phone}, assistant_phone={self.assistant_phone}, client={self.client}, status={self.status}, messages={self.messages}, created_at={self.created_at}, updated_at={self.updated_at}, finished_at={self.finished_at})>"
