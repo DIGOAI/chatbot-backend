@@ -24,7 +24,7 @@ def twilio_hook(webhook: Annotated[TwilioWebHook, Depends()]):
     else:
         Logger.info(f"Client not cached: {webhook.from_number}")
         # default_user = Client(id="", ci="", names="", lastnames="", phone="", saraguros_id=-1, created_at=datetime.utcnow(), updated_at=datetime.utcnow())
-        tree.context = Context(webhook, None, "")
+        tree.context = Context(webhook, None, None)
 
     # Execute the tree actions with the context setted
     tree()
