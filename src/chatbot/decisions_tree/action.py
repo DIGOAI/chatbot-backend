@@ -8,7 +8,7 @@ T = TypeVar('T', contravariant=True)
 
 
 class ActionFunction(Generic[T], Protocol):
-    def __call__(self, context: T) -> None | Literal[False]:
+    def __call__(self, context: T, id_func: str) -> None | Literal[False]:
         ...
 
 
@@ -33,7 +33,7 @@ class Action(Generic[T]):
             Logger.info(
                 f"Executing action {self.id} - {cast(Callable[[T], None], self._func).__name__}")
 
-            ended = self._func(context)
+            ended = self._func(context, self.id)
 
             if ended is None:
                 return not self._end
@@ -57,7 +57,7 @@ if __name__ == "__main__":
         'status': 4
     }
 
-    def print_context(context: ContextType) -> None:
+    def print_context(context: ContextType, id_func: str) -> None:
         print(context)
 
     action = Action("1.0",  print_context)

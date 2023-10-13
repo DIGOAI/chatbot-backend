@@ -26,7 +26,7 @@ def say_error(ctx: Context):
 
 
 @tree.add_action("0.0", condition=lambda ctx: ctx.client is None, end=False)
-def load_context(context: Context):
+def load_context(context: Context, id_func: str):
     Logger.info("Loading context")
 
     # Instace the services
@@ -54,15 +54,16 @@ def load_context(context: Context):
 
 
 @tree.add_action("0.1", condition=lambda ctx: ctx.last_state == None)
-def say_welcome(context: Context):
+def say_welcome(context: Context, id_func: str):
     if context.client is None:
         return say_error(context)
 
     twilio.send_message(MessageType.SAY_HELLO, receiver="whatsapp:" + context.client.phone)
+    context.last_state = id_func
 
 
 @tree.add_action("0.2", condition=lambda ctx: ctx.last_state == "0.1")
-def search_saraguros_client(context: Context):
+def search_saraguros_client(context: Context, id_func: str):
     Logger.info("Searching saraguros client")
 
     if context.client is None:
@@ -80,6 +81,8 @@ def search_saraguros_client(context: Context):
             Logger.warn(f"User doesn't exists: {client_ci}")
             twilio.send_message(MessageType.ERROR_CLIENT_NOT_FOUND, receiver=context.event_twilio.from_number)
 
+            context.last_state = None
+
             return False
 
         Logger.info("Updating user data")
@@ -89,22 +92,27 @@ def search_saraguros_client(context: Context):
         context.client.lastnames = user.lastnames
         context.client.saraguros_id = user.saraguros_id
 
+        context.last_state = id_func
+
     except ValueError as e:
         Logger.warn(str(e))
         twilio.send_message(MessageType.ERROR_INVALID_CI, receiver=context.event_twilio.from_number)
+
         return
 
 
 @tree.add_action("1.0", condition=lambda ctx: ctx.last_state == "0.2" and ctx.client != None and ctx.client.saraguros_id == None)
-def say_welcome_unknown(context: Context):
+def say_welcome_unknown(context: Context, id_func: str):
     if context.client is None:
         return say_error(context)
 
     twilio.send_message(MessageType.WELCOME_UNKNOW, receiver="whatsapp:" + context.client.phone)
 
+    context.last_state = id_func
+
 
 @tree.add_action("1.1", condition=lambda ctx: ctx.last_state == "0.2" and ctx.client != None and ctx.client.saraguros_id == None)
-def send_promotions(context: Context):
+def send_promotions(context: Context, id_func: str):
     if context.client is None:
         return say_error(context)
 
@@ -114,10 +122,11 @@ def send_promotions(context: Context):
 
     fullname = format_fullname(context.client.names, context.client.lastnames)
     say_goodbye(fullname, "whatsapp:" + context.client.phone)
+    context.last_state = id_func
 
 
 @tree.add_action("1.2", condition=lambda ctx: ctx.last_state == "0.2" and ctx.client != None and ctx.client.saraguros_id == None)
-def send_coverages(context: Context):
+def send_coverages(context: Context, id_func: str):
     if context.client is None:
         return say_error(context)
 
@@ -127,10 +136,11 @@ def send_coverages(context: Context):
 
     fullname = format_fullname(context.client.names, context.client.lastnames)
     say_goodbye(fullname, "whatsapp:" + context.client.phone)
+    context.last_state = id_func
 
 
 @tree.add_action("1.3", condition=lambda ctx: ctx.last_state == "0.2" and ctx.client != None and ctx.client.saraguros_id == None)
-def talk_with_agent(context: Context):
+def talk_with_agent(context: Context, id_func: str):
     if context.client is None:
         return say_error(context)
 
@@ -143,7 +153,7 @@ def talk_with_agent(context: Context):
 
 
 @tree.add_action("2.0", condition=lambda ctx: ctx.last_state == "0.2" and ctx.client != None and ctx.client.saraguros_id != None)
-def say_welcome_client(context: Context):
+def say_welcome_client(context: Context, id_func: str):
     if context.client is None:
         return say_error(context)
 
@@ -152,7 +162,7 @@ def say_welcome_client(context: Context):
 
 
 @tree.add_action("2.1", condition=lambda ctx: ctx.last_state == "2.0" and ctx.event_twilio.body == OptionType.STATUS)
-def service_status(context: Context):
+def service_status(context: Context, id_func: str):
     if context.client is None:
         return say_error(context)
 
@@ -160,42 +170,42 @@ def service_status(context: Context):
 
 
 @tree.add_action("2.2", condition=lambda ctx: ctx.last_state == "2.0" and ctx.event_twilio.body == OptionType.PAYMENT)
-def service_payment(context: Context):
+def service_payment(context: Context, id_func: str):
     if context.client is None:
         return say_error(context)
     pass
 
 
 @tree.add_action("2.2.1", condition=lambda ctx: ctx.last_state == "2.2" and ctx.event_twilio.body == OptionType.TRANSACTION)
-def payment_transaction(context: Context):
+def payment_transaction(context: Context, id_func: str):
     if context.client is None:
         return say_error(context)
     pass
 
 
 @tree.add_action("2.2.2", condition=lambda ctx: ctx.last_state == "2.2" and ctx.event_twilio.body == OptionType.CARD)
-def payment_card(context: Context):
+def payment_card(context: Context, id_func: str):
     if context.client is None:
         return say_error(context)
     pass
 
 
 @tree.add_action("2.2.3", condition=lambda ctx: ctx.last_state == "2.2" and ctx.event_twilio.body == OptionType.CASH)
-def payment_cash(context: Context):
+def payment_cash(context: Context, id_func: str):
     if context.client is None:
         return say_error(context)
     pass
 
 
 @tree.add_action("2.3", condition=lambda ctx: ctx.last_state == "2.0" and ctx.event_twilio.body == OptionType.SUPPORT)
-def service_support(context: Context):
+def service_support(context: Context, id_func: str):
     if context.client is None:
         return say_error(context)
     pass
 
 
 @tree.add_action("3.0", condition=lambda ctx: ctx.last_state in ["1.1", "1.2"] and ctx.event_twilio.body == OptionType.END)
-def end_conversation(context: Context):
+def end_conversation(context: Context, id_func: str):
     if context.client is None:
         return say_error(context)
 
@@ -203,7 +213,7 @@ def end_conversation(context: Context):
 
 
 @tree.add_action("3.1", condition=lambda ctx: ctx.last_state in ["1.1", "1.2"] and ctx.event_twilio.body == OptionType.ANOTHER)
-def another_question(context: Context):
+def another_question(context: Context, id_func: str):
     if context.client is None:
         return say_error(context)
 
