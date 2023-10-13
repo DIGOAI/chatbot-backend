@@ -41,4 +41,4 @@ class Message(Base, ICreatedAt):
     conversation: Mapped["Conversation"] = relationship(back_populates="messages")
 
     def __repr__(self) -> str:
-        return f"<MessageModel(id={self.id}, sender={self.sender}, message={self.message}, client_id={self.message_type}, created_at={self.created_at})>"
+        return f"<Message id={self.id} sender={self.sender} receiver={self.receiver} message={self.message} media_url={self.media_url} message_type={self.message_type} conversation={self.conversation} created_at={self.created_at}>"
