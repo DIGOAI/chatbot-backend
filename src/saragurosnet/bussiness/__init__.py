@@ -19,7 +19,13 @@ def say_goodbye(name: str, receiver: str):
     twilio.send_message(MessageType.END_CONVERSATION.format(name=name), receiver=receiver)
 
 
-@tree.add_action("0.0", condition=lambda ctx: ctx.client.id == -1, end=False)
+def say_error(ctx: Context):
+    Logger.error("Client is None")
+    twilio.send_message(MessageType.ERROR_CLIENT_NOT_FOUND, receiver=ctx.event_twilio.from_number)
+    return False
+
+
+@tree.add_action("0.0", condition=lambda ctx: ctx.client is None, end=False)
 def load_context(context: Context):
     Logger.info("Loading context")
 
@@ -40,21 +46,27 @@ def load_context(context: Context):
     hours_diff = int((datetime.now(timezone.utc) - user.updated_at).seconds / 3600)
 
     Logger.info(
-        f"Context loaded: [ ID: {user.id} | CI: {user.ci} | Phone: {user.phone} | Status: {user.last_state} | Hours: {hours_diff}]")
+        f"Context loaded: [ ID: {user.id} | CI: {user.ci} | Phone: {user.phone} | Status: {context.last_state} | Hours: {hours_diff}]")
 
     context.client = user
 
     # return False  # TODO: Delete this line when the backend is ready
 
 
-@tree.add_action("0.1", condition=lambda ctx: ctx.client.last_state == None)
+@tree.add_action("0.1", condition=lambda ctx: ctx.last_state == None)
 def say_welcome(context: Context):
+    if context.client is None:
+        return say_error(context)
+
     twilio.send_message(MessageType.SAY_HELLO, receiver="whatsapp:" + context.client.phone)
 
 
-@tree.add_action("0.2", condition=lambda ctx: ctx.client.last_state == "0.1")
+@tree.add_action("0.2", condition=lambda ctx: ctx.last_state == "0.1")
 def search_saraguros_client(context: Context):
     Logger.info("Searching saraguros client")
+
+    if context.client is None:
+        return say_error(context)
 
     try:
         client_ci = get_ci_or_ruc(context.event_twilio.body)
@@ -83,13 +95,19 @@ def search_saraguros_client(context: Context):
         return
 
 
-@tree.add_action("1.0", condition=lambda ctx: ctx.client.last_state == "0.2" and ctx.client.saraguros_id == None)
+@tree.add_action("1.0", condition=lambda ctx: ctx.last_state == "0.2" and ctx.client != None and ctx.client.saraguros_id == None)
 def say_welcome_unknown(context: Context):
+    if context.client is None:
+        return say_error(context)
+
     twilio.send_message(MessageType.WELCOME_UNKNOW, receiver="whatsapp:" + context.client.phone)
 
 
-@tree.add_action("1.1", condition=lambda ctx: ctx.client.last_state == "0.2" and ctx.client.saraguros_id == None)
+@tree.add_action("1.1", condition=lambda ctx: ctx.last_state == "0.2" and ctx.client != None and ctx.client.saraguros_id == None)
 def send_promotions(context: Context):
+    if context.client is None:
+        return say_error(context)
+
     twilio.send_message(MessageType.PROMOTIONS,
                         receiver="whatsapp:" + context.client.phone,
                         media_url=MediaUrlType.PROMOTIONS)
@@ -98,8 +116,11 @@ def send_promotions(context: Context):
     say_goodbye(fullname, "whatsapp:" + context.client.phone)
 
 
-@tree.add_action("1.2", condition=lambda ctx: ctx.client.last_state == "0.2" and ctx.client.saraguros_id == None)
+@tree.add_action("1.2", condition=lambda ctx: ctx.last_state == "0.2" and ctx.client != None and ctx.client.saraguros_id == None)
 def send_coverages(context: Context):
+    if context.client is None:
+        return say_error(context)
+
     twilio.send_message(MessageType.COVERAGES,
                         receiver="whatsapp:" + context.client.phone,
                         media_url=MediaUrlType.COVERAGES)
@@ -108,8 +129,11 @@ def send_coverages(context: Context):
     say_goodbye(fullname, "whatsapp:" + context.client.phone)
 
 
-@tree.add_action("1.3", condition=lambda ctx: ctx.client.last_state == "0.2" and ctx.client.saraguros_id == None)
+@tree.add_action("1.3", condition=lambda ctx: ctx.last_state == "0.2" and ctx.client != None and ctx.client.saraguros_id == None)
 def talk_with_agent(context: Context):
+    if context.client is None:
+        return say_error(context)
+
     fullname = format_fullname(context.client.names, context.client.lastnames)
     twilio.send_message(MessageType.CONNECT_AGENT.format(name=fullname), receiver="whatsapp:" + context.client.phone)
 
@@ -118,49 +142,71 @@ def talk_with_agent(context: Context):
     # TODO: Enviar notificacion al agente con el ID del usuario
 
 
-@tree.add_action("2.0", condition=lambda ctx: ctx.client.last_state == "0.2" and ctx.client.saraguros_id != None)
+@tree.add_action("2.0", condition=lambda ctx: ctx.last_state == "0.2" and ctx.client != None and ctx.client.saraguros_id != None)
 def say_welcome_client(context: Context):
+    if context.client is None:
+        return say_error(context)
+
     fullname = format_fullname(context.client.names, context.client.lastnames)
     twilio.send_message(MessageType.WELCOME_CLIENT.format(name=fullname), receiver="whatsapp:" + context.client.phone)
 
 
-@tree.add_action("2.1", condition=lambda ctx: ctx.client.last_state == "2.0" and ctx.event_twilio.body == OptionType.STATUS)
+@tree.add_action("2.1", condition=lambda ctx: ctx.last_state == "2.0" and ctx.event_twilio.body == OptionType.STATUS)
 def service_status(context: Context):
+    if context.client is None:
+        return say_error(context)
+
     pass
 
 
-@tree.add_action("2.2", condition=lambda ctx: ctx.client.last_state == "2.0" and ctx.event_twilio.body == OptionType.PAYMENT)
+@tree.add_action("2.2", condition=lambda ctx: ctx.last_state == "2.0" and ctx.event_twilio.body == OptionType.PAYMENT)
 def service_payment(context: Context):
+    if context.client is None:
+        return say_error(context)
     pass
 
 
-@tree.add_action("2.2.1", condition=lambda ctx: ctx.client.last_state == "2.2" and ctx.event_twilio.body == OptionType.TRANSACTION)
+@tree.add_action("2.2.1", condition=lambda ctx: ctx.last_state == "2.2" and ctx.event_twilio.body == OptionType.TRANSACTION)
 def payment_transaction(context: Context):
+    if context.client is None:
+        return say_error(context)
     pass
 
 
-@tree.add_action("2.2.2", condition=lambda ctx: ctx.client.last_state == "2.2" and ctx.event_twilio.body == OptionType.CARD)
+@tree.add_action("2.2.2", condition=lambda ctx: ctx.last_state == "2.2" and ctx.event_twilio.body == OptionType.CARD)
 def payment_card(context: Context):
+    if context.client is None:
+        return say_error(context)
     pass
 
 
-@tree.add_action("2.2.3", condition=lambda ctx: ctx.client.last_state == "2.2" and ctx.event_twilio.body == OptionType.CASH)
+@tree.add_action("2.2.3", condition=lambda ctx: ctx.last_state == "2.2" and ctx.event_twilio.body == OptionType.CASH)
 def payment_cash(context: Context):
+    if context.client is None:
+        return say_error(context)
     pass
 
 
-@tree.add_action("2.3", condition=lambda ctx: ctx.client.last_state == "2.0" and ctx.event_twilio.body == OptionType.SUPPORT)
+@tree.add_action("2.3", condition=lambda ctx: ctx.last_state == "2.0" and ctx.event_twilio.body == OptionType.SUPPORT)
 def service_support(context: Context):
+    if context.client is None:
+        return say_error(context)
     pass
 
 
-@tree.add_action("3.0", condition=lambda ctx: ctx.client.last_state in ["1.1", "1.2"] and ctx.event_twilio.body == OptionType.END)
+@tree.add_action("3.0", condition=lambda ctx: ctx.last_state in ["1.1", "1.2"] and ctx.event_twilio.body == OptionType.END)
 def end_conversation(context: Context):
+    if context.client is None:
+        return say_error(context)
+
     twilio.send_message(MessageType.SAY_GOODBAY, receiver="whatsapp:" + context.client.phone)
 
 
-@tree.add_action("3.1", condition=lambda ctx: ctx.client.last_state in ["1.1", "1.2"] and ctx.event_twilio.body == OptionType.ANOTHER)
+@tree.add_action("3.1", condition=lambda ctx: ctx.last_state in ["1.1", "1.2"] and ctx.event_twilio.body == OptionType.ANOTHER)
 def another_question(context: Context):
+    if context.client is None:
+        return say_error(context)
+
     if context.client.saraguros_id:
         # Return to say_welcome_client
         pass

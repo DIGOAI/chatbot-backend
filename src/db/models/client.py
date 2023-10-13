@@ -24,6 +24,7 @@ class Client(Base, IUuidPk, ITimeControl):
     updated_at (datetime): The datetime when the client was updated
 
     conversations (list[Conversation]): The conversations of the client
+    tickets (list[Ticket]): The tickets of the client
     """
 
     __tablename__ = "clients"
@@ -38,4 +39,4 @@ class Client(Base, IUuidPk, ITimeControl):
     tickets: Mapped["Ticket"] = relationship(back_populates="client")
 
     def __repr__(self) -> str:
-        return f"<Client(id={self.id}, ci={self.ci}, name={self.names}, saraguros_net={self.saraguros_id}, conversations={self.conversations}, created_at={self.created_at}, updated_at={self.updated_at})>"
+        return f"<Client(id={self.id}, ci={self.ci}, name={self.names}, saraguros_net={self.saraguros_id}, conversations={self.conversations}, tickets={self.tickets}, created_at={self.created_at}, updated_at={self.updated_at})>"
