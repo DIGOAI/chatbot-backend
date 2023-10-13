@@ -1,7 +1,6 @@
 from fastapi import status as STATUS
 
 from src.api.cases.base_use_cases import UseCaseBase
-from src.api.repositories import UserRepository
 from src.api.utils import decrypt, signJWT
 from src.common.models import (
     LoginSchema,
@@ -10,29 +9,34 @@ from src.common.models import (
     User,
     create_response,
 )
-from src.common.models.user import UserRole
+from src.common.models.user import SystemRole
+from src.db.repositories import UserRepository
 
 
 def create_token_data(user: User) -> TokenSchema:
     payload = {
         "user_id": str(user.email),
-        "role": user.role.value,
+        "role": user.system_role.value,
         "keyType": "PRIVATE",
         "exp_time_sec": 60 * 10
     }
 
-    match user.role:
-        case UserRole.ADMIN:
+    match user.system_role:
+        case SystemRole.ADMIN:
             payload["keyType"] = "PRIVATE"
             payload["exp_time_sec"] = 60 * 60
 
-        case UserRole.WORKER:
+        case SystemRole.WORKER:
             payload["keyType"] = "PRIVATE"
             payload["exp_time_sec"] = 60 * 10
 
-        case UserRole.SUPPORT:
+        case SystemRole.SUPPORT:
             payload["keyType"] = "SERVICE"
             payload["exp_time_sec"] = 60 * 60 * 24 * 365
+
+        case SystemRole.OTHER:
+            payload["keyType"] = "SERVICE"
+            payload["exp_time_sec"] = 60 * 1
 
     access_token, _ = signJWT(
         user_id=user.email,

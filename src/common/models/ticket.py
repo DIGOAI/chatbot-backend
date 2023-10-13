@@ -1,28 +1,130 @@
+from datetime import datetime
+from enum import Enum
 from typing import Optional
+from uuid import UUID
+
+from pydantic import BaseModel, ConfigDict, Field
 
 
-class Ticket(object):
+class TicketShiftSaraguros(str, Enum):
+    """Enum to represent the shifts of a Saraguros ticket."""
+
+    MORNING = "MAÑANA"
+    AFTERNOON = "TARDE"
+
+
+class TicketSaragurosBase(BaseModel):
+    client_id: int = Field(..., alias="idcliente")
+    department: str = Field(..., alias="dp")
+    subject: str = Field(..., alias="asunto")
+    applicant: str = Field(..., alias="solicitante")
+    visit_date: str = Field(..., alias="fechavisita")
+    shift: TicketShiftSaraguros = Field(default=TicketShiftSaraguros.MORNING, alias="turno")
+    scheduled_by: str = Field(default="PAGINA WEB", alias="agendado")
+    content: str = Field(..., alias="contenido")
+
+    model_config = ConfigDict(populate_by_name=True)
+
+
+class TicketSaragurosInsert(TicketSaragurosBase):
     """Class to represent a ticket in SaragurosNet.
 
-    Parameters:
-    contenido (str): The content of the ticket
-    asunto (str): The subject of the ticket
-    departamento (str): The department of the ticket
-    turno (str): The shift of the ticket
-    fechavisita (str): The date of the ticket
-    agendado (bool): If the ticket is scheduled or not
+    Attributes:
+    client_id (str): The client id of the ticket
+    department (str): The department of the ticket
+    subject (str): The subject of the ticket
+    applicant (str): The applicant of the ticket
+    visit_date (str): The visit date of the ticket
+    shift (str): The shift of the ticket
+    scheduled_by (str): The scheduled by of the ticket
+    content (str): The content of the ticket
     """
 
-    def __init__(self, contenido: str, asunto: str, departamento: str, turno: str, fechavisita: str, agendado: bool):
-        self.id: Optional[int] = None
-        self.id_cliente: Optional[str] = None
+    pass
 
-        self.contenido = contenido
-        self.asunto = asunto
-        self.departamento = departamento
-        self.turno = turno
-        self.fechavisita = fechavisita
-        self.agendado = agendado
 
-    def __str__(self):
-        return f"Ticket({self.id}, {self.id_cliente}, {self.contenido}, {self.asunto}, {self.departamento}, {self.turno}, {self.fechavisita}, {self.agendado})"
+class TicketSaraguros(TicketSaragurosBase):
+    """Class to represent a ticket in SaragurosNet.
+
+    Attributes:
+    id (int): The id of the ticket
+    client_id (str): The client id of the ticket
+    department (str): The department of the ticket
+    subject (str): The subject of the ticket
+    applicant (str): The applicant of the ticket
+    visit_date (str): The visit date of the ticket
+    shift (str): The shift of the ticket
+    scheduled_by (str): The scheduled by of the ticket
+    content (str): The content of the ticket
+
+    support_date (str): The support date of the ticket
+    closed_date (str): The closed date of the ticket
+    last_date (str): The last date of the ticket
+    closed_by (str): The closed by of the ticket
+    """
+
+    id: int
+    support_date: str = Field(..., alias="fecha_soporte")
+    closed_date: str = Field(..., alias="fecha_cerrado")
+    last_date: str = Field(..., alias="lastdate")
+    closed_by: str = Field(..., alias="motivo_cierre")
+
+
+class TicketShift(str, Enum):
+    """Enum to represent the shifts of a ticket."""
+
+    MORNING = "MORNING"
+    AFTERNOON = "AFTERNOON"
+
+
+class TicketStatus(str, Enum):
+    WAITING = "WAITING"
+    ATTENDING = "ATTENDING"
+    CLOSED = "CLOSED"
+    UNSOLVED = "UNSOLVED"
+
+
+class TicketBase(BaseModel):
+    subject: str
+    shift: TicketShift = Field(default=TicketShift.MORNING)
+    department_id: UUID
+    status: TicketStatus = Field(default=TicketStatus.WAITING)
+    client_id: UUID
+    conversation_id: Optional[UUID] = None
+
+
+class TicketInsert(TicketBase):
+    """Class to represent a ticket in the database.
+
+    Attributes:
+    subject (str): The subject of the ticket
+    shift (str): The shift of the ticket
+    department_id (uuid): The id of the department of the ticket
+    status (str): The status of the ticket
+    client_id (uuid): The id of the client of the ticket
+    conversation_id (uuid): The id of the conversation of the ticket
+    """
+
+    pass
+
+
+class Ticket(TicketBase):
+    """Class to represent a ticket in the database.
+
+    Attributes:
+    id (uuid): The id of the ticket
+    external_id (int): The external id of the ticket (SaragurosNet)
+    subject (str): The subject of the ticket
+    shift (str): The shift of the ticket
+    department_id (uuid): The id of the department of the ticket
+    status (str): The status of the ticket
+    client_id (uuid): The id of the client of the ticket
+    conversation_id (uuid): The id of the conversation of the ticket
+    created_at (datetime): The datetime when the ticket was created
+    updated_at (datetime): The datetime when the ticket was updated
+    """
+
+    id: UUID
+    external_id: Optional[int] = None
+    created_at: datetime
+    updated_at: datetime

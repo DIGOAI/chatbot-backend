@@ -1,4 +1,4 @@
-from src.api.db import Session
+from src.db import Session
 
 
 class UseCaseBase():

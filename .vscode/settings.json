@@ -5,7 +5,7 @@
   "python.analysis.autoImportCompletions": true,
   "python.analysis.inlayHints.variableTypes": true,
   "python.analysis.inlayHints.functionReturnTypes": true,
-  "python.analysis.inlayHints.callArgumentNames": true,
+  "python.analysis.inlayHints.callArgumentNames": "partial",
   "[python]": {
     "diffEditor.ignoreTrimWhitespace": false,
     "editor.formatOnType": false,
@@ -16,5 +16,10 @@
       "source.organizeImports": true
     }
   },
-  "isort.args": ["--profile", "black"]
+  "isort.args": ["--profile", "black"],
+  "mypy-type-checker.reportingScope": "workspace",
+  "mypy-type-checker.preferDaemon": true,
+  "scm.alwaysShowActions": true,
+  "scm.experimental.showSyncView": true,
+  "debug.toolBarLocation": "commandCenter"
 }

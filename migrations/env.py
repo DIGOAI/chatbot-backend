@@ -1,3 +1,4 @@
+import os
 from logging.config import fileConfig
 
 import alembic_postgresql_enum  # type: ignore
@@ -24,6 +25,9 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
+database_url = os.getenv("DATABASE_URL", "").replace("postgresql://", "postgresql+psycopg://")
+
+config.set_main_option("sqlalchemy.url", database_url)
 
 
 def run_migrations_offline() -> None:

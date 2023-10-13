@@ -1,8 +1,8 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from src.api.db.models import Message as MessageModel
 from src.common.models import Message, MessageInsert
+from src.db.models import Message as MessageModel
 
 
 class MessageRepository:
@@ -18,8 +18,8 @@ class MessageRepository:
 
         return Message.model_validate(message)
 
-    def get_by_client_id(self, client_id: int) -> list[Message]:
-        stmt = select(MessageModel).filter(MessageModel.client_id == client_id)
+    def get_by_phone(self, client_phone: str) -> list[Message]:
+        stmt = select(MessageModel).filter(MessageModel.sender == client_phone)
         messages = self._session.scalars(stmt).all()
         return [Message.model_validate(message) for message in messages]
 

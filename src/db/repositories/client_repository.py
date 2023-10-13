@@ -1,8 +1,8 @@
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
-from src.api.db.models import Client as ClientModel
 from src.common.models import Client, ClientInsert
+from src.db.models import Client as ClientModel
 
 
 class ClientRepository():
@@ -25,4 +25,22 @@ class ClientRepository():
     def get_client_by_phone(self, client_phone: str):
         stmt = select(ClientModel).where(ClientModel.phone == client_phone)
         client = self._session.scalars(stmt).first()
+
+        if not client:
+            return None
+
         return Client.model_validate(client)
+
+    def update_status_client(self, client_id: int, status: str):
+        stmt = (
+            update(ClientModel)
+            .where(ClientModel.id == client_id)
+            .values(last_state=status)
+            .returning(ClientModel)
+        )
+
+        # self._session.execute(stmt)
+        client_updated = self._session.scalars(stmt).one()
+        self._session.commit()
+
+        return Client.model_validate(client_updated)

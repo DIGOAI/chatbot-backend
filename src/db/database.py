@@ -2,6 +2,7 @@ from typing import Any
 
 from psycopg import Cursor
 from sqlalchemy import Connection, ExecutionContext, create_engine
+from sqlalchemy.engine import make_url
 from sqlalchemy.event import listens_for
 from sqlalchemy.orm.session import sessionmaker
 
@@ -12,7 +13,9 @@ _database_url = _Config.DATABASE_URL.replace("postgresql://", "postgresql+psycop
 
 _NAME = "database"
 
-# Logger.info(f"Database URL: {_database_url}", caller_name=_NAME)
+url = make_url(_database_url)
+
+Logger.info(f"Database in {url.host} with name {url.database}", caller_name=_NAME)
 engine = create_engine(_database_url, echo=False)
 
 

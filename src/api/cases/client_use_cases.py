@@ -1,8 +1,9 @@
 from fastapi import status as STATUS
 
 from src.api.cases.base_use_cases import UseCaseBase
-from src.api.repositories import ClientRepository
-from src.common.models import ClientInsert, create_response
+from src.common.models import Client, ClientInsert, create_response
+from src.db.models import Client as ClientModel
+from src.db.repositories import BaseRepository, ClientRepository
 
 
 class RegisterNewClient(UseCaseBase):
@@ -23,10 +24,11 @@ class GetClients(UseCaseBase):
         return create_response(clients, "Clients retrieved")
 
 
-class GetClientByPhone(UseCaseBase):
-    def __call__(self, client_phone: str):
-        with self._session() as session:
-            client_repository = ClientRepository(session)
-            client = client_repository.get_client_by_phone(client_phone)
+class ClientUseCases(UseCaseBase):
 
-        return create_response(client, "Client retrieved")
+    def add_new_client(self, data: ClientInsert):
+        with self._session() as session:
+            client_repo = BaseRepository(ClientModel, Client, session)
+            client = client_repo.add(data.model_dump())
+
+        return create_response(client, "Client registered", status_code=STATUS.HTTP_201_CREATED)

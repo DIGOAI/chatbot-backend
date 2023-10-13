@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Body, Depends, HTTPException
 from fastapi import status as STATUS
 
-from src.api.cases import GetClientByPhone, GetClients, RegisterNewClient
+from src.api.cases import GetClients, RegisterNewClient
 from src.api.middlewares import APITokenAuth, JWTBearer
 from src.api.middlewares.jwt_bearer import Role
 from src.common.models import Client, ClientInsert, GenericResponse
@@ -23,10 +23,10 @@ def add_client(client_insert: ClientInsert):
     return register_new_client(client_insert)
 
 
-@router.get("/{client_phone}", response_model=GenericResponse[Client], dependencies=[Depends(APITokenAuth())])
-def get_client_by_phone(client_phone: str):
-    get_client_by_phone = GetClientByPhone()
-    return get_client_by_phone(client_phone)
+# @router.get("/{client_phone}", response_model=GenericResponse[Client], dependencies=[Depends(APITokenAuth())])
+# def get_client_by_phone(client_phone: str):
+#     get_client_by_phone = GetClientByPhone()
+#     return get_client_by_phone(client_phone)
 
 
 @router.post("/activate", dependencies=[Depends(APITokenAuth())])

@@ -5,7 +5,7 @@ from typing import Any, Optional
 import requests
 
 from src.common.logger import Logger
-from src.common.models.ticket import Ticket
+from src.common.models.ticket import TicketSaragurosInsert as Ticket
 from src.config import Config
 
 
@@ -55,7 +55,7 @@ class SaragurosNetService:
             Logger.error(f"Error parsing response from {url}")
             return None
 
-    def activate_service(self, usuario_id: str) -> Optional[dict[str, Any]]:
+    def activate_service(self, usuario_id: int) -> Optional[dict[str, Any]]:
         """Activate the service for a user.
 
         Parameters:
@@ -78,15 +78,9 @@ class SaragurosNetService:
         dict[str, Any] | None: The result of the request
         """
 
-        data = {
-            "idcliente": ticket.id_cliente,
-            "dp": ticket.departamento,
-            "asunto": ticket.asunto,
-            "fechavisita": ticket.fechavisita,
-            "turno": ticket.turno,
-            "agendado": ticket.agendado,
-            "contenido": ticket.contenido
-        }
+        data = ticket.model_dump(by_alias=True)
+
+        Logger.info(f"Creating ticket with data {data}")
 
         return self._make_request(SaragurosServiceEndpoint.NEW_TICKET, data)
 
@@ -107,7 +101,7 @@ class SaragurosNetService:
 
 if __name__ == "__main__":
     token = "R3Z4SlNrWVZvZzFsV1pvTTQ3ci9wZz09"
-    usuario_id = "34fdd32g-4f3d-4f3d-4f3d-4f3d4f3d4f3d"
+    usuario_id = 1
 
     service = SaragurosNetService(token)
 
@@ -115,14 +109,13 @@ if __name__ == "__main__":
     print("Resultado de activar_servicio:", activar_result)
 
     nuevo_ticket = Ticket(
+        idcliente=usuario_id,
         contenido="Contenido del ticket",
         asunto="Asunto del ticket",
-        departamento="Soporte",
-        turno="Tarde",
+        dp="Soporte",
         fechavisita="2023-08-25",
-        agendado=True
+        solicitante="Juan Gahona"
     )
-    nuevo_ticket.id_cliente = usuario_id
 
     create_ticket_result = service.create_ticket(nuevo_ticket)
     print("Resultado de create_ticket:", create_ticket_result)
