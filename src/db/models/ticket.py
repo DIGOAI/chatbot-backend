@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import TYPE_CHECKING, Optional
 from uuid import UUID
 
@@ -6,6 +5,7 @@ from sqlalchemy import Enum as EnumType
 from sqlalchemy import ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from src.common.models import TicketStatus
 from src.db.models.base import Base, ITimeControl, IUuidPk
 from src.db.models.conversation import Conversation
 
@@ -13,13 +13,6 @@ if TYPE_CHECKING:
     from src.common.models.client import Client
     from src.db.models.conversation import Conversation
     from src.db.models.department import Department
-
-
-class TicketStatus(str, Enum):
-    WAITING = "WAITING"
-    ATTENDING = "ATTENDING"
-    CLOSED = "CLOSED"
-    UNSOLVED = "UNSOLVED"
 
 
 class Ticket(Base, IUuidPk, ITimeControl):

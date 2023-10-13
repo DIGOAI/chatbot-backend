@@ -1,7 +1,15 @@
 from src.common.models.client import Client, ClientInsert
 from src.common.models.message import Message, MessageInsert, MessageType
 from src.common.models.responses import GenericResponse, create_response
-from src.common.models.ticket import Ticket
+from src.common.models.ticket import (
+    Ticket,
+    TicketInsert,
+    TicketSaraguros,
+    TicketSaragurosInsert,
+    TicketShift,
+    TicketShiftSaraguros,
+    TicketStatus,
+)
 from src.common.models.user import (
     LoginSchema,
     RegisterSchema,
@@ -21,9 +29,15 @@ __all__ = [
     "MessageInsert",
     "MessageType",
     "RegisterSchema",
+    "SystemRole",
     "Ticket",
+    "TicketInsert",
+    "TicketSaraguros",
+    "TicketSaragurosInsert",
+    "TicketShift",
+    "TicketShiftSaraguros",
+    "TicketStatus",
     "TokenSchema",
     "TwilioWebHook",
     "User",
-    "SystemRole",
 ]
