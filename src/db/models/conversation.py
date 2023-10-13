@@ -46,7 +46,7 @@ class Conversation(Base, IUuidPk, ITimeControl):
     finished_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
 
     client: Mapped["Client"] = relationship(back_populates="conversations")
-    messages: Mapped[list["Message"]] = relationship(back_populates="messages")
+    messages: Mapped[list["Message"]] = relationship(back_populates="conversation")
     ticket: Mapped["Ticket"] = relationship(back_populates="conversation")
 
     def __repr__(self) -> str:
