@@ -20,6 +20,7 @@ class ErrorHandler(BaseHTTPMiddleware):
                 content={
                     "status": "error",
                     "type": e.__class__.__name__,
-                    "message": str(e)
+                    "message": str(e),
+                    "traceback": e.__traceback__ if hasattr(e, "__traceback__") else None
                 }
             )
