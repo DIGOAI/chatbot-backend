@@ -122,7 +122,7 @@ def say_welcome_unknown(context: Context, id_func: str):
     context.last_state = id_func
 
 
-@tree.add_action("1.1", condition=lambda ctx: ctx.last_state == "1.0" and ctx.client != None and ctx.client.saraguros_id == None)
+@tree.add_action("1.1", condition=lambda ctx: ctx.last_state == "1.0" and ctx.client != None and ctx.client.saraguros_id == None and (ctx.event_twilio.button_text == OptionType.PROMOTIONS or ctx.event_twilio.body == OptionType.PROMOTIONS))
 def send_promotions(context: Context, id_func: str):
     if context.client is None:
         return say_error(context)
@@ -136,7 +136,7 @@ def send_promotions(context: Context, id_func: str):
     context.last_state = id_func
 
 
-@tree.add_action("1.2", condition=lambda ctx: ctx.last_state == "1.0" and ctx.client != None and ctx.client.saraguros_id == None)
+@tree.add_action("1.2", condition=lambda ctx: ctx.last_state == "1.0" and ctx.client != None and ctx.client.saraguros_id == None and (ctx.event_twilio.button_text == OptionType.COVERAGES or ctx.event_twilio.body == OptionType.COVERAGES))
 def send_coverages(context: Context, id_func: str):
     if context.client is None:
         return say_error(context)
@@ -150,7 +150,7 @@ def send_coverages(context: Context, id_func: str):
     context.last_state = id_func
 
 
-@tree.add_action("1.3", condition=lambda ctx: ctx.last_state == "1.0" and ctx.client != None and ctx.client.saraguros_id == None)
+@tree.add_action("1.3", condition=lambda ctx: ctx.last_state == "1.0" and ctx.client != None and ctx.client.saraguros_id == None and (ctx.event_twilio.button_text == OptionType.AGENT or ctx.event_twilio.body == OptionType.AGENT))
 def talk_with_agent(context: Context, id_func: str):
     if context.client is None:
         return say_error(context)
