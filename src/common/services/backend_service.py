@@ -1,6 +1,9 @@
 from src.chatbot.utils import Requester
 from src.common.logger import Logger
 from src.common.models import Client, GenericResponse
+from src.db import Session
+from src.db.models import Client as ClientModel
+from src.db.repositories import BaseRepository
 
 
 class BackendService():
@@ -24,6 +27,13 @@ class BackendService():
             return None
 
     def get_saraguros_data_from_ci(self, ci: str):
+
+        with Session() as session:
+            client_repo = BaseRepository(ClientModel, Client, session)
+            client = client_repo.filter(ClientModel.ci == ci, first=True)
+
+            if client is not None:
+                return client
 
         try:
             res = self._fetcher.make_request("GET", f"/api/v1/saraguros/{ci}", response_model=GenericResponse[Client])
