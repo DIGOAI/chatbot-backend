@@ -9,3 +9,6 @@ class Context():
         self.event_twilio: Event = event
         self.client: Client | None = client
         self.last_state: str | None = last_state
+
+    def __str__(self) -> str:
+        return f"Context(event_twilio={self.event_twilio}, client={self.client}, last_state={self.last_state})"

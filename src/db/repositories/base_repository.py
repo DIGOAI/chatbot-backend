@@ -1,8 +1,8 @@
-from typing import Any, Generic, Sequence, TypeVar
+from typing import Any, Generic, List, Literal, Optional, Sequence, TypeVar, overload
 from uuid import UUID
 
 from pydantic import BaseModel
-from sqlalchemy import BinaryExpression, select, update
+from sqlalchemy import ColumnExpressionArgument, select, update
 from sqlalchemy.orm import Session
 
 from src.db.models import Base
@@ -71,14 +71,27 @@ class BaseRepository(Generic[DbModel, PyModel]):
         self.session.commit()
         return model
 
-    def filter(self, *expresions: BinaryExpression[Any]):
+    @overload
+    def filter(self, *expresions: ColumnExpressionArgument[bool], first: Literal[False] = False) -> List[PyModel]:
+        ...
+
+    @overload
+    def filter(self, *expresions: ColumnExpressionArgument[bool], first: Literal[True] = True) -> PyModel | None:
+        ...
+
+    def filter(self, *expresions: ColumnExpressionArgument[bool], first: bool = False) -> List[PyModel] | Optional[PyModel]:
         stmt = select(self.db_model)
 
         if expresions:
             stmt = stmt.where(*expresions)
 
-        models = self.session.scalars(stmt).all()
+        if first:
+            model = self.session.scalars(stmt).first()
+            if not model:
+                return None
+            return self.py_model.model_validate(model)
 
+        models = self.session.scalars(stmt).all()
         return [self.py_model.model_validate(model) for model in models]
 
     def update(self, id: int | UUID, *values: Sequence[Any]) -> PyModel:

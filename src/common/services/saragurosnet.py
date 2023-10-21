@@ -92,6 +92,51 @@ class SaragurosNetService:
 
         Returns:
         dict[str, Any] | None: The result of the request
+
+        Example:
+        ```json
+        {
+            "estado":"exito",
+            "datos":[
+                {
+                    "id":6,
+                    "nombre":"ARIEL Perez",
+                    "estado":"ACTIVO",
+                    "correo":"",
+                    "telefono":"45434565",
+                    "movil":"998283745",
+                    "cedula":"65454323",
+                    "pasarela":"",
+                    "codigo":"l4o4gp",
+                    "direccion_principal":"2301 Peger Rd.",
+                    "servicios":[
+                        {
+                            "id":5,
+                            "idperfil":2,
+                            "nodo":2,
+                            "costo":"150.00",
+                            "ipap":"",
+                            "mac":"00:44:56:56:78:17",
+                            "ip":"192.168.33.3",
+                            "instalado":"0000-00-00",
+                            "pppuser":"User6",
+                            "ppppass":"Pass6",
+                            "tiposervicio":"internet",
+                            "status_user":"OFFLINE",
+                            "coordenadas":"-11.984449254433779,-77.0827752259944",
+                            "direccion":"",
+                            "snmp_comunidad":"public",
+                            "perfil":"Plan 4Mbps"
+                        }
+                    ],
+                    "facturacion":{
+                        "facturas_nopagadas":4,
+                        "total_facturas":"750.00"
+                    }
+                }
+            ]
+        }
+        ```
         """
 
         data = {"cedula": cedula}
