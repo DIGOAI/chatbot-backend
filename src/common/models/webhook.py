@@ -46,3 +46,6 @@ class TwilioWebHook():
         self.forwarded = Forwarded
         self.frequently_forwarded = FrequentlyForwarded
         self.button_text = ButtonText
+
+    def __str__(self) -> str:
+        return f"TwilioWebHook(from_number={self.from_number}, to_number={self.to_number}, body={self.body}, num_media={self.num_media}, media_content_type={self.media_content_type}, media_url={self.media_url}, profile_name={self.profile_name}, wa_id={self.wa_id}, button_text={self.button_text})"

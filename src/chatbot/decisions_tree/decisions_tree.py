@@ -47,6 +47,7 @@ class DecisionsTree(Generic[T]):
 
         for key, f in self._functions.items():
             f()
+            Logger.info(f"Current context: {self.context}")
             if not self._tree[key](self.context):
                 break
 
