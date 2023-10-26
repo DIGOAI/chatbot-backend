@@ -17,15 +17,15 @@ oct_1_11_00 = datetime.fromtimestamp(1696158000)
 # Create a list of 5 clients
 clients: list[Client] = [
     Client(id=UUID("2f6e67d5-2652-4940-9ade-853be8a6cf34"), names="John Doe", phone="+593987654321",
-           saraguros_id=None, created_at=oct_1_10_30, updated_at=oct_1_11_00),
+           saraguros_id=None, created_at=oct_1_10_30, updated_at=oct_1_11_00, email="example1@mail.xyz"),
     Client(id=UUID("418fbef3-6184-4335-8317-246d198a0bd3"), names="Jane Doe", phone="+593987654322",
-           saraguros_id=None, created_at=oct_1_10_30, updated_at=oct_1_11_00),
+           saraguros_id=None, created_at=oct_1_10_30, updated_at=oct_1_11_00, email="example2@mail.xyz"),
     Client(id=UUID("bd794025-207a-43f7-94a2-19f9a329b05b"), names="John Smith", phone="+593987654323",
-           saraguros_id=None, created_at=oct_1_10_30, updated_at=oct_1_11_00),
+           saraguros_id=None, created_at=oct_1_10_30, updated_at=oct_1_11_00, email="example3@mail.xyz"),
     Client(id=UUID("4223010a-ddf6-404f-a2fc-e844f94ef05c"), names="Jane Smith", phone="+593987654324",
-           saraguros_id=None, created_at=oct_1_10_30, updated_at=oct_1_11_00),
+           saraguros_id=None, created_at=oct_1_10_30, updated_at=oct_1_11_00, email="example4@mail.xyz"),
     Client(id=UUID("040ea055-b8a3-4391-9395-dcf0538b0772"), names="John Doe", phone="+593987654325",
-           saraguros_id=None, created_at=oct_1_10_30, updated_at=oct_1_11_00),
+           saraguros_id=None, created_at=oct_1_10_30, updated_at=oct_1_11_00, email="example5@mail.xyz"),
 ]
 
 
