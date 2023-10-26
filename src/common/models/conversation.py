@@ -1,7 +1,7 @@
 from datetime import datetime
 from enum import Enum
 from typing import Any, Optional
-from uuid import UUID, uuid4
+from uuid import UUID
 
 from pydantic import BaseModel, Field, field_serializer
 
@@ -27,7 +27,7 @@ class ConversationBase(BaseModel):
 
     client_phone: str = Field(min_length=10, max_length=13)
     assistant_phone: str = Field(min_length=10, max_length=13)
-    client_id: Optional[UUID] = Field(default_factory=uuid4)
+    client_id: Optional[UUID] = Field(None)
     status: Optional[ConversationStatus] = Field(default=ConversationStatus.OPENED)
     finished_at: Optional[datetime] = Field(None)
 
@@ -81,7 +81,7 @@ class Conversation(ConversationBase):
     finished_at (datetime): The datetime when the conversation was finished
     """
 
-    id: UUID = Field(default_factory=uuid4)
+    id: UUID
     created_at: datetime
     updated_at: datetime
 
