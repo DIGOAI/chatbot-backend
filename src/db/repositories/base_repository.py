@@ -111,7 +111,7 @@ class BaseRepository(Generic[DbModel, PyModel]):
         stmt = (
             update(self.db_model)
             .where(self.db_model.id == id)  # type: ignore
-            .values(*values)
+            .values(*values, **kwvalues)
             .returning(self.db_model)
         )
 
