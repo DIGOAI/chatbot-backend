@@ -1,5 +1,4 @@
 from datetime import datetime
-from enum import Enum
 from typing import TYPE_CHECKING, Optional
 from uuid import UUID
 
@@ -8,17 +7,13 @@ from sqlalchemy import Enum as EnumType
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from src.common.models import ConversationStatus
 from src.db.models.base import Base, ITimeControl, IUuidPk
 
 if TYPE_CHECKING:
     from src.common.models.client import Client
     from src.db.models.message import Message
     from src.db.models.ticket import Ticket
-
-
-class ConversationStatus(str, Enum):
-    OPENED = "OPENED"
-    CLOSED = "CLOSED"
 
 
 class Conversation(Base, IUuidPk, ITimeControl):

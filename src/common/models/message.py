@@ -1,7 +1,7 @@
 from datetime import datetime
 from enum import Enum
 from typing import Any, Optional
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field, field_serializer
 
@@ -14,12 +14,21 @@ class MessageType(str, Enum):
 
 
 class MessageBase(BaseModel):
+    id: str
     sender: str
     receiver: str
     message: str
     media_url: Optional[str]
     message_type: MessageType = Field(default=MessageType.IN)
-    conversation_id: UUID
+    conversation_id: UUID = Field(default_factory=uuid4)
+
+    model_config = {
+        "from_attributes": True,
+    }
+
+    @field_serializer("conversation_id")
+    def serialize_id(self, id: UUID, _info: Any) -> str:
+        return str(id)
 
 
 class Message(MessageBase):
@@ -36,7 +45,6 @@ class Message(MessageBase):
     created_at (datetime): The datetime when the message was created
     """
 
-    id: str
     created_at: datetime
 
     @field_serializer("created_at")
@@ -64,6 +72,7 @@ class MessageInsert(MessageBase):
     """Message class to handle the message model.
 
     Attributes:
+    id (str): The Twilio Message SID (MSXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX) of the message
     sender (str): The phone sender of the message
     receiver (str): The phone receiver of the message
     message (str): The message of the message
@@ -76,6 +85,7 @@ class MessageInsert(MessageBase):
         "from_attributes": True,
         "json_schema_extra": {
             "example": {
+                "id": "MSXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
                 "sender": "+593905997001",
                 "receiver": "+593905997001",
                 "message": "Hola",

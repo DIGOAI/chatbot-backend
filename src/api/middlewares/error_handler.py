@@ -1,3 +1,5 @@
+import traceback
+
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
@@ -13,7 +15,11 @@ class ErrorHandler(BaseHTTPMiddleware):
         try:
             return await call_next(request)
         except Exception as e:
-            Logger.error(f"Error {e.__class__.__name__}: {str(e)}", "error-handler")
+            error_title = f"Error {id(e)} | {e.__class__.__name__}: {str(e)}"
+            Logger.error(error_title, "error-handler")
+
+            if hasattr(e, "__traceback__"):
+                Logger.error(f"{error_title} {traceback.format_exc()}", "error-handler")
 
             return JSONResponse(
                 status_code=500,
@@ -21,6 +27,6 @@ class ErrorHandler(BaseHTTPMiddleware):
                     "status": "error",
                     "type": e.__class__.__name__,
                     "message": str(e),
-                    "traceback": e.__traceback__ if hasattr(e, "__traceback__") else None
+                    "traceback": traceback.format_exc() if hasattr(e, "__traceback__") else None
                 }
             )

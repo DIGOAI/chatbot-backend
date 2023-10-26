@@ -29,16 +29,12 @@ class DecisionsTree(Generic[T]):
     def context(self, context: T) -> None:
         self.__context = context
 
-    def _add_action(self, action: Action[T]) -> None:
-        self._tree[action.id] = action
-
     def add_action(self, id: str, condition: Callable[[T], bool], end: bool = True):
         def inner_decorator(func: ActionFunction[T]):
             @wraps(func)
-            def wrapper() -> None:
-                self._add_action(
-                    Action(id, func, condition(self.context), end))
-            self._functions[id] = (wrapper)
+            def wrapper():
+                self._tree[id] = Action(id, func, condition(self.context), end)
+            self._functions[id] = wrapper
             return wrapper
         return inner_decorator
 

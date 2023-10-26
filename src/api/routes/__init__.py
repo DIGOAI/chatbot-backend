@@ -5,6 +5,7 @@ from fastapi import APIRouter, FastAPI
 
 from src.api.routes.auth_routes import router as auth_router
 from src.api.routes.client_routes import router as client_router
+from src.api.routes.conversation_routes import router as conversation_router
 from src.api.routes.external_routes import router as external_router
 from src.api.routes.message_routes import router as message_router
 from src.api.routes.root_routes import router as root_router
@@ -27,6 +28,7 @@ _routes: list[_RoutesType] = [
     {"router": auth_router, "prefix": _default_prefix},
     {"router": client_router, "prefix": _default_prefix},
     {"router": message_router, "prefix": _default_prefix},
+    {"router": conversation_router, "prefix": _default_prefix},
     {"router": external_router, "prefix": _default_prefix},
     {"router": twilio_router, "prefix": _default_prefix},
 ]
