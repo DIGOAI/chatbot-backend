@@ -1,4 +1,9 @@
 from src.common.models.client import Client, ClientInsert
+from src.common.models.conversation import (
+    Conversation,
+    ConversationInsert,
+    ConversationStatus,
+)
 from src.common.models.message import Message, MessageInsert, MessageType
 from src.common.models.responses import GenericResponse, create_response
 from src.common.models.ticket import (
@@ -22,6 +27,9 @@ from src.common.models.webhook import TwilioWebHook
 __all__ = [
     "Client",
     "ClientInsert",
+    "Conversation",
+    "ConversationInsert",
+    "ConversationStatus",
     "create_response",
     "GenericResponse",
     "LoginSchema",
