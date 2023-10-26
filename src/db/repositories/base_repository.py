@@ -4,6 +4,7 @@ from uuid import UUID
 from pydantic import BaseModel
 from sqlalchemy import ColumnExpressionArgument, select, update
 from sqlalchemy.orm import Session
+from sqlalchemy.sql._typing import _DMLColumnKeyMapping  # type: ignore
 
 from src.db.models import Base
 
@@ -39,14 +40,26 @@ class BaseRepository(Generic[DbModel, PyModel]):
         self.py_model = py_model
         self.session = session
 
-    def add(self, data: dict[str, Any]) -> PyModel:
+    @overload
+    def add(self, data: dict[str, Any], return_: Literal[True] = True) -> PyModel:
+        ...
+
+    @overload
+    def add(self, data: dict[str, Any], return_: Literal[False]) -> bool:
+        ...
+
+    def add(self, data: dict[str, Any], return_: bool = True) -> PyModel | bool:
         model = self.db_model(**data)
         self.session.add(model)
         self.session.commit()
-        self.session.refresh(model)
-        model_created = self.py_model.model_validate(model)
 
-        return model_created
+        if return_:
+            self.session.refresh(model)
+            model_created = self.py_model.model_validate(model)
+
+            return model_created
+
+        return True
 
     def get(self, id: int | UUID) -> PyModel:
         # stmt = select(self.db_model).where(self.db_model.id == id)
@@ -94,7 +107,7 @@ class BaseRepository(Generic[DbModel, PyModel]):
         models = self.session.scalars(stmt).all()
         return [self.py_model.model_validate(model) for model in models]
 
-    def update(self, id: int | UUID, *values: Sequence[Any]) -> PyModel:
+    def update(self, id: int | UUID, *values: _DMLColumnKeyMapping[Any] | Sequence[Any], **kwvalues: Any) -> PyModel:
         stmt = (
             update(self.db_model)
             .where(self.db_model.id == id)  # type: ignore
