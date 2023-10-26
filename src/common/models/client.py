@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Any, Optional
 from uuid import UUID
 
-from pydantic import BaseModel, Field, field_serializer
+from pydantic import BaseModel, EmailStr, Field, field_serializer
 
 
 class ClientBase(BaseModel):
@@ -13,6 +13,7 @@ class ClientBase(BaseModel):
     names (str): The names of the client
     lastnames (str): The lastnames of the client
     phone (str): The phone of the client
+    email (str): The email of the client
     saraguros_id (int): The id of the client in saragurosnet
     """
 
@@ -20,6 +21,7 @@ class ClientBase(BaseModel):
     names: Optional[str] = Field(min_length=4, max_length=40, default=None)
     lastnames: Optional[str] = Field(min_length=4, max_length=40, default=None)
     phone: str = Field(min_length=10, max_length=13)
+    email: EmailStr
     saraguros_id: Optional[int] = Field(None)
 
     model_config = {
@@ -35,6 +37,7 @@ class ClientInsert(ClientBase):
     names (str): The names of the client
     lastnames (str): The lastnames of the client
     phone (str): The phone of the client
+    email (str): The email of the client
     saraguros_id (int): The id of the client in saragurosnet
     """
 
@@ -46,6 +49,7 @@ class ClientInsert(ClientBase):
                 "names": "Juan",
                 "lastnames": "Perez",
                 "phone": "+593986728536",
+                "email": "example@mail.xyz",
                 "saraguros_id": 1,
             }
         }
@@ -61,6 +65,7 @@ class Client(ClientBase):
     names (str): The names of the client
     lastnames (str): The lastnames of the client
     phone (str): The phone of the client
+    email (str): The email of the client
     saraguros_id (int): The id of the client in saragurosnet
     created_at (datetime): The datetime when the client was created
     updated_at (datetime): The datetime when the client was updated
@@ -82,12 +87,13 @@ class Client(ClientBase):
         "from_attributes": True,
         "json_schema_extra": {
             "example": {
-                "id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
+                "id": "e6a3f1c4-9a9b-4f9c-9b7c-5f1b4a9c8f5c",
                 "ci": "0105997001",
                 "names": "Juan",
                 "lastnames": "Perez",
                 "phone": "+593986728536",
-                "last_state": "1.0",
+                "email": "example@mail.xyz",
+                "saraguros_id": 1,
                 "created_at": "2021-04-03T17:52:42.041338",
                 "updated_at": "2021-04-03T17:52:42.041338"
             }

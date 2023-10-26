@@ -33,6 +33,7 @@ class Client(Base, IUuidPk, ITimeControl):
     names: Mapped[Optional[str]] = mapped_column(String(40), nullable=True)
     lastnames: Mapped[Optional[str]] = mapped_column(String(40), nullable=True)
     phone: Mapped[str] = mapped_column(String(13), nullable=False)
+    email: Mapped[str] = mapped_column(String(255), nullable=True)
     saraguros_id: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
 
     conversations: Mapped[list["Conversation"]] = relationship(back_populates="client")
