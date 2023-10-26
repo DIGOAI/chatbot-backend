@@ -1,4 +1,4 @@
-from src.api.cases.base_use_cases import UseCaseBase
+from src.common.cases import UseCaseBase
 from src.common.models import Client, ClientInsert
 from src.db.models import Client as ClientModel
 from src.db.repositories import BaseRepository, ClientRepository
