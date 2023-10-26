@@ -20,7 +20,7 @@ class IUpdatedAt:
 
 class IUuidPk:
     id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, index=True,
-                                     default=uuid4(), server_default=func.gen_random_uuid())
+                                     default=uuid4, server_default=func.gen_random_uuid())
 
 
 class ITimeControl(ICreatedAt, IUpdatedAt):
