@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Any, Optional
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field, field_serializer
 
@@ -21,6 +21,10 @@ class ClientBase(BaseModel):
     lastnames: Optional[str] = Field(min_length=4, max_length=40, default=None)
     phone: str = Field(min_length=10, max_length=13)
     saraguros_id: Optional[int] = Field(None)
+
+    model_config = {
+        "from_attributes": True,
+    }
 
 
 class ClientInsert(ClientBase):
@@ -62,9 +66,13 @@ class Client(ClientBase):
     updated_at (datetime): The datetime when the client was updated
     """
 
-    id: UUID
+    id: UUID = Field(default_factory=uuid4)
     created_at: datetime
     updated_at: datetime
+
+    @field_serializer("id")
+    def serialize_id(self, id: UUID, _info: Any) -> str:
+        return str(id)
 
     @field_serializer("created_at", "updated_at")
     def serialize_dt(self, dt: datetime, _info: Any) -> float:
