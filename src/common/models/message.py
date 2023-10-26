@@ -1,7 +1,7 @@
 from datetime import datetime
 from enum import Enum
 from typing import Any, Optional
-from uuid import UUID, uuid4
+from uuid import UUID
 
 from pydantic import BaseModel, Field, field_serializer
 
@@ -20,7 +20,7 @@ class MessageBase(BaseModel):
     message: str
     media_url: Optional[str]
     message_type: MessageType = Field(default=MessageType.IN)
-    conversation_id: UUID = Field(default_factory=uuid4)
+    conversation_id: UUID
 
     model_config = {
         "from_attributes": True,

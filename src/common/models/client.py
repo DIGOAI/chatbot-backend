@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Any, Optional
-from uuid import UUID, uuid4
+from uuid import UUID
 
 from pydantic import BaseModel, Field, field_serializer
 
@@ -66,7 +66,7 @@ class Client(ClientBase):
     updated_at (datetime): The datetime when the client was updated
     """
 
-    id: UUID = Field(default_factory=uuid4)
+    id: UUID
     created_at: datetime
     updated_at: datetime
 
