@@ -27,7 +27,7 @@ class LoginSchema(BaseModel):
 
 class RegisterSchema(BaseModel):
     email: EmailStr
-    role: SystemRole = Field(default=SystemRole.WORKER)
+    system_role: SystemRole = Field(default=SystemRole.WORKER)
     password: str = Field(min_length=8, max_length=32, pattern=PASSWORD_PATTERN)
     names: Optional[str] = Field(min_length=4, max_length=40, default=None,)
     lastnames: Optional[str] = Field(min_length=4, max_length=40, default=None)

@@ -1,7 +1,7 @@
 from fastapi import status as STATUS
 
-from src.api.cases.base_use_cases import UseCaseBase
 from src.api.utils import decrypt, signJWT
+from src.common.cases import UseCaseBase
 from src.common.models import (
     LoginSchema,
     RegisterSchema,
