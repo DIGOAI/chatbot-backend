@@ -7,7 +7,12 @@ from src.common.models.conversation import (
     ConversationWithData,
     ConversationWithLastMessage,
 )
-from src.common.models.message import Message, MessageInsert, MessageType
+from src.common.models.message import (
+    Message,
+    MessageInsert,
+    MessageInsertWeb,
+    MessageType,
+)
 from src.common.models.responses import GenericResponse, create_response
 from src.common.models.ticket import (
     Ticket,
@@ -41,6 +46,7 @@ __all__ = [
     "LoginSchema",
     "Message",
     "MessageInsert",
+    "MessageInsertWeb",
     "MessageType",
     "RegisterSchema",
     "SystemRole",

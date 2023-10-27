@@ -1,8 +1,13 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 
 from src.api.middlewares import JWTBearer
 from src.common.cases import MessageUseCases
-from src.common.models import GenericResponse, Message, MessageInsert, create_response
+from src.common.models import (
+    GenericResponse,
+    Message,
+    MessageInsertWeb,
+    create_response,
+)
 
 router = APIRouter(prefix="/message", tags=["Message"], dependencies=[Depends(JWTBearer())])
 
@@ -15,7 +20,7 @@ def get_messages(limit: int = 10):
 
 
 @router.post("/send_message", response_model=GenericResponse[Message])
-def send_message(message: MessageInsert):
-    # message_is_created = MessageUseCases().add_new_message(message)
-    # return write_message(message)
-    raise HTTPException(status_code=501, detail="Not implemented")
+def send_message(message: MessageInsertWeb):
+    message_sended = MessageUseCases().send_message_from_web(message)
+
+    return create_response(message_sended, message="Message sended.")
