@@ -38,7 +38,7 @@ class Message(Base, ICreatedAt):
     message_type: Mapped[MessageType] = mapped_column(EnumType(MessageType), default=MessageType.IN, nullable=False)
     conversation_id: Mapped[UUID] = mapped_column(ForeignKey("conversations.id", ondelete="CASCADE"), nullable=False)
 
-    conversation: Mapped["Conversation"] = relationship(back_populates="messages")
+    conversation: Mapped["Conversation"] = relationship(back_populates="messages", foreign_keys=[conversation_id])
 
     def __repr__(self) -> str:
         return f"<Message id={self.id} sender={self.sender} receiver={self.receiver} message={self.message} media_url={self.media_url} message_type={self.message_type} conversation={self.conversation} created_at={self.created_at}>"

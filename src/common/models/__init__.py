@@ -4,6 +4,8 @@ from src.common.models.conversation import (
     ConversationGroup,
     ConversationInsert,
     ConversationStatus,
+    ConversationWithData,
+    ConversationWithLastMessage,
 )
 from src.common.models.message import Message, MessageInsert, MessageType
 from src.common.models.responses import GenericResponse, create_response
@@ -32,6 +34,8 @@ __all__ = [
     "ConversationGroup",
     "ConversationInsert",
     "ConversationStatus",
+    "ConversationWithData",
+    "ConversationWithLastMessage",
     "create_response",
     "GenericResponse",
     "LoginSchema",

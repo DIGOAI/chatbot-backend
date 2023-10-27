@@ -9,10 +9,10 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.common.models import ConversationGroup, ConversationStatus
 from src.db.models.base import Base, ITimeControl, IUuidPk
+from src.db.models.message import Message
 
 if TYPE_CHECKING:
     from src.common.models.client import Client
-    from src.db.models.message import Message
     from src.db.models.ticket import Ticket
 
 
@@ -40,11 +40,15 @@ class Conversation(Base, IUuidPk, ITimeControl):
     client_id: Mapped[Optional[UUID]] = mapped_column(ForeignKey("clients.id", ondelete="CASCADE"), nullable=True)
     group: Mapped[ConversationGroup] = mapped_column(EnumType(ConversationGroup), default=ConversationGroup.CHATBOT)
     status: Mapped[ConversationStatus] = mapped_column(EnumType(ConversationStatus), default=ConversationStatus.OPENED)
+    last_message_id: Mapped[Optional[str]] = mapped_column(
+        ForeignKey("messages.id", ondelete="SET NULL"), nullable=True)
     finished_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=True)
 
     client: Mapped["Client"] = relationship(back_populates="conversations")
-    messages: Mapped[list["Message"]] = relationship(back_populates="conversation")
+    messages: Mapped[list["Message"]] = relationship(
+        back_populates="conversation", foreign_keys=[Message.conversation_id])
     ticket: Mapped["Ticket"] = relationship(back_populates="conversation")
+    last_message: Mapped["Message"] = relationship(foreign_keys=[last_message_id])
 
     def __repr__(self) -> str:
         return f"<Conversation(id={self.id}, client_phone={self.client_phone}, assistant_phone={self.assistant_phone}, client={self.client}, group={self.group}, status={self.status}, messages={self.messages}, created_at={self.created_at}, updated_at={self.updated_at}, finished_at={self.finished_at})>"
