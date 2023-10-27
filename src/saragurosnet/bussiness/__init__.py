@@ -17,11 +17,13 @@ tree = DecisionsTree[Context]()
 twilio = TwilioService(Config.TWILIO_SID, Config.TWILIO_TOKEN,
                        Config.TWILIO_SENDER, '')
 
-
 # === Util functions ===
+
+
 def say_error(ctx: Context):
     Logger.error("Client is None")
-    twilio.send_message(MessageType.ERROR_CLIENT_NOT_FOUND, receiver=ctx.event_twilio.from_number)
+    MessageUseCases().send_message(MessageType.ERROR_CLIENT_NOT_FOUND, ctx.event_twilio.from_number, ctx.conversation.id)
+    # twilio.send_message(MessageType.ERROR_CLIENT_NOT_FOUND, receiver=ctx.event_twilio.from_number)
     return False
 # === End util functions ===
 
@@ -55,8 +57,6 @@ def pre_action(ctx: Context):
         conversation_updated = conversation_cases.update_last_message_id(ctx.conversation, new_message.id)
 
         ctx.conversation = conversation_updated
-
-
 # === End pre actions ===
 
 
@@ -74,7 +74,8 @@ def load_context(ctx: Context, id_func: str):
 
     if not user:
         Logger.warn(f"User doesn't exists: {client_phone}")
-        twilio.send_message(MessageType.ERROR_CLIENT_NOT_FOUND, receiver=ctx.event_twilio.from_number)
+        MessageUseCases().send_message(MessageType.ERROR_CLIENT_NOT_FOUND, ctx.event_twilio.from_number, ctx.conversation.id)
+        # twilio.send_message(MessageType.ERROR_CLIENT_NOT_FOUND, receiver=ctx.event_twilio.from_number)
 
         return False
 
@@ -90,7 +91,8 @@ def load_context(ctx: Context, id_func: str):
 
 @tree.add_action("0.1", condition=lambda ctx: ctx.last_state == None or ctx.last_state == "3.1", next="0.2")
 def say_welcome(ctx: Context, id_func: str):
-    twilio.send_message(MessageType.SAY_HELLO, receiver=ctx.event_twilio.from_number)
+    MessageUseCases().send_message(MessageType.SAY_HELLO, ctx.event_twilio.from_number, ctx.conversation.id)
+    # twilio.send_message(MessageType.SAY_HELLO, receiver=ctx.event_twilio.from_number)
     ctx.last_state = id_func
 
 
@@ -136,13 +138,15 @@ def search_saraguros_client(ctx: Context, id_func: str):
 
     except ValueError as e:
         Logger.warn(str(e))
-        twilio.send_message(MessageType.ERROR_INVALID_CI, receiver=ctx.event_twilio.from_number)
+        MessageUseCases().send_message(MessageType.ERROR_INVALID_CI, ctx.event_twilio.from_number, ctx.conversation.id)
+        # twilio.send_message(MessageType.ERROR_INVALID_CI, receiver=ctx.event_twilio.from_number)
 
         ctx.last_state = None
 
     except (KeyError, IndexError) as e:
         Logger.error(f'Error getting client data from SaragurosNet API: {e} key | index')
-        twilio.send_message(MessageType.ERROR_CLIENT_NOT_FOUND, receiver=ctx.event_twilio.from_number)
+        MessageUseCases().send_message(MessageType.ERROR_CLIENT_NOT_FOUND, ctx.event_twilio.from_number, ctx.conversation.id)
+        # twilio.send_message(MessageType.ERROR_CLIENT_NOT_FOUND, receiver=ctx.event_twilio.from_number)
 
         ctx.last_state = None
 
@@ -152,7 +156,9 @@ def say_welcome_unknown(ctx: Context, id_func: str):
     if ctx.client is None:
         return say_error(ctx)
 
-    twilio.send_message(MessageType.WELCOME_UNKNOW.format(name="Cliente"), receiver="whatsapp:" + ctx.client.phone)
+    MessageUseCases().send_message(MessageType.WELCOME_UNKNOW.format(
+        name="Cliente"), ctx.event_twilio.from_number, ctx.conversation.id)
+    # twilio.send_message(MessageType.WELCOME_UNKNOW.format(name="Cliente"), receiver="whatsapp:" + ctx.client.phone)
 
     ctx.last_state = id_func
 
@@ -162,9 +168,12 @@ def send_promotions(ctx: Context, id_func: str):
     if ctx.client is None:
         return say_error(ctx)
 
-    twilio.send_message(MessageType.PROMOTIONS,
-                        receiver="whatsapp:" + ctx.client.phone,
-                        media_url=MediaUrlType.PROMOTIONS)
+    MessageUseCases().send_message(MessageType.PROMOTIONS, ctx.event_twilio.from_number,
+                                   ctx.conversation.id, media_url=MediaUrlType.PROMOTIONS)
+
+    # twilio.send_message(MessageType.PROMOTIONS,
+    #                     receiver="whatsapp:" + ctx.client.phone,
+    #                     media_url=MediaUrlType.PROMOTIONS)
 
     # fullname = format_fullname(ctx.client.names, ctx.client.lastnames)
     # say_goodbye(fullname, "whatsapp:" + ctx.client.phone)
@@ -176,9 +185,12 @@ def send_coverages(ctx: Context, id_func: str):
     if ctx.client is None:
         return say_error(ctx)
 
-    twilio.send_message(MessageType.COVERAGES,
-                        receiver="whatsapp:" + ctx.client.phone,
-                        media_url=MediaUrlType.COVERAGES)
+    MessageUseCases().send_message(MessageType.COVERAGES, ctx.event_twilio.from_number,
+                                   ctx.conversation.id, media_url=MediaUrlType.COVERAGES)
+
+    # twilio.send_message(MessageType.COVERAGES,
+    #                     receiver="whatsapp:" + ctx.client.phone,
+    #                     media_url=MediaUrlType.COVERAGES)
 
     # fullname = format_fullname(ctx.client.names, ctx.client.lastnames)
     # say_goodbye(fullname, "whatsapp:" + ctx.client.phone)
@@ -191,7 +203,10 @@ def talk_with_agent(ctx: Context, id_func: str):
         return say_error(ctx)
 
     fullname = format_fullname(ctx.client.names, ctx.client.lastnames)
-    twilio.send_message(MessageType.CONNECT_AGENT.format(name=fullname), receiver="whatsapp:" + ctx.client.phone)
+
+    MessageUseCases().send_message(MessageType.CONNECT_AGENT.format(
+        name=fullname), ctx.event_twilio.from_number, ctx.conversation.id)
+    # twilio.send_message(MessageType.CONNECT_AGENT.format(name=fullname), receiver="whatsapp:" + ctx.client.phone)
 
     # TODO: Generar ticket de atencion al cliente
     # TODO: Crear nuevo usuario en microwisp para tener su ID
@@ -204,7 +219,10 @@ def say_welcome_client(ctx: Context, id_func: str):
         return say_error(ctx)
 
     fullname = format_fullname(ctx.client.names, ctx.client.lastnames)
-    twilio.send_message(MessageType.WELCOME_CLIENT.format(name=fullname), receiver="whatsapp:" + ctx.client.phone)
+
+    MessageUseCases().send_message(MessageType.WELCOME_CLIENT.format(
+        name=fullname), ctx.event_twilio.from_number, ctx.conversation.id)
+    # twilio.send_message(MessageType.WELCOME_CLIENT.format(name=fullname), receiver="whatsapp:" + ctx.client.phone)
 
 
 @tree.add_action("2.1", condition=lambda ctx: ctx.last_state == "2.0" and ctx.event_twilio.body == OptionType.STATUS)
@@ -257,7 +275,10 @@ def end_conversation(ctx: Context, id_func: str):
 
     fullname = format_fullname(ctx.client.names, ctx.client.lastnames)
     fullname = fullname if fullname != "" else "Cliente"
-    twilio.send_message(MessageType.END_CONVERSATION.format(name=fullname), receiver="whatsapp:" + ctx.client.phone)
+
+    MessageUseCases().send_message(MessageType.END_CONVERSATION.format(
+        name=fullname), ctx.event_twilio.from_number, ctx.conversation.id)
+    # twilio.send_message(MessageType.END_CONVERSATION.format(name=fullname), receiver="whatsapp:" + ctx.client.phone)
     ctx.last_state = id_func
 
 
@@ -266,7 +287,8 @@ def say_goodbye(ctx: Context, id_func: str):
     if ctx.client is None:
         return say_error(ctx)
 
-    twilio.send_message(MessageType.SAY_GOODBAY, receiver="whatsapp:" + ctx.client.phone)
+    MessageUseCases().send_message(MessageType.SAY_GOODBAY, ctx.event_twilio.from_number, ctx.conversation.id)
+    # twilio.send_message(MessageType.SAY_GOODBAY, receiver="whatsapp:" + ctx.client.phone)
 
     # TODO: End conversation and update th db
     conversation = ConversationUseCases().end_conversation(ctx.conversation)
