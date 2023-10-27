@@ -22,6 +22,8 @@ depends_on: str | Sequence[str] | None = None
 def upgrade() -> None:
     # === Create conversationstatus enum type ===
     sa.Enum('OPENED', 'CLOSED', name='conversationstatus').create(op.get_bind())  # type: ignore
+    sa.Enum('SUPPORT', 'SALES', 'CLAIMS', 'CHATBOT', 'WEB', 'OTHER',
+            name='conversationgroup').create(op.get_bind())  # type: ignore
 
     # === Create conversations table ===
     op.create_table('conversations',
@@ -29,6 +31,8 @@ def upgrade() -> None:
                     sa.Column('client_phone', sa.String(length=13), nullable=False),
                     sa.Column('assistant_phone', sa.String(length=13), nullable=False),
                     sa.Column('client_id', sa.Uuid(), nullable=True),
+                    sa.Column('group',  # type: ignore
+                              postgresql.ENUM('SUPPORT', 'SALES', 'CLAIMS', 'CHATBOT', 'WEB', 'OTHER', name='conversationgroup', create_type=False), nullable=False),
                     sa.Column('status',  # type: ignore
                               postgresql.ENUM('OPENED', 'CLOSED', name='conversationstatus', create_type=False), nullable=False),
                     sa.Column('created_at', sa.DateTime(timezone=True),
@@ -48,3 +52,5 @@ def downgrade() -> None:
     op.drop_table('conversations')
 
     sa.Enum('OPENED', 'CLOSED', name='conversationstatus').drop(op.get_bind())  # type: ignore
+    sa.Enum('SUPPORT', 'SALES', 'CLAIMS', 'CHATBOT', 'WEB', 'OTHER',
+            name='conversationgroup').drop(op.get_bind())  # type: ignore

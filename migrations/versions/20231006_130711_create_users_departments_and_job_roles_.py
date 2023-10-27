@@ -1,4 +1,4 @@
-"""Create users, departments and job_roles tables
+"""Create users and departments tables
 
 Revision ID: 914977b24c0c
 Revises: 
@@ -25,7 +25,7 @@ def upgrade() -> None:
 
     # === Create departments table ===
     op.create_table('departments',
-                    sa.Column('id', sa.Uuid(), server_default=sa.text('gen_random_uuid()'), nullable=False),
+                    sa.Column('id', sa.String(10), nullable=False),
                     sa.Column('name', sa.String(length=80), nullable=False),
                     sa.Column('external_id', sa.Integer(), nullable=False),
                     sa.Column('created_at', sa.DateTime(timezone=True),
@@ -36,20 +36,6 @@ def upgrade() -> None:
                     )
     op.create_index(op.f('ix_departments_id'), 'departments', ['id'], unique=False)
 
-    # === Create job_roles table ===
-    op.create_table('job_roles',
-                    sa.Column('id', sa.Uuid(), server_default=sa.text('gen_random_uuid()'), nullable=False),
-                    sa.Column('name', sa.String(length=80), nullable=False),
-                    sa.Column('department_id', sa.Uuid(), nullable=False),
-                    sa.Column('created_at', sa.DateTime(timezone=True),
-                              server_default=sa.text('now()'), nullable=False),
-                    sa.Column('updated_at', sa.DateTime(timezone=True),
-                              server_default=sa.text('now()'), nullable=False),
-                    sa.ForeignKeyConstraint(['department_id'], ['departments.id'], ondelete='CASCADE'),
-                    sa.PrimaryKeyConstraint('id')
-                    )
-    op.create_index(op.f('ix_job_roles_id'), 'job_roles', ['id'], unique=False)
-
     # === Create users table ===
     op.create_table('users',
                     sa.Column('id', sa.Uuid(), server_default=sa.text('gen_random_uuid()'), nullable=False),
@@ -59,13 +45,14 @@ def upgrade() -> None:
                     sa.Column('lastnames', sa.String(length=40), nullable=True),
                     sa.Column('system_role',  # type: ignore
                               postgresql.ENUM('OTHER', 'WORKER', 'ADMIN', 'SUPPORT', name='systemrole', create_type=False), nullable=False),
-                    sa.Column('job_role_id', sa.Uuid(), nullable=True),
+                    sa.Column('department_id', sa.String(10), nullable=False),
                     sa.Column('active', sa.Boolean(), server_default='true', nullable=False),
                     sa.Column('created_at', sa.DateTime(timezone=True),
                               server_default=sa.text('now()'), nullable=False),
                     sa.Column('updated_at', sa.DateTime(timezone=True),
                               server_default=sa.text('now()'), nullable=False),
-                    sa.ForeignKeyConstraint(['job_role_id'], ['job_roles.id'], ondelete='CASCADE'),
+
+                    sa.ForeignKeyConstraint(['department_id'], ['departments.id'], ondelete='CASCADE'),
 
                     sa.PrimaryKeyConstraint('id')
                     )
@@ -75,8 +62,6 @@ def upgrade() -> None:
 def downgrade() -> None:
     op.drop_index(op.f('ix_users_id'), table_name='users')
     op.drop_table('users')
-    op.drop_index(op.f('ix_job_roles_id'), table_name='job_roles')
-    op.drop_table('job_roles')
     op.drop_index(op.f('ix_departments_id'), table_name='departments')
     op.drop_table('departments')
 

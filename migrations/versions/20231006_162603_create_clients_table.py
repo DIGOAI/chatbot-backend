@@ -26,6 +26,7 @@ def upgrade() -> None:
                     sa.Column('names', sa.String(length=40), nullable=True),
                     sa.Column('lastnames', sa.String(length=40), nullable=True),
                     sa.Column('phone', sa.String(length=13), nullable=False),
+                    sa.Column('email', sa.String(length=255), nullable=True),
                     sa.Column('saraguros_id', sa.Integer(), nullable=True),
                     sa.Column('created_at', sa.DateTime(timezone=True),
                               server_default=sa.text('now()'), nullable=False),
