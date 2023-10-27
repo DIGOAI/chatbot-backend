@@ -45,6 +45,15 @@ class ConversationUseCases(UseCaseBase):
 
         return conversation_updated
 
+    def update_last_message_id(self, conversation: Conversation, message_id: str):
+        with self._session() as session:
+            conversation_repo = BaseRepository(ConversationModel, Conversation, session)
+            conversation.updated_at = datetime.utcnow()
+            conversation_updated = conversation_repo.update(
+                conversation.id, last_message_id=message_id, updated_at=conversation.updated_at)
+
+        return conversation_updated
+
     def end_conversation(self, conversation: Conversation):
         with self._session() as session:
             conversation_repo = BaseRepository(ConversationModel, Conversation, session)

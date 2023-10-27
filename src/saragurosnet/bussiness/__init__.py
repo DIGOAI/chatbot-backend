@@ -50,6 +50,13 @@ def pre_action(ctx: Context):
     if message_saved:
         Logger.info(f"Message saved: {new_message.id}")
 
+        # Update the conversation last message id
+        conversation_cases = ConversationUseCases()
+        conversation_updated = conversation_cases.update_last_message_id(ctx.conversation, new_message.id)
+
+        ctx.conversation = conversation_updated
+
+
 # === End pre actions ===
 
 
