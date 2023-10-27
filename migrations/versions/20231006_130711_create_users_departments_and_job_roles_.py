@@ -45,7 +45,7 @@ def upgrade() -> None:
                     sa.Column('lastnames', sa.String(length=40), nullable=True),
                     sa.Column('system_role',  # type: ignore
                               postgresql.ENUM('OTHER', 'WORKER', 'ADMIN', 'SUPPORT', name='systemrole', create_type=False), nullable=False),
-                    sa.Column('department_id', sa.String(10), nullable=False),
+                    sa.Column('department_id', sa.String(10), nullable=True),
                     sa.Column('active', sa.Boolean(), server_default='true', nullable=False),
                     sa.Column('created_at', sa.DateTime(timezone=True),
                               server_default=sa.text('now()'), nullable=False),

@@ -1,5 +1,4 @@
 from datetime import datetime
-from enum import Enum
 from typing import TYPE_CHECKING, Optional
 from uuid import UUID
 
@@ -8,33 +7,13 @@ from sqlalchemy import Enum as EnumType
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.common.models import ConversationStatus
+from src.common.models import ConversationGroup, ConversationStatus
 from src.db.models.base import Base, ITimeControl, IUuidPk
 
 if TYPE_CHECKING:
     from src.common.models.client import Client
     from src.db.models.message import Message
     from src.db.models.ticket import Ticket
-
-
-class ConversationGroup(str, Enum):
-    """ConversationGroup class to handle the conversation group enum.
-
-    Attributes:
-    SUPPORT (str): The support conversation group
-    SALES (str): The sales conversation group
-    CLAIMS (str): The claims conversation group
-    CHATBOT (str): The chatbot conversation group
-    WEB (str): The web conversation group
-    OTHER (str): The other conversation group
-    """
-
-    SUPPORT = "SUPPORT"
-    SALES = "SALES"
-    CLAIMS = "CLAIMS"
-    CHATBOT = "CHATBOT"
-    WEB = "WEB"
-    OTHER = "OTHER"
 
 
 class Conversation(Base, IUuidPk, ITimeControl):

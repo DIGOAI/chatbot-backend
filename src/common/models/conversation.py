@@ -14,6 +14,26 @@ class ConversationStatus(str, Enum):
     CLOSED = "CLOSED"
 
 
+class ConversationGroup(str, Enum):
+    """ConversationGroup class to handle the conversation group enum.
+
+    Attributes:
+    SUPPORT (str): The support conversation group
+    SALES (str): The sales conversation group
+    CLAIMS (str): The claims conversation group
+    CHATBOT (str): The chatbot conversation group
+    WEB (str): The web conversation group
+    OTHER (str): The other conversation group
+    """
+
+    SUPPORT = "SUPPORT"
+    SALES = "SALES"
+    CLAIMS = "CLAIMS"
+    CHATBOT = "CHATBOT"
+    WEB = "WEB"
+    OTHER = "OTHER"
+
+
 class ConversationBase(BaseModel):
     """ConversationBase class to handle the conversation model.
 
@@ -21,6 +41,7 @@ class ConversationBase(BaseModel):
     client_phone (str): The phone of the client in the conversation
     assistant_phone (str): The phone of the assistant in the conversation
     client_id (uuid): The id of the client in the conversation
+    group (ConversationGroup): The group of the conversation
     status (str): The status of the conversation
     finished_at (datetime): The datetime when the conversation was finished
     """
@@ -28,6 +49,7 @@ class ConversationBase(BaseModel):
     client_phone: str = Field(min_length=10, max_length=13)
     assistant_phone: str = Field(min_length=10, max_length=13)
     client_id: Optional[UUID] = Field(None)
+    group: Optional[ConversationGroup] = Field(default=ConversationGroup.CHATBOT)
     status: Optional[ConversationStatus] = Field(default=ConversationStatus.OPENED)
     finished_at: Optional[datetime] = Field(None)
 
@@ -49,6 +71,7 @@ class ConversationInsert(ConversationBase):
     client_phone (str): The phone of the client in the conversation
     assistant_phone (str): The phone of the assistant in the conversation
     client_id (uuid): The id of the client in the conversation
+    group (ConversationGroup): The group of the conversation
     status (str): The status of the conversation
     finished_at (datetime): The datetime when the conversation was finished
     """
@@ -75,6 +98,7 @@ class Conversation(ConversationBase):
     client_phone (str): The phone of the client in the conversation
     assistant_phone (str): The phone of the assistant in the conversation
     client_id (uuid): The id of the client in the conversation
+    group (ConversationGroup): The group of the conversation
     status (str): The status of the conversation
     created_at (datetime): The datetime when the conversation was created
     updated_at (datetime): The datetime when the conversation was updated

@@ -1,6 +1,7 @@
 from src.common.models.client import Client, ClientInsert
 from src.common.models.conversation import (
     Conversation,
+    ConversationGroup,
     ConversationInsert,
     ConversationStatus,
 )
@@ -28,6 +29,7 @@ __all__ = [
     "Client",
     "ClientInsert",
     "Conversation",
+    "ConversationGroup",
     "ConversationInsert",
     "ConversationStatus",
     "create_response",
