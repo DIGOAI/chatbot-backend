@@ -121,4 +121,8 @@ class Logger:
             caller_module_name = caller_name
 
         init()
-        print(f"{COLORS[alert_type]}[{alert_type:^5}]{Style.RESET_ALL}{Style.BRIGHT}[{caller_module_name:^{Logger.module_char_length}}]:{Style.RESET_ALL} {msg}")
+
+        try:
+            print(f"{COLORS[alert_type]}[{alert_type:^5}]{Style.RESET_ALL}{Style.BRIGHT}[{caller_module_name:^{Logger.module_char_length}}]:{Style.RESET_ALL} {msg}")
+        except Exception:
+            print(f"{alert_type}[{alert_type:^5}][{caller_module_name:^{Logger.module_char_length}}]: {msg}")
