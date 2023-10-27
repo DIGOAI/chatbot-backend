@@ -29,7 +29,7 @@ def upgrade() -> None:
                     sa.Column('external_id', sa.Integer(), nullable=True),
                     sa.Column('subject', sa.String(length=255), nullable=False),
                     sa.Column('shift', sa.String(length=13), nullable=True),
-                    sa.Column('department_id', sa.Uuid(), nullable=False),
+                    sa.Column('department_id', sa.String(10), nullable=False),
                     sa.Column('status',  # type: ignore
                               postgresql.ENUM('WAITING', 'ATTENDING', 'CLOSED', 'UNSOLVED', name='ticketstatus', create_type=False), nullable=False),
                     sa.Column('client_id', sa.Uuid(), nullable=False),

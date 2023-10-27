@@ -40,7 +40,7 @@ class User(BaseModel):
     names: Optional[str]
     lastnames: Optional[str]
     system_role: SystemRole
-    job_role_id: Optional[UUID]
+    department_id: Optional[str]
     active: bool
     created_at: datetime
     updated_at: datetime

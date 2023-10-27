@@ -19,6 +19,7 @@ class Client(Base, IUuidPk, ITimeControl):
     names (str): The names of the client
     lastnames (str): The lastnames of the client
     phone (str): The phone of the client
+    email (str): The email of the client
     saraguros_id (int): The id of the client in saraguros
     created_at (datetime): The datetime when the client was created
     updated_at (datetime): The datetime when the client was updated
@@ -33,7 +34,7 @@ class Client(Base, IUuidPk, ITimeControl):
     names: Mapped[Optional[str]] = mapped_column(String(40), nullable=True)
     lastnames: Mapped[Optional[str]] = mapped_column(String(40), nullable=True)
     phone: Mapped[str] = mapped_column(String(13), nullable=False)
-    email: Mapped[str] = mapped_column(String(255), nullable=True)
+    email: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     saraguros_id: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
 
     conversations: Mapped[list["Conversation"]] = relationship(back_populates="client")

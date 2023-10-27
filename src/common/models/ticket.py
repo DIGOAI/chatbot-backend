@@ -87,7 +87,7 @@ class TicketStatus(str, Enum):
 class TicketBase(BaseModel):
     subject: str
     shift: TicketShift = Field(default=TicketShift.MORNING)
-    department_id: UUID
+    department_id: str
     status: TicketStatus = Field(default=TicketStatus.WAITING)
     client_id: UUID
     conversation_id: Optional[UUID] = None
@@ -99,7 +99,7 @@ class TicketInsert(TicketBase):
     Attributes:
     subject (str): The subject of the ticket
     shift (str): The shift of the ticket
-    department_id (uuid): The id of the department of the ticket
+    department_id (str): The id of the department of the ticket
     status (str): The status of the ticket
     client_id (uuid): The id of the client of the ticket
     conversation_id (uuid): The id of the conversation of the ticket
@@ -116,7 +116,7 @@ class Ticket(TicketBase):
     external_id (int): The external id of the ticket (SaragurosNet)
     subject (str): The subject of the ticket
     shift (str): The shift of the ticket
-    department_id (uuid): The id of the department of the ticket
+    department_id (str): The id of the department of the ticket
     status (str): The status of the ticket
     client_id (uuid): The id of the client of the ticket
     conversation_id (uuid): The id of the conversation of the ticket

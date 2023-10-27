@@ -21,7 +21,7 @@ class ClientBase(BaseModel):
     names: Optional[str] = Field(min_length=4, max_length=40, default=None)
     lastnames: Optional[str] = Field(min_length=4, max_length=40, default=None)
     phone: str = Field(min_length=10, max_length=13)
-    email: EmailStr
+    email: Optional[EmailStr] = Field(None)
     saraguros_id: Optional[int] = Field(None)
 
     model_config = {
