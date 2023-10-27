@@ -57,9 +57,14 @@ class ConversationUseCases(UseCaseBase):
     def end_conversation(self, conversation: Conversation):
         with self._session() as session:
             conversation_repo = BaseRepository(ConversationModel, Conversation, session)
-            conversation.updated_at = datetime.utcnow()
+
+            timestamp = datetime.utcnow()
+
+            conversation.updated_at = timestamp
+            conversation.finished_at = timestamp
+
             conversation_updated = conversation_repo.update(
-                conversation.id, status=ConversationStatus.CLOSED, updated_at=conversation.updated_at)
+                conversation.id, status=ConversationStatus.CLOSED, updated_at=conversation.updated_at, finished_at=conversation.finished_at)
 
         return conversation_updated
 
