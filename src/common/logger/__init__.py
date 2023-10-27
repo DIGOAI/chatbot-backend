@@ -1,6 +1,6 @@
 from enum import Enum
 
-from colorama import Back, Fore, Style, init
+# from colorama import Back, Fore, Style, init
 
 
 class AlertType(str, Enum):
@@ -16,15 +16,15 @@ class AlertType(str, Enum):
         return self.value
 
 
-ColorDict = dict[AlertType, str]
+# ColorDict = dict[AlertType, str]
 
-COLORS: ColorDict = {
-    AlertType.INFO: Back.BLUE + Fore.WHITE + Style.BRIGHT,
-    AlertType.ERROR: Back.RED + Fore.WHITE + Style.BRIGHT,
-    AlertType.WARNING: Back.YELLOW + Fore.BLACK + Style.BRIGHT,
-    AlertType.ALERT: Back.GREEN + Fore.WHITE + Style.BRIGHT,
-    AlertType.DEBUG: Back.MAGENTA + Fore.WHITE + Style.BRIGHT,
-}
+# COLORS: ColorDict = {
+#     AlertType.INFO: Back.BLUE + Fore.WHITE + Style.BRIGHT,
+#     AlertType.ERROR: Back.RED + Fore.WHITE + Style.BRIGHT,
+#     AlertType.WARNING: Back.YELLOW + Fore.BLACK + Style.BRIGHT,
+#     AlertType.ALERT: Back.GREEN + Fore.WHITE + Style.BRIGHT,
+#     AlertType.DEBUG: Back.MAGENTA + Fore.WHITE + Style.BRIGHT,
+# }
 
 
 class Logger:
@@ -120,9 +120,10 @@ class Logger:
         else:
             caller_module_name = caller_name
 
-        init()
+        # init()
 
-        try:
-            print(f"{COLORS[alert_type]}[{alert_type:^5}]{Style.RESET_ALL}{Style.BRIGHT}[{caller_module_name:^{Logger.module_char_length}}]:{Style.RESET_ALL} {msg}")
-        except Exception:
-            print(f"{alert_type}[{alert_type:^5}][{caller_module_name:^{Logger.module_char_length}}]: {msg}")
+        print(f"[{alert_type:^5}][{caller_module_name:^{Logger.module_char_length}}]: {msg}")
+        # try:
+        #     print(f"{COLORS[alert_type]}[{alert_type:^5}]{Style.RESET_ALL}{Style.BRIGHT}[{caller_module_name:^{Logger.module_char_length}}]:{Style.RESET_ALL} {msg}")
+        # except Exception:
+        #     print(f"{alert_type}[{alert_type:^5}][{caller_module_name:^{Logger.module_char_length}}]: {msg}")
