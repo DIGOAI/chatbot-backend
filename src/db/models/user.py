@@ -1,5 +1,4 @@
 from typing import TYPE_CHECKING, Optional
-from uuid import UUID
 
 from sqlalchemy import Boolean
 from sqlalchemy import Enum as EnumType
@@ -10,7 +9,7 @@ from src.common.models import SystemRole
 from src.db.models.base import Base, ITimeControl, IUuidPk
 
 if TYPE_CHECKING:
-    from src.db.models.job_role import JobRole
+    from src.db.models.department import Department
 
 
 class User(Base, IUuidPk, ITimeControl):
@@ -23,7 +22,7 @@ class User(Base, IUuidPk, ITimeControl):
     names (str): The names of the user
     lastnames (str): The lastnames of the user
     system_role (SystemRole): The system role of the user
-    job_role_id (uuid): The job role id of the user
+    department_id (str): The id of the department of the user
     active (bool): The active status of the user
     created_at (datetime): The datetime when the user was created
     updated_at (datetime): The datetime when the user was updated
@@ -40,11 +39,11 @@ class User(Base, IUuidPk, ITimeControl):
     names: Mapped[Optional[str]] = mapped_column(String(40), nullable=True, default=None, server_default=None)
     lastnames: Mapped[Optional[str]] = mapped_column(String(40), nullable=True, default=None, server_default=None)
     system_role: Mapped[SystemRole] = mapped_column(EnumType(SystemRole), default=SystemRole.WORKER)
-    job_role_id: Mapped[Optional[UUID]] = mapped_column(ForeignKey(
-        "job_roles.id", ondelete="CASCADE"), nullable=True, default=None, server_default=None)
+    department_id: Mapped[Optional[str]] = mapped_column(ForeignKey(
+        "departments.id", ondelete="CASCADE"), nullable=True, default=None, server_default=None)
     active: Mapped[bool] = mapped_column(Boolean, default=True, server_default="true")
 
-    job_role: Mapped["JobRole"] = relationship(back_populates="users")
+    department: Mapped["Department"] = relationship(back_populates="users")
 
     def __repr__(self) -> str:
-        return f"<UserModel(id={self.id}, email={self.email}, password={self.password}, names={self.names}, lastnames={self.lastnames}, system_role={self.system_role}, job_role={self.job_role}, active={self.active}, created_at={self.created_at}, updated_at={self.updated_at})>"
+        return f"<UserModel(id={self.id}, email={self.email}, password={self.password}, names={self.names}, lastnames={self.lastnames}, system_role={self.system_role}, department={self.department}, active={self.active}, created_at={self.created_at}, updated_at={self.updated_at})>"
