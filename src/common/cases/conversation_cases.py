@@ -76,7 +76,8 @@ class ConversationUseCases(UseCaseBase):
 
     def get_conversations_with_last_message(self, from_: int, to: int):
         with self._session() as session:
-            stmt = select(ConversationModel).limit(to).offset(from_).join(ConversationModel.last_message)
+            stmt = select(ConversationModel).order_by(ConversationModel.created_at.desc()
+                                                      ).limit(to).offset(from_).join(ConversationModel.last_message)
             conversations = session.scalars(stmt).all()
 
             convers = conversations
