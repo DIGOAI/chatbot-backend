@@ -5,6 +5,14 @@ from src.db.repositories import BaseRepository
 
 
 class MessageUseCases(UseCaseBase):
+
+    def get_last_messages(self, limit: int = 10):
+        with self._session() as session:
+            message_repo = BaseRepository(MessageModel, Message, session)
+            messages = message_repo.list(to=limit)
+
+        return messages
+
     def add_new_message(self, message_data: MessageInsert):
         with self._session() as session:
             message_repo = BaseRepository(MessageModel, Message, session)
