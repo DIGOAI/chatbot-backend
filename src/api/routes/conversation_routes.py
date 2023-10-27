@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from uuid import UUID
 
 from fastapi import APIRouter, Depends
@@ -11,6 +12,13 @@ from src.common.models import (
     create_response,
 )
 
+
+@dataclass
+class ConversationResume:
+    opened: int
+    closed: int
+
+
 router = APIRouter(prefix="/conversations", tags=["Conversations"], dependencies=[Depends(JWTBearer())])
 
 
@@ -21,11 +29,11 @@ def get_conversations(start: int = 0, end: int = 10):
     return create_response(conversations, f"Conversations from {start} to {end}")
 
 
-@router.get("/resume")
+@router.get("/resume", response_model=GenericResponse[ConversationResume])
 def get_conversation_resume():
-    conversations = ConversationUseCases().get_conversations_resume()
+    resume = ConversationUseCases().get_conversations_resume()
 
-    return create_response(conversations, "Conversation resume")
+    return create_response(ConversationResume(resume.opened, resume.closed), "Conversation resume")
 
 
 @router.get("/{conversation_id}", response_model=GenericResponse[ConversationWithData])
