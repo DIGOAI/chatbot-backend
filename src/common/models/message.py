@@ -95,3 +95,13 @@ class MessageInsert(MessageBase):
             }
         }
     }
+
+
+class MessageInsertWeb(BaseModel):
+    receiver: str
+    message: str
+    conversation_id: UUID
+
+    @field_serializer("conversation_id")
+    def serialize_id(self, id: UUID, _info: Any) -> str:
+        return str(id)
