@@ -72,8 +72,8 @@ class BaseRepository(Generic[DbModel, PyModel]):
 
         return self.py_model.model_validate(model)
 
-    def list(self) -> list[PyModel]:
-        stmt = select(self.db_model)
+    def list(self, from_: Optional[int] = None, to: Optional[int] = None) -> list[PyModel]:
+        stmt = select(self.db_model).limit(to).offset(from_)
         models = self.session.scalars(stmt).all()
 
         return [self.py_model.model_validate(model) for model in models]
