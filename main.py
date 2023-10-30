@@ -1,4 +1,10 @@
+from fastapi import FastAPI
+
+# REST API
 from src import api, chatbot
+
+# socket.io
+from src.socket import socketio_mount
 
 app = api.create_app(
     title="ChatbotAPI | DIGO",
@@ -6,6 +12,9 @@ app = api.create_app(
     description=f"""Welcome to the **REST API** for the **Saragurosnet - Chatbot** service.
     \n\nPowered by `Digo-chatbot v{chatbot.__VERSION__}`""",
 )
+
+app = FastAPI()
+app = socketio_mount(app)
 
 
 if __name__ == "__main__":

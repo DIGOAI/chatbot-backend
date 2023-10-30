@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SocketIO Example</title>
+</head>
+<body>
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+<script>
+var socket = io('http://localhost:8000');
+
+socket.on('connect', function() {
+    console.log('Connected to server');
+});
+
+socket.on('message', function(data) {
+    console.log('Received message from server:', data);
+});
+
+socket.emit('message', 'Hello from the client!');
+</script>
+</body>
+</html>
