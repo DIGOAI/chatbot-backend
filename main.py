@@ -1,5 +1,3 @@
-from fastapi import FastAPI
-
 # REST API
 from src import api, chatbot
 
@@ -13,8 +11,7 @@ app = api.create_app(
     \n\nPowered by `Digo-chatbot v{chatbot.__VERSION__}`""",
 )
 
-app = FastAPI()
-app = socketio_mount(app)
+sio = socketio_mount(app)
 
 
 if __name__ == "__main__":
