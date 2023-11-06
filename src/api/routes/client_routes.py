@@ -12,7 +12,7 @@ router = APIRouter(prefix="/client", tags=["Client"])
 
 
 @router.get("/", dependencies=[Depends(JWTBearer(Role.ADMIN))], response_model=GenericResponse[list[Client]])
-def get_clients():
+def get_clients(limit: int = 50, offset: int = 0):
     get_clients = GetClients()
     return get_clients()
 
