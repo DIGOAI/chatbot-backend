@@ -8,7 +8,10 @@ from src.common.models import Client, GenericResponse
 router = APIRouter(prefix="/client", tags=["Client"])
 
 
-@router.get("/", dependencies=[Depends(JWTBearer(Role.ADMIN))], response_model=GenericResponse[list[Client]])
+_worker_dependency = Depends(JWTBearer(Role.WORKER))
+
+
+@router.get("/", dependencies=[_worker_dependency], response_model=GenericResponse[list[Client]])
 def get_clients():
     get_clients = GetClients()
     return get_clients()
