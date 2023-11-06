@@ -1,6 +1,6 @@
 import json
 from enum import Enum
-from typing import Any, Optional
+from typing import Any, Literal, Optional
 
 import requests
 
@@ -8,13 +8,16 @@ from src.common.logger import Logger
 from src.common.models.ticket import TicketSaragurosInsert as Ticket
 from src.config import Config
 
+_InstallationType = Literal['PENDIENTE', 'NO INSTALADO', 'INSTALADO']
 
-class SaragurosServiceEndpoint(str, Enum):
+
+class MikrowispEndpoint(str, Enum):
     """Enum to represent the endpoints of the Saraguros API."""
 
     ACTIVATE_SERVICE = "ActiveService"
     NEW_TICKET = "NewTicket"
     GET_CLIENTS = "GetClientsDetails"
+    LIST_INSTALLS = "ListInstall"
 
 
 class SaragurosNetService:
@@ -25,15 +28,15 @@ class SaragurosNetService:
         self.headers = {"Content-Type": "application/json"}
         self.token = token
 
-    def _make_request(self, endpoint: SaragurosServiceEndpoint, data: dict[str, Any]) -> Optional[dict[str, Any]]:
+    def _make_request(self, endpoint: MikrowispEndpoint, data: dict[str, Any]) -> Optional[dict[str, Any]]:
         """Make a request to the Saraguros API.
 
-        Parameters:
+        Attributes:
         endpoint (str): The endpoint to make the request
         data (dict[str, Any]): The data to send in the request
 
         Returns:
-        dict[str, Any]: The result of the request
+        dict[str, Any] | None: The result of the request
         """
 
         url = f"{self.base_url}/{endpoint.value}"
@@ -55,7 +58,7 @@ class SaragurosNetService:
             Logger.error(f"Error parsing response from {url}")
             return None
 
-    def activate_service(self, usuario_id: int) -> Optional[dict[str, Any]]:
+    def activate_service(self, user_id: int) -> Optional[dict[str, Any]]:
         """Activate the service for a user.
 
         Parameters:
@@ -64,14 +67,14 @@ class SaragurosNetService:
         Returns:
         dict[str, Any] | None: The result of the request
         """
-        data = {"idcliente": usuario_id}
+        data = {"idcliente": user_id}
 
-        return self._make_request(SaragurosServiceEndpoint.ACTIVATE_SERVICE, data)
+        return self._make_request(MikrowispEndpoint.ACTIVATE_SERVICE, data)
 
     def create_ticket(self, ticket: Ticket) -> Optional[dict[str, Any]]:
         """Create a ticket.
 
-        Parameters:
+        Attributes:
         ticket (Ticket): The ticket to create
 
         Returns:
@@ -82,12 +85,12 @@ class SaragurosNetService:
 
         Logger.info(f"Creating ticket with data {data}")
 
-        return self._make_request(SaragurosServiceEndpoint.NEW_TICKET, data)
+        return self._make_request(MikrowispEndpoint.NEW_TICKET, data)
 
-    def get_client_data(self, cedula: str):
+    def get_client_data(self, ci: str) -> Optional[dict[str, Any]]:
         """Get the data of a user.
 
-        Parameters:
+        Attributes:
         cedula (str): The cedula of the user to get the data
 
         Returns:
@@ -139,9 +142,63 @@ class SaragurosNetService:
         ```
         """
 
-        data = {"cedula": cedula}
+        data = {"cedula": ci}
 
-        return self._make_request(SaragurosServiceEndpoint.GET_CLIENTS, data)
+        return self._make_request(MikrowispEndpoint.GET_CLIENTS, data)
+
+    def get_list_installs(self, status: _InstallationType, ci: Optional[str]) -> Optional[dict[str, Any]]:
+        """Get the list of installations.
+
+        Attributes:
+        status (str): The status of the installation
+        ci (str): The cedula of the user to get the data
+
+        Returns:
+        dict[str, Any] | None: The result of the request
+
+        Example:
+        ```json
+        {
+            "estado": "exito",
+            "instalaciones": [
+                {
+                    "id": 4,
+                    "userid": 93,
+                    "fecha_ingreso": "2018-10-30",
+                    "fecha_salida": "0000-00-00",
+                    "idtecnico": 0,
+                    "direccion": "SAN CRESCENTE 240  101, Las Condes",
+                    "telefono": "9652368914",
+                    "movil": "933901439",
+                    "idnodo": 0,
+                    "email": "correo@gmail.com",
+                    "cedula": "995658100",
+                    "estate": "INSTALADO",
+                    "cliente": "COMERCIAL C.W. CHILE LIMITADA",
+                    "notas": "",
+                    "fecha_instalacion": "0001-11-30 00:00:00",
+                    "zona": 4,
+                    "idvendedor": 0,
+                    "cliente_pruebas": "",
+                    "gaa": "",
+                    "colonia": "",
+                    "tipo_estrato": 0,
+                    "N_orden": ""
+                }
+            ],
+            "mensaje": "Se ha encontrado 1  Registros."
+        }
+        ```
+        """
+
+        data = {
+            "estado": status
+        }
+
+        if ci:
+            data["cedula"] = ci
+
+        return self._make_request(MikrowispEndpoint.LIST_INSTALLS, data)
 
 
 if __name__ == "__main__":
