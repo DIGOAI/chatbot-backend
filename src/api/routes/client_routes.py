@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
 
-from src.api.cases import GetClients
 from src.api.middlewares import JWTBearer
 from src.api.middlewares.jwt_bearer import Role
-from src.common.models import Client, GenericResponse
+from src.common.cases import ClientUseCases
+from src.common.models import Client, GenericResponse, create_response
 
 router = APIRouter(prefix="/client", tags=["Client"])
 
@@ -13,8 +13,14 @@ _worker_dependency = Depends(JWTBearer(Role.WORKER))
 
 @router.get("/", dependencies=[_worker_dependency], response_model=GenericResponse[list[Client]])
 def get_clients():
-    get_clients = GetClients()
-    return get_clients()
+    clients = ClientUseCases().get_clients()
+    return create_response(clients, "Clients found")
+
+
+@router.get("/saragurosnet", dependencies=[_worker_dependency], response_model=GenericResponse[list[Client]])
+def get_saraguros_clients():
+    clients = ClientUseCases().get_clients("client")
+    return create_response(clients, "Saraguros clients found")
 
 
 # @router.post("/", response_model=GenericResponse[Client], status_code=STATUS.HTTP_201_CREATED)
