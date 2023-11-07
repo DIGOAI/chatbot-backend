@@ -9,7 +9,7 @@ from src.api.routes.conversation_routes import router as conversation_router
 from src.api.routes.email_routes import router as email_router
 
 #
-from src.api.routes.external_routes import router as external_router
+# from src.api.routes.external_routes import router as external_router
 from src.api.routes.message_routes import router as message_router
 from src.api.routes.root_routes import router as root_router
 from src.api.routes.tickets_routes import router as tickets_router
@@ -33,7 +33,6 @@ _routes: list[_RoutesType] = [
     {"router": client_router, "prefix": _default_prefix},
     {"router": message_router, "prefix": _default_prefix},
     {"router": conversation_router, "prefix": _default_prefix},
-    {"router": external_router, "prefix": _default_prefix},
     {"router": twilio_router, "prefix": _default_prefix},
     {"router": tickets_router, "prefix": _default_prefix},
     {"router": email_router, "prefix": _default_prefix},
