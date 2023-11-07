@@ -1,5 +1,6 @@
 from src.common.utils.patterns import (
     CI_RUC_PATTERN,
+    HOUR_PATTERN,
     PASSWORD_PATTERN,
     PHONE_PATTERN,
     UUIDV4_PATTERN,
@@ -7,6 +8,7 @@ from src.common.utils.patterns import (
 
 __all__ = [
     "CI_RUC_PATTERN",
+    "HOUR_PATTERN",
     "PASSWORD_PATTERN",
     "PHONE_PATTERN",
     "UUIDV4_PATTERN",

@@ -3,7 +3,9 @@ import re
 import pytz
 import schedule
 
-_HOUR_PATTERN = re.compile(r"^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$")
+from src.common.utils import HOUR_PATTERN as _HOUR_PATTERN
+
+_hour_matcher = re.compile(_HOUR_PATTERN)
 
 
 def service_close_to_expiration(day: int, hour: str, tz: str = "America/Guayaquil") -> schedule.Job:
@@ -28,7 +30,7 @@ def service_close_to_expiration(day: int, hour: str, tz: str = "America/Guayaqui
     if day > 31 or day < 1:
         raise ValueError("The day must be between 1 and 31")
 
-    if not _HOUR_PATTERN.match(hour):
+    if not _hour_matcher.match(hour):
         raise ValueError("The hour must be a valid time in format HH:MM")
 
     if tz not in pytz.all_timezones:
