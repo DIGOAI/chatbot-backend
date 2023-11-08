@@ -12,6 +12,7 @@ from src.api.routes.message_routes import router as message_router
 from src.api.routes.root_routes import router as root_router
 from src.api.routes.ticket_routes import router as tickets_router
 from src.api.routes.twilio_routes import router as twilio_router
+from src.api.routes.whatsapp_routes import router as whatsapp_router
 
 
 class _RoutesType(TypedDict):
@@ -31,9 +32,9 @@ _routes: list[_RoutesType] = [
     {"router": client_router, "prefix": _default_prefix},
     {"router": message_router, "prefix": _default_prefix},
     {"router": conversation_router, "prefix": _default_prefix},
-    {"router": twilio_router, "prefix": _default_prefix},
     {"router": tickets_router, "prefix": _default_prefix},
     {"router": email_router, "prefix": _default_prefix},
+    {"router": whatsapp_router, "prefix": _default_prefix},
     {"router": massive_template_router, "prefix": _default_prefix},
     {"router": twilio_router, "prefix": _default_prefix},
 ]
