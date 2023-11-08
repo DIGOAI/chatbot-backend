@@ -1,38 +1,10 @@
-from fastapi import APIRouter
+from uuid import UUID
 
-router = APIRouter(prefix="/emails", tags=["Emails"])
+from fastapi import APIRouter, HTTPException
 
-
-@router.post("/")
-def send_email_to_certain_users():
-    return {}
+router = APIRouter(prefix="/email", tags=["Email"])
 
 
-@router.post("/massive")
-def send_email_to_all_users():
-    return "Massive"
-
-
-@router.get("/templates")
-def get_email_templates(limit: int = 30, offset: int = 0):
-    return []
-
-
-@router.get("/templates/{template_id}")
-def get_email_template(template_id: int):
-    return ""
-
-
-@router.put("/templates/{template_id}")
-def update_email_template(template_id: int):
-    return ""
-
-
-@router.post("/templates/{template_id}")
-def create_email_template(template_id: int):
-    return []
-
-
-@router.delete("/templates/{template_id}")
-def delete_email_template(template_id: int):
-    return {}
+@router.post("/send")
+def send_massive_email(template_id: UUID, emails: list[str]):
+    raise HTTPException(status_code=501, detail="Not implemented")
