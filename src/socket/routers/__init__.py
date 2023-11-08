@@ -1,4 +1,4 @@
-from socketio import ASGIApp
+from socketio import ASGIApp  # type: ignore
 
 from src.socket.routers.chat import router as router_chat
 
