@@ -44,3 +44,38 @@ def run_schedules_continuously(interval: int = 1):
     continuous_thread = ScheduleThread(cease_continuous_run)
     continuous_thread.start()
     return cease_continuous_run
+
+
+# class ScheduleManager:
+#     _instance: "ScheduleManager" | None = None
+
+#     def __new__(cls) -> "ScheduleManager":
+#         if cls._instance is None:
+#             cls._instance = super(ScheduleManager, cls).__new__(cls)
+#             cls._instance._cease_continuous_run: threading.Event = threading.Event()
+#             cls._instance._interval: int = 1
+#             cls._instance._continuous_thread: "ScheduleManager.ScheduleThread" = cls._instance.ScheduleThread()
+
+#         return cls._instance
+
+#     def run_schedules_continuously(self, interval: int = 1) -> None:
+#         self._instance._interval = interval
+#         self._instance._continuous_thread.start()
+
+#     def get_cease_continuous_run(self) -> threading.Event:
+#         return self._instance._cease_continuous_run
+
+#     class ScheduleThread(threading.Thread):
+#         def run(self) -> None:
+#             while not ScheduleManager._instance._cease_continuous_run.is_set():
+#                 schedule.run_pending()
+#                 seconds_to_next_execution = schedule.idle_seconds()
+#                 time.sleep(seconds_to_next_execution or ScheduleManager._instance._interval)
+
+
+# # Uso:
+# manager: ScheduleManager = ScheduleManager()
+# manager.run_schedules_continuously()
+
+# # Para acceder al atributo cease_continuous_run desde cualquier parte del código:
+# cease_continuous_run: threading.Event = manager.get_cease_continuous_run()
