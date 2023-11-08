@@ -15,26 +15,6 @@ app = api.create_app(
 sio = socketio_mount(app)
 socketio_router_v1(sio)
 
-clients = []
-
-
-@sio.on("connect", namespace="/chat")
-def connect(sid, env):
-    clients.append(sid)
-    print("--> clients: ", clients)
-
-
-@sio.on("disconnect", namespace="/chat")
-def disconnect(sid):
-    clients.remove(sid)
-    print("--> clients: ", clients)
-
-
-@sio.on("messages")
-async def messages(sid, data):
-    await sio.emit("response", "I'm the server")
-
-
 if __name__ == "__main__":
     import uvicorn
 
