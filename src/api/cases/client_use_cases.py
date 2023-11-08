@@ -16,10 +16,11 @@ class RegisterNewClient(UseCaseBase):
 
 
 class GetClients(UseCaseBase):
-    def __call__(self):
+
+    def __call__(self, limit: int = 50, offset: int = 0):
         with self._session() as session:
             client_repository = ClientRepository(session)
-            clients = client_repository.get_all_clients()
+            clients = client_repository.get_all_clients(limit, offset)
 
         return create_response(clients, "Clients retrieved")
 
