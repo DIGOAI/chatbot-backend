@@ -20,6 +20,38 @@ class MassiveTemplateType(str, Enum):
     WHATSAPP = "WHATSAPP"
 
 
+class MassiveTemplateResume(BaseModel):
+    """MassiveTemplateResume class to handle the massive template resume model.
+
+    Attributes:
+    id (UUID): The id of the massive template
+    name (str): The name of the massive template
+    description (str): The description of the massive template
+    type (MassiveTemplateType): The type of the massive template
+    """
+
+    id: UUID
+    name: str
+    description: Optional[str]
+    type: MassiveTemplateType
+
+    @field_serializer("id")
+    def serialize_id(self, id: UUID, _info: Any) -> str:
+        return str(id)
+
+    model_config = {
+        "from_attributes": True,
+        "json_schema_extra": {
+            "example": {
+                "id": "e6a3f1c4-9a9b-4f9c-9b7c-5f1b4a9c8f5c",
+                "name": "Massive template name",
+                "description": "Massive template description",
+                "type": "EMAIL"
+            }
+        }
+    }
+
+
 class MassiveTemplateBase(BaseModel):
     """MassiveTemplateBase class to handle the massive template base model.
 
@@ -102,7 +134,9 @@ class MassiveTemplate(MassiveTemplateBase):
                 "data": {
                     "subject": "Massive template subject",
                     "body": "Massive template body"
-                }
+                },
+                "created_at": "2021-08-29T19:40:00.000Z",
+                "updated_at": "2021-08-29T19:40:00.000Z"
             }
         }
     }
