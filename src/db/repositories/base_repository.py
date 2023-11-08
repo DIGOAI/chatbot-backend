@@ -78,10 +78,14 @@ class BaseRepository(Generic[DbModel, PyModel]):
         return [self.py_model.model_validate(model) for model in models]
 
     def delete(self, id: int | UUID) -> PyModel:
-        model = self.get(id)
+        model = self.session.get(self.db_model, id)
+
+        if not model:
+            raise IdNotFoundError(id)
+
         self.session.delete(model)
         self.session.commit()
-        return model
+        return self.py_model.model_validate(model)
 
     @overload
     def filter(self, *expresions: ColumnExpressionArgument[bool], first: Literal[False] = False) -> List[PyModel]:
