@@ -1,30 +1,44 @@
 from uuid import UUID
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, status
+
+from src.api.cases import MassiveTemplateUseCases
+from src.common.models import (
+    GenericResponse,
+    MassiveTemplate,
+    MassiveTemplateInsert,
+    MassiveTemplateType,
+    create_response,
+)
 
 router = APIRouter(prefix="/templates", tags=["Massive templates"])
 
 
-@router.get("/")
-def get_email_templates(limit: int = 30, offset: int = 0):
-    raise HTTPException(status_code=501, detail="Not implemented")
+@router.get("/", response_model=GenericResponse[list[MassiveTemplate]])
+def get_templates(type: MassiveTemplateType):
+    templates = MassiveTemplateUseCases().get_templates_by_type(type)
+    return create_response(templates, "Templates retrieved")
 
 
-@router.post("/")
-def create_email_template():
-    raise HTTPException(status_code=501, detail="Not implemented")
+@router.post("/", response_model=GenericResponse[MassiveTemplate], status_code=status.HTTP_201_CREATED)
+def create_template(template_data: MassiveTemplateInsert):
+    template = MassiveTemplateUseCases().add_new_template(template_data)
+    return create_response(template, "Template created", status.HTTP_201_CREATED)
 
 
-@router.get("/{template_id}")
-def get_email_template(template_id: UUID):
-    raise HTTPException(status_code=501, detail="Not implemented")
+@router.get("/{template_id}", response_model=GenericResponse[MassiveTemplate])
+def get_template(template_id: UUID):
+    template = MassiveTemplateUseCases().get_template_by_id(template_id)
+    return create_response(template, "Template retrieved")
 
 
-@router.put("/{template_id}")
-def update_email_template(template_id: UUID):
-    raise HTTPException(status_code=501, detail="Not implemented")
+@router.put("/", response_model=GenericResponse[MassiveTemplate])
+def update_template(template: MassiveTemplate):
+    template_updated = MassiveTemplateUseCases().update_template(template)
+    return create_response(template_updated, "Template updated")
 
 
-@router.delete("/{template_id}")
-def delete_email_template(template_id: UUID):
-    raise HTTPException(status_code=501, detail="Not implemented")
+@router.delete("/{template_id}", response_model=GenericResponse[MassiveTemplate])
+def delete_template(template_id: UUID):
+    template_deleted = MassiveTemplateUseCases().delete_template(template_id)
+    return create_response(template_deleted, "Template deleted")
