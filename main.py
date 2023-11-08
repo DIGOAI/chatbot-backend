@@ -11,7 +11,7 @@ app = api.create_app(
     \n\nPowered by `Digo-chatbot v{chatbot.__VERSION__}`""",
 )
 
-app = socketio_mount(app)
+socketio_mount(app)
 
 if __name__ == "__main__":
     import uvicorn
