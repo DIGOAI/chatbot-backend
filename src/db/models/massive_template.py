@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Any
 
 from sqlalchemy import Enum as EnumType
@@ -6,21 +5,8 @@ from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.orm import Mapped, mapped_column
 
+from src.common.models import MassiveTemplateType
 from src.db.models.base import Base, ITimeControl, IUuidPk
-
-
-class MassiveTemplateType(str, Enum):
-    """MassiveTemplateType class to handle the massive template type enum.
-
-    Attributes:
-    EMAIL (str): The email massive template type
-    SMS (str): The sms massive template type
-    WHATSAPP (str): The whatsapp massive template type
-    """
-
-    EMAIL = "EMAIL"
-    SMS = "SMS"
-    WHATSAPP = "WHATSAPP"
 
 
 class MassiveTemplate(Base, IUuidPk, ITimeControl):
