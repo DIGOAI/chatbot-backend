@@ -1,6 +1,9 @@
 from src.common.cases import UseCaseBase
 from src.common.models import create_response
+
+#
 from src.common.models.ticket import Ticket as TicketPYModel
+from src.common.models.ticket import TicketStatus
 from src.db.models.ticket import Ticket as TicketDBModel
 
 # db
@@ -36,4 +39,22 @@ class TicketUseCase(UseCaseBase):
         with self._session() as session:
             repository = BaseRepository(TicketDBModel, TicketPYModel, session)
             result = repository.delete(item_id)
+        return result
+
+    def open_ticket(self, item_id: int):
+        data = {
+            "status": TicketStatus.ATTENDING
+        }
+        with self._session() as session:
+            repository = BaseRepository(TicketDBModel, TicketPYModel, session)
+            result = self.update(item_id, data)
+        return result
+
+    def close_ticket(self, item_id: int):
+        data = {
+            "status": TicketStatus.CLOSED
+        }
+        with self._session() as session:
+            repository = BaseRepository(TicketDBModel, TicketPYModel, session)
+            result = self.update(item_id, data)
         return result
