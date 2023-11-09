@@ -1,4 +1,8 @@
+# REST API
 from src import api, chatbot
+
+# socket.io
+from src.socket import socketio_mount
 
 app = api.create_app(
     title="ChatbotAPI | DIGO",
@@ -7,6 +11,7 @@ app = api.create_app(
     \n\nPowered by `Digo-chatbot v{chatbot.__VERSION__}`""",
 )
 
+socketio_mount(app)
 
 if __name__ == "__main__":
     import uvicorn

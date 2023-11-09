@@ -6,9 +6,13 @@ from fastapi import APIRouter, FastAPI
 from src.api.routes.auth_routes import router as auth_router
 from src.api.routes.client_routes import router as client_router
 from src.api.routes.conversation_routes import router as conversation_router
+from src.api.routes.email_routes import router as email_router
+from src.api.routes.massive_template_routes import router as massive_template_router
 from src.api.routes.message_routes import router as message_router
 from src.api.routes.root_routes import router as root_router
+from src.api.routes.ticket_routes import router as tickets_router
 from src.api.routes.twilio_routes import router as twilio_router
+from src.api.routes.whatsapp_routes import router as whatsapp_router
 
 
 class _RoutesType(TypedDict):
@@ -28,6 +32,10 @@ _routes: list[_RoutesType] = [
     {"router": client_router, "prefix": _default_prefix},
     {"router": message_router, "prefix": _default_prefix},
     {"router": conversation_router, "prefix": _default_prefix},
+    {"router": tickets_router, "prefix": _default_prefix},
+    {"router": email_router, "prefix": _default_prefix},
+    {"router": whatsapp_router, "prefix": _default_prefix},
+    {"router": massive_template_router, "prefix": _default_prefix},
     {"router": twilio_router, "prefix": _default_prefix},
 ]
 

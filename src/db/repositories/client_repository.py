@@ -9,8 +9,8 @@ class ClientRepository():
     def __init__(self, session: Session):
         self._session = session
 
-    def get_all_clients(self):
-        stmt = select(ClientModel)
+    def get_all_clients(self, limit: int = 50, offset: int = 0):
+        stmt = select(ClientModel).limit(limit).offset(offset)
         clients = self._session.scalars(stmt).all()
         return [Client.model_validate(user) for user in clients]
 

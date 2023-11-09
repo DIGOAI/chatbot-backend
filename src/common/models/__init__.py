@@ -7,6 +7,12 @@ from src.common.models.conversation import (
     ConversationWithData,
     ConversationWithLastMessage,
 )
+from src.common.models.massive_template import (
+    MassiveTemplate,
+    MassiveTemplateInsert,
+    MassiveTemplateResume,
+    MassiveTemplateType,
+)
 from src.common.models.message import (
     Message,
     MessageInsert,
@@ -44,6 +50,10 @@ __all__ = [
     "create_response",
     "GenericResponse",
     "LoginSchema",
+    "MassiveTemplate",
+    "MassiveTemplateInsert",
+    "MassiveTemplateResume",
+    "MassiveTemplateType",
     "Message",
     "MessageInsert",
     "MessageInsertWeb",
