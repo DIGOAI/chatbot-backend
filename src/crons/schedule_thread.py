@@ -63,10 +63,11 @@ class ScheduleManager:
         self._instance._stop_jobs()
 
         self._instance._cease_continuous_run.set()
-        self._instance._continuous_thread.join()
+        if self._instance._continuous_thread.is_alive():
+            self._instance._continuous_thread.join()
 
-        self._instance._continuous_thread = self._instance.ScheduleThread()
-        self._instance._cease_continuous_run.clear()
+            self._instance._continuous_thread = self._instance.ScheduleThread()
+            self._instance._cease_continuous_run.clear()
 
     class ScheduleThread(threading.Thread):
         """ Class to run scheduled jobs in the background. """
