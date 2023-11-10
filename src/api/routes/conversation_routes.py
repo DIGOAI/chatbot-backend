@@ -41,13 +41,3 @@ def get_conversation(conversation_id: UUID):
     conversation = ConversationUseCases().get_conversation_with_messages(conversation_id)
 
     return create_response(conversation, "Conversation found")
-
-
-@router.put("/{conversation_id}")
-def update_conversation():
-    return {}
-
-
-@router.delete("/{conversation_id}")
-def delete_conversation(conversation_id: UUID):
-    return {}
