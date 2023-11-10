@@ -22,25 +22,25 @@ def get_tickets(limit: int = 30, offset: int = 0):
 
 
 @router.get("/{ticket_id}", response_model=GenericResponse[Ticket])
-def get_ticket(ticket_id: int):
+def get_ticket(ticket_id: str):
     result = controller.get(ticket_id)
     return result
 
 
 @router.post("/", response_model=GenericResponse[Ticket])
 def create_ticket(form: TicketInsert):
-    result = controller.add(form.dict())
+    result = controller.add(form.model_dump())
     return result
 
 
 @router.put("/{ticket_id}")
-def update_ticket(ticket_id: int, form: TicketInsert):
-    result = controller.update(ticket_id, form.dict())
+def update_ticket(ticket_id: str, form: TicketInsert):
+    result = controller.update(ticket_id, form.model_dump())
     return result
 
 
 @router.delete("/{ticket_id}")
-def delete_ticket(ticket_id: int):
+def delete_ticket(ticket_id: str):
     result = controller.delete(ticket_id)
     return result
 
@@ -52,6 +52,6 @@ def open_ticket():
 
 
 @router.put("/{ticket_id}/close")
-def close_ticket():
+def close_ticket(ticket_id: str):
     result = controller.close_ticket(item_id)
     return result
