@@ -35,4 +35,7 @@ def data_reconciliation_process(interval: int, hour: str, tz: str = "America/Gua
     if tz not in pytz.all_timezones:
         raise ValueError("The timezone must be a valid timezone")
 
+    Logger.info(
+        f"Data reconciliation process scheduled at {interval} days {hour} in {tz}", "reconciliation job")
+
     return schedule.every(interval).day.at(hour, tz).do(task)  # type: ignore

@@ -40,4 +40,6 @@ def service_close_to_expiration(day: int, hour: str, tz: str = "America/Guayaqui
     if tz not in pytz.all_timezones:
         raise ValueError("The timezone must be a valid timezone")
 
+    Logger.info(f"Service close to expiration scheduled at {day} {hour} in {tz}", "expiration job")
+
     return schedule.every().day.at(hour, tz).do(task)  # type: ignore
