@@ -18,5 +18,5 @@ async def lifespan(app: _FastAPI):
     # Execute shutdown procedure
     Logger.info("Cleanning application startup procedures")
 
-    await _schedule_manager.stop_schedules_continuously()
+    _schedule_manager.stop_schedules_continuously()
     Logger.info("Stopped schedules thread")

@@ -1,4 +1,3 @@
-import asyncio
 import threading
 from typing import Any, NamedTuple, Protocol, Self
 
@@ -42,6 +41,9 @@ class ScheduleManager:
     def add_job(self, job_func: ScheduleFunction, **job_params: Any) -> None:
         self._jobs_for_run.append(JobData(job_func, job_params))
 
+    def clear_jobs(self) -> None:
+        self._jobs_for_run = []
+
     def run_schedules_continuously(self) -> None:
         if self._instance is None:
             raise ValueError("The ScheduleManager is not initialized")
@@ -50,9 +52,10 @@ class ScheduleManager:
         self._instance._init_jobs()
 
         # self._instance._interval = interval
-        self._instance._continuous_thread.start()
+        if not self._instance._continuous_thread.is_alive():
+            self._instance._continuous_thread.start()
 
-    async def _close_schedules_continuously(self) -> None:
+    def stop_schedules_continuously(self):
         if self._instance is None:
             raise ValueError("The ScheduleManager is not initialized")
 
@@ -62,9 +65,8 @@ class ScheduleManager:
         self._instance._cease_continuous_run.set()
         self._instance._continuous_thread.join()
 
-    async def stop_schedules_continuously(self):
-        task = asyncio.create_task(self._close_schedules_continuously())
-        return task
+        self._instance._continuous_thread = self._instance.ScheduleThread()
+        self._instance._cease_continuous_run.clear()
 
     class ScheduleThread(threading.Thread):
         """ Class to run scheduled jobs in the background. """
