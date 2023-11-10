@@ -1,3 +1,5 @@
+from src.common.cases import OptionsUseCases as _options_cases
+from src.common.logger import Logger
 from src.crons.data_reconciliation import (
     data_reconciliation_process as _data_reconciliation_process,
 )
@@ -8,8 +10,18 @@ from src.crons.service_expiration import (
 
 ScheduleManager = _ScheduleManager(interval=5)
 
-ScheduleManager.add_job(_service_close_to_expiration, day=10, hour="11:38")  # type: ignore
-ScheduleManager.add_job(_data_reconciliation_process, interval=1, hour="11:39")  # type: ignore
+try:
+    options = _options_cases().get_options()
+
+    ScheduleManager.add_job(_service_close_to_expiration,  # type: ignore
+                            day=options.cutting_day,
+                            hour=options.cutting_hour.strftime("%H:%M"))
+    ScheduleManager.add_job(_data_reconciliation_process,  # type: ignore
+                            interval=options.data_reconciliation_interval,
+                            hour=options.data_reconciliation_hour.strftime("%H:%M"))
+
+except Exception as e:
+    Logger.error(f"Error on crons init: {e}")
 
 __all__ = [
     "ScheduleManager",
