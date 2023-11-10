@@ -42,4 +42,4 @@ def service_close_to_expiration(day: int, hour: str, tz: str = "America/Guayaqui
 
     Logger.info(f"Service close to expiration scheduled at {day} {hour} in {tz}", "expiration job")
 
-    return schedule.every().day.at(hour, tz).do(task)  # type: ignore
+    return schedule.every().days.at(hour, tz).do(task)  # type: ignore

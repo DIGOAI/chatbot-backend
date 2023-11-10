@@ -26,7 +26,7 @@ def data_reconciliation_process(interval: int, hour: str, tz: str = "America/Gua
         today = dt.now(pytz.timezone(tz)).strftime("%d/%m/%Y")
         Logger.info(f"Fetching data from {interval} days ago at {today} {hour} in {tz}")
 
-    if interval > 10 or interval < 1:
+    if interval < 1 or interval > 10:
         raise ValueError("The intervas in days must be between 1 and 10")
 
     if not _hour_matcher.match(hour):
@@ -38,4 +38,4 @@ def data_reconciliation_process(interval: int, hour: str, tz: str = "America/Gua
     Logger.info(
         f"Data reconciliation process scheduled at {interval} days {hour} in {tz}", "reconciliation job")
 
-    return schedule.every(interval).day.at(hour, tz).do(task)  # type: ignore
+    return schedule.every(interval).days.at(hour, tz).do(task)  # type: ignore
