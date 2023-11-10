@@ -3,6 +3,7 @@ import re
 import pytz
 import schedule
 
+from src.common.logger import Logger
 from src.common.utils import HOUR_PATTERN as _HOUR_PATTERN
 
 _hour_matcher = re.compile(_HOUR_PATTERN)
@@ -22,10 +23,13 @@ def service_close_to_expiration(day: int, hour: str, tz: str = "America/Guayaqui
 
         from datetime import datetime as dt
 
-        today = dt.now(pytz.timezone(tz)).day
+        today = dt.now(pytz.timezone(tz))
+        today_str = today.strftime("%d/%m/%Y")
+        today_day = today.day
 
-        if today == day:
-            print(f"Service close to expiration: {day}")
+        if today_day == day:
+            Logger.info(
+                f"Sending email alert of service close to expiration at {today_str} {hour} in {tz}")
 
     if day > 31 or day < 1:
         raise ValueError("The day must be between 1 and 31")
