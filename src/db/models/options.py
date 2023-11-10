@@ -1,3 +1,5 @@
+from datetime import time
+
 from sqlalchemy.dialects.postgresql import SMALLINT, TIME
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -19,9 +21,10 @@ class Options(Base, IUuidPk, ITimeControl):
     __tablename__ = "options"
 
     cutting_day: Mapped[int] = mapped_column(SMALLINT, nullable=False, default=1, server_default="1")
-    cutting_hour: Mapped[str] = mapped_column(TIME, nullable=False, default="00:00", server_default="00:00")
+    cutting_hour: Mapped[time] = mapped_column(TIME, nullable=False, default="00:00", server_default="00:00")
     data_reconciliation_interval: Mapped[int] = mapped_column(SMALLINT, nullable=False, default=1, server_default="1")
-    data_reconciliation_hour: Mapped[str] = mapped_column(TIME, nullable=False, default="00:00", server_default="00:00")
+    data_reconciliation_hour: Mapped[time] = mapped_column(
+        TIME, nullable=False, default="00:00", server_default="00:00")
 
     def __repr__(self) -> str:
         return f"<Options(id={self.id}, cutting_day={self.cutting_day}, cutting_hour={self.cutting_hour}, data_reconciliation_interval={self.data_reconciliation_interval}, created_at={self.created_at}, updated_at={self.updated_at})>"
