@@ -32,7 +32,7 @@ def decodeJWT(token: str) -> Payload | None:
     try:
         decoded_token = cast(Payload, jwt.decode(token, Config.JWT_SECRET, algorithms=[  # type: ignore
                              Config.JWT_ALGORITHM], options={"require": ["exp", "iat", "sub"]}))
-        print(decoded_token)
+
         return decoded_token
     except BaseException:
         return None
