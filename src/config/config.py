@@ -41,6 +41,12 @@ class Config:
 
         self.X_API_KEY = os.environ.get("X_API_KEY", "")
 
+        self.SMTP_HOST: str = os.environ.get("SMTP_HOST", "")
+        self.SMTP_PORT: int = int(os.environ.get("SMTP_PORT", 587))
+        self.SMTP_USER: str = os.environ.get("SMTP_USER", "")
+        self.SMTP_PASSWORD: str = os.environ.get("SMTP_PASSWORD", "")
+        self.SMTP_SENDER: str = os.environ.get("SMTP_SENDER", self.SMTP_USER or "")
+
         try:
             self._verify()
         except ValueError as e:
