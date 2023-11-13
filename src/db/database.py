@@ -10,12 +10,18 @@ from src.common.logger import Logger
 from src.config import Config as _Config
 
 # TODO: Remove this when railway fixes their postgresql url
-_database_url = _Config.DATABASE_URL.replace("postgresql://", "postgresql+psycopg://")
-_database_url = _Config.DATABASE_URL.replace("postgres://", "postgresql+psycopg://")
+_database_url = _Config.DATABASE_URL
+
+if _database_url.startswith("postgres://"):
+    _database_url = _Config.DATABASE_URL.replace("postgres://", "postgresql+psycopg://")
+elif _database_url.startswith("postgresql://"):
+    _database_url = _Config.DATABASE_URL.replace("postgresql://", "postgresql+psycopg://")
 
 _NAME = "database"
 
 url = make_url(_database_url)
+
+Logger.warn(f"{_database_url}")
 
 Logger.info(f"Database in {url.host} with name {url.database}", caller_name=_NAME)
 engine = create_engine(_database_url, echo=False)
