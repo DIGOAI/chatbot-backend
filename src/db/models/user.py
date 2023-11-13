@@ -10,6 +10,7 @@ from src.db.models.base import Base, ITimeControl, IUuidPk
 
 if TYPE_CHECKING:
     from src.db.models.department import Department
+    from src.db.models.ticket import Ticket
 
 
 class User(Base, IUuidPk, ITimeControl):
@@ -44,6 +45,7 @@ class User(Base, IUuidPk, ITimeControl):
     active: Mapped[bool] = mapped_column(Boolean, default=True, server_default="true")
 
     department: Mapped["Department"] = relationship(back_populates="users")
+    tickets: Mapped[list["Ticket"]] = relationship(back_populates="worker")
 
     def __repr__(self) -> str:
-        return f"<UserModel(id={self.id}, email={self.email}, password={self.password}, names={self.names}, lastnames={self.lastnames}, system_role={self.system_role}, department={self.department}, active={self.active}, created_at={self.created_at}, updated_at={self.updated_at})>"
+        return f"<UserModel(id={self.id}, email={self.email}, password={self.password}, names={self.names}, lastnames={self.lastnames}, system_role={self.system_role}, department={self.department}, tickets={self.tickets}, active={self.active}, created_at={self.created_at}, updated_at={self.updated_at})>"
