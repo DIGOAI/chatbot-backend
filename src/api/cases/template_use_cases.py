@@ -49,6 +49,7 @@ class MassiveTemplateUseCases(UseCaseBase):
                 name=data.name,
                 description=data.description,
                 data=data.data,
+                template=data.template,
                 updated_at=datetime.utcnow()
             )
 
