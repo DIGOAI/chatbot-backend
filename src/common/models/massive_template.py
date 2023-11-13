@@ -60,12 +60,14 @@ class MassiveTemplateBase(BaseModel):
     description (str): The description of the massive template
     type (MassiveTemplateType): The type of the massive template
     data (dict[str, Any]): The data of the massive template
+    template (str): The template of the massive template
     """
 
     name: str = Field(..., max_length=80)
     description: Optional[str] = Field(None, max_length=255)
     type: MassiveTemplateType
     data: dict[str, Any]
+    template: str
 
     model_config = {
         "from_attributes": True
@@ -80,6 +82,7 @@ class MassiveTemplateInsert(MassiveTemplateBase):
     description (str): The description of the massive template
     type (MassiveTemplateType): The type of the massive template
     data (dict[str, Any]): The data of the massive template
+    template (str): The template of the massive template
     """
 
     model_config = {
@@ -92,7 +95,8 @@ class MassiveTemplateInsert(MassiveTemplateBase):
                 "data": {
                     "subject": "Massive template subject",
                     "body": "Massive template body"
-                }
+                },
+                "template": "<html><body><h1>Massive template body</h1></body></html>",
             }
         }
     }
@@ -107,6 +111,7 @@ class MassiveTemplate(MassiveTemplateBase):
     description (str): The description of the massive template
     type (MassiveTemplateType): The type of the massive template
     data (dict[str, Any]): The data of the massive template
+    template (str): The template of the massive template
     created_at (datetime): The datetime when the massive template was created
     updated_at (datetime): The datetime when the massive template was updated
     """
@@ -135,6 +140,7 @@ class MassiveTemplate(MassiveTemplateBase):
                     "subject": "Massive template subject",
                     "body": "Massive template body"
                 },
+                "template": "<html><body><h1>Massive template body</h1></body></html>",
                 "created_at": "2021-08-29T19:40:00.000Z",
                 "updated_at": "2021-08-29T19:40:00.000Z"
             }

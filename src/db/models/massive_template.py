@@ -17,6 +17,8 @@ class MassiveTemplate(Base, IUuidPk, ITimeControl):
     name (str): The name of the massive template
     description (str): The description of the massive template
     type (MassiveTemplateType): The type of the massive template
+    data (dict[str, Any]): The data of the massive template
+    template (str): The template of the massive template
     created_at (datetime): The datetime when the massive template was created
     updated_at (datetime): The datetime when the massive template was updated
     """
