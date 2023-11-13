@@ -8,7 +8,7 @@ from src.api.middlewares import JWTBearer
 from src.common.cases import EmailUseCases
 from src.common.models import GenericResponse, create_response
 
-router = APIRouter(prefix="/email", tags=["Email"], dependencies=[Depends(JWTBearer)])
+router = APIRouter(prefix="/email", tags=["Email"], dependencies=[Depends(JWTBearer())])
 
 
 @dataclass
