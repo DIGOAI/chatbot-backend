@@ -1,7 +1,7 @@
 from typing import Any
 
 from sqlalchemy import Enum as EnumType
-from sqlalchemy import String
+from sqlalchemy import String, Text
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -27,6 +27,7 @@ class MassiveTemplate(Base, IUuidPk, ITimeControl):
     description: Mapped[str] = mapped_column(String(255), nullable=True)
     type: Mapped[MassiveTemplateType] = mapped_column(EnumType(MassiveTemplateType), nullable=False)
     data: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+    template: Mapped[str] = mapped_column(Text, nullable=False)
 
     def __repr__(self) -> str:
-        return f"<MassiveTemplateModel(id={self.id}, name={self.name}, description={self.description}, type={self.type}, created_at={self.created_at}, updated_at={self.updated_at})>"
+        return f"<MassiveTemplateModel(id={self.id}, name={self.name}, description={self.description}, type={self.type}, data={self.data}, template={self.template}, created_at={self.created_at}, updated_at={self.updated_at})>"
