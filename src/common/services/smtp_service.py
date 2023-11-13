@@ -12,10 +12,11 @@ class SMTPService():
     def send_email(self, receivers: list[str], subject: str, body: str):
         msg = EmailMessage()
 
-        msg.set_content(body)
+        msg.add_header('Content-Type', 'text/html')
         msg['Subject'] = subject
         msg['From'] = self._sender
         msg['To'] = ', '.join(receivers)
+        msg.set_payload(body)
 
         with smtplib.SMTP_SSL(Config.SMTP_HOST, Config.SMTP_PORT) as smtp:
             smtp.login(Config.SMTP_USER, Config.SMTP_PASSWORD)
