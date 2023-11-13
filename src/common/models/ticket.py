@@ -92,6 +92,10 @@ class TicketBase(BaseModel):
     client_id: UUID
     conversation_id: Optional[UUID] = None
 
+    model_config = {
+        "from_attributes": True,
+    }
+
 
 class TicketInsert(TicketBase):
     """Class to represent a ticket in the database.
@@ -129,7 +133,7 @@ class Ticket(TicketBase):
     created_at: datetime
     updated_at: datetime
 
-    @field_serializer("id")
+    @field_serializer("id", "client_id", "conversation_id")
     def serialize_id(self, id: UUID, _info: Any) -> str:
         return str(id)
 
