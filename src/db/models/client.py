@@ -38,7 +38,7 @@ class Client(Base, IUuidPk, ITimeControl):
     saraguros_id: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
 
     conversations: Mapped[list["Conversation"]] = relationship(back_populates="client")
-    tickets: Mapped["Ticket"] = relationship(back_populates="client")
+    tickets: Mapped[list["Ticket"]] = relationship(back_populates="client")
 
     def __repr__(self) -> str:
         return f"<Client(id={self.id}, ci={self.ci}, name={self.names}, saraguros_net={self.saraguros_id}, conversations={self.conversations}, tickets={self.tickets}, created_at={self.created_at}, updated_at={self.updated_at})>"

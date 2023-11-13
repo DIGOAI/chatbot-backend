@@ -1,45 +1,38 @@
-from fastapi import APIRouter
+from uuid import UUID
 
-# use cases
+from fastapi import APIRouter, Depends
+
 from src.api.cases.ticket_use_cases import TicketUseCase
+from src.api.middlewares.jwt_bearer import JWTBearer, Role
+from src.common.models import GenericResponse, create_response
+from src.common.models.ticket import Ticket
 
-# models
-from src.common.models import GenericResponse
+_worker_dependency = Depends(JWTBearer(Role.WORKER))
 
-# schemas
-from src.common.models.ticket import Ticket, TicketInsert
-
-router = APIRouter(prefix="/tickets", tags=["Tickets"])
-
+router = APIRouter(prefix="/tickets", tags=["Tickets"], dependencies=[_worker_dependency])
 
 controller = TicketUseCase()
 
 
 @router.get("/", response_model=GenericResponse[list[Ticket]])
-def get_tickets(limit: int = 30, offset: int = 0):
-    items = controller.list(limit, offset)
-    return items
+def get_tickets(limit: int = 10, offset: int = 0):
+    result = controller.get_tickets(limit, offset)
+    return create_response(result, "Tickets found")
 
 
 @router.get("/{ticket_id}", response_model=GenericResponse[Ticket])
-def get_ticket(ticket_id: int):
-    item = controller.get(ticket_id)
-    return item
+def get_ticket(ticket_id: UUID):
+    result = controller.get_ticket(ticket_id)
+    return create_response(result, "Ticket found")
 
 
-@router.post("/")
-def create_ticket(form: TicketInsert):
-    item = controller.add(form.dict())
-    return item
+@router.get("/{ticket_id}/open")
+def open_ticket(ticket_id: UUID):
+    result = controller.attend_ticket(ticket_id)
+    return create_response(result, "Ticket opened")
 
 
-@router.put("/{ticket_id}")
-def update_ticket(ticket_id: int, form: TicketInsert):
-    item = controller.update(ticket_id, form.dict())
-    return item
-
-
-@router.delete("/{ticket_id}")
-def delete_ticket(ticket_id: int):
-    result = controller.delete(ticket_id)
-    return result
+@router.get("/{ticket_id}/close")
+def close_ticket(ticket_id: UUID):
+    result = controller.close_ticket(ticket_id)
+    return create_response(result, "Ticket closed")

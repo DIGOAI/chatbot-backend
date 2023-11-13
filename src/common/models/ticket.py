@@ -1,9 +1,9 @@
 from datetime import datetime
 from enum import Enum
-from typing import Optional
+from typing import Any, Optional
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_serializer
 
 
 class TicketShiftSaraguros(str, Enum):
@@ -86,11 +86,15 @@ class TicketStatus(str, Enum):
 
 class TicketBase(BaseModel):
     subject: str
-    shift: TicketShift = Field(default=TicketShift.MORNING)
+    shift: Optional[TicketShift] = Field(default=None)
     department_id: str
     status: TicketStatus = Field(default=TicketStatus.WAITING)
     client_id: UUID
     conversation_id: Optional[UUID] = None
+
+    model_config = {
+        "from_attributes": True,
+    }
 
 
 class TicketInsert(TicketBase):
@@ -128,3 +132,11 @@ class Ticket(TicketBase):
     external_id: Optional[int] = None
     created_at: datetime
     updated_at: datetime
+
+    @field_serializer("id", "client_id", "conversation_id")
+    def serialize_id(self, id: UUID, _info: Any) -> str:
+        return str(id)
+
+    @field_serializer("created_at", "updated_at")
+    def serialize_dt(self, dt: datetime, _info: Any) -> float:
+        return dt.timestamp()

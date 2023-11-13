@@ -1,39 +1,36 @@
-from src.common.cases import UseCaseBase
-from src.common.models import create_response
-from src.common.models.ticket import Ticket as TicketPYModel
-from src.db.models.ticket import Ticket as TicketDBModel
+from uuid import UUID
 
-# db
+from src.common.cases import UseCaseBase
+from src.common.models.ticket import Ticket, TicketStatus
+from src.db.models.ticket import Ticket as TicketModel
 from src.db.repositories import BaseRepository
 
 
 class TicketUseCase(UseCaseBase):
-    def list(self, limit: int = 30, offset: int = 0):
+    def get_tickets(self, limit: int = 30, offset: int = 0):
         with self._session() as session:
-            repository = BaseRepository(TicketDBModel, TicketPYModel, session)
+            repository = BaseRepository(TicketModel, Ticket, session)
             items = repository.list(offset, limit)
-        return create_response(data=items)
 
-    def get(self, item_id: int):
+        return items
+
+    def get_ticket(self, item_id: UUID):
         with self._session() as session:
-            repository = BaseRepository(TicketDBModel, TicketPYModel, session)
+            repository = BaseRepository(TicketModel, Ticket, session)
             item = repository.get(item_id)
+
         return item
 
-    def add(self, data: dict):
+    def attend_ticket(self, item_id: UUID):
         with self._session() as session:
-            repository = BaseRepository(TicketDBModel, TicketPYModel, session)
-            item = repository.add(data, return_=True)
-        return item
+            ticket_repo = BaseRepository(TicketModel, Ticket, session)
+            result = ticket_repo.update(item_id, status=TicketStatus.ATTENDING)
 
-    def update(self, item_id: int, data: dict):
-        with self._session() as session:
-            repository = BaseRepository(TicketDBModel, TicketPYModel, session)
-            item = repository.update(item_id, **data)
-        return item
+        return result
 
-    def delete(self, item_id: int):
+    def close_ticket(self, item_id: UUID):
         with self._session() as session:
-            repository = BaseRepository(TicketDBModel, TicketPYModel, session)
-            result = repository.delete(item_id)
+            ticket_repo = BaseRepository(TicketModel, Ticket, session)
+            result = ticket_repo.update(item_id, status=TicketStatus.CLOSED)
+
         return result
