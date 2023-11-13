@@ -9,7 +9,9 @@ from sqlalchemy.orm.session import sessionmaker
 from src.common.logger import Logger
 from src.config import Config as _Config
 
+# TODO: Remove this when railway fixes their postgresql url
 _database_url = _Config.DATABASE_URL.replace("postgresql://", "postgresql+psycopg://")
+_database_url = _Config.DATABASE_URL.replace("postgres://", "postgresql+psycopg://")
 
 _NAME = "database"
 
