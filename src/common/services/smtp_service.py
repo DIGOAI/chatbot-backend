@@ -16,7 +16,7 @@ class SMTPService():
         msg['Subject'] = subject
         msg['From'] = self._sender
         msg['To'] = ', '.join(receivers)
-        msg.set_payload(body)
+        msg.set_payload(body, charset='utf-8')
 
         with smtplib.SMTP_SSL(Config.SMTP_HOST, Config.SMTP_PORT) as smtp:
             smtp.login(Config.SMTP_USER, Config.SMTP_PASSWORD)
