@@ -29,6 +29,7 @@ from src.common.models.ticket import (
     TicketShift,
     TicketShiftSaraguros,
     TicketStatus,
+    TicketWithClient,
 )
 from src.common.models.user import (
     LoginSchema,
@@ -70,6 +71,7 @@ __all__ = [
     "TicketShift",
     "TicketShiftSaraguros",
     "TicketStatus",
+    "TicketWithClient",
     "TokenSchema",
     "TwilioWebHook",
     "User",
