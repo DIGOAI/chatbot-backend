@@ -42,6 +42,22 @@ class Action(Generic[T]):
         self._end = end
         self.next = next
 
+    @property
+    def id(self) -> str:
+        return self.__id
+
+    @id.setter
+    def id(self, id: str) -> None:
+        self.__id = id
+
+    @property
+    def next(self) -> str | list[str]:
+        return self.__next
+
+    @next.setter
+    def next(self, next: str | list[str]) -> None:
+        self.__next = next
+
     def __call__(self, context: T) -> tuple[bool, ActionStatus]:
         if self._condition(context):
             Logger.info(
