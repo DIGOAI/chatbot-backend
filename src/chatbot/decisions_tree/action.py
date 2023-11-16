@@ -60,8 +60,8 @@ class Action(Generic[T]):
 
     def __call__(self, context: T) -> tuple[bool, ActionStatus]:
         if self._condition(context):
-            Logger.info(
-                f"Executing action {self.id} - {cast(Callable[[T], None], self._func).__name__}")
+            func_name = cast(Callable[[T], None], self._func).__name__
+            Logger.info(f"Executing action {self.id} - {func_name}")
 
             ended = self._func(context, self.id)
 
