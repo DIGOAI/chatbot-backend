@@ -86,7 +86,7 @@ class DecisionsTree(Generic[T]):
         Logger.info(f"Building and executing actions")
 
         ended = False
-        execute_preactions = True
+        preactions_executed = False
         next_actions_to_execute: str | list[str] | None = None
 
         while not ended:
@@ -101,12 +101,12 @@ class DecisionsTree(Generic[T]):
                 next_actions = [self._start_id]
 
             # Execute the preactions
-            if execute_preactions:
+            if not preactions_executed:
                 for preaction in self._preactions:
                     Logger.info(f"Executing preaction {preaction.__name__}")  # type: ignore
                     preaction(self.context)
 
-                execute_preactions = False
+                preactions_executed = True
 
             for id in next_actions:
                 if id not in self._tree:
