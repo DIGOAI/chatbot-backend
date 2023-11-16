@@ -89,39 +89,50 @@ class DecisionsTree(Generic[T]):
         preactions_executed = False
         next_actions_to_execute: str | list[str] | None = None
 
+        # Execute the actions until the end is reached
         while not ended:
 
+            # If the next actions is None, set the start action
             if next_actions is None:
                 next_actions = []
 
+            # If the next actions is a string, convert to a list
             if isinstance(next_actions, str):
                 next_actions = [next_actions]
 
+            # If the next actions is empty, set the start action
             if not next_actions:
                 next_actions = [self._start_id]
 
-            # Execute the preactions
+            # If preactions are not executed, execute them
             if not preactions_executed:
+                # Execute the preactions
                 for preaction in self._preactions:
                     Logger.info(f"Executing preaction {preaction.__name__}")  # type: ignore
                     preaction(self.context)
 
+                # Set the preactions as executed
                 preactions_executed = True
 
+            # Execute the actions
             for id in next_actions:
+                # If the action is not found, raise an error
                 if id not in self._tree:
                     raise ValueError(f"Action {id} not found")
 
+                # Execute the action
                 action = self._tree[id]
                 ended, status = action(self.context)
 
+                # If the action is ended or executed, set the next actions to execute
                 if ended or status == ActionStatus.EXECUTED:
                     next_actions_to_execute = action.next
                     break
 
+                # Set the next actions to execute
                 next_actions_to_execute = action.next
 
             next_actions = next_actions_to_execute
 
         Logger.info(f"Finished building and executing actions")
-        return next_actions_to_execute
+        return next_actions_to_execute  # Return the next actions to execute
