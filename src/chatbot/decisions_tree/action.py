@@ -28,9 +28,11 @@ class Action(Generic[T]):
 
     This class represents an generic action to execute.
 
-    Parameters:
+    Attributes:
     id (str): The id of the action
     func (Callable[[T], None]): The function to execute
+    condition (Callable[[T], bool]): The condition to execute the action
+    end (bool): If the action is the last one
     """
 
     def __init__(self, id: str, func: ActionFunction[T], condition: Callable[[T], bool], end: bool = True, next: str | list[str] = []) -> None:
