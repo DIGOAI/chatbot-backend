@@ -9,7 +9,7 @@ group = ActionGroup[Context]()
 
 @group.add_preaction()
 def pre_action(ctx: Context):
-    Logger.info(f"Pre action: {ctx.last_state}")
+    Logger.info(f"Last action: {ctx.last_state}")
 
     sender_phone, _ = get_phone_and_service(ctx.event_twilio.from_number)
     receiver_phone, _ = get_phone_and_service(ctx.event_twilio.to_number)
