@@ -137,6 +137,23 @@ class DecisionsTree(Generic[T]):
         Logger.info(f"Finished building and executing actions")
         return next_actions_to_execute  # Return the next actions to execute
 
+    def register_action_group(self, action_group: 'ActionGroup[T]') -> None:
+        """Register an action group.
+
+        The action group is a group of actions to execute.
+
+        Attributes:
+        action_group (ActionGroup[T]): The action group to register
+        """
+
+        # Add preactions to the preactions list
+        for preaction in action_group.preactions:
+            self._preactions.append(preaction)
+
+        # Add the actions to the tree
+        for id, action in action_group.tree.items():
+            self._tree[id] = action
+
 
 class ActionGroup(Generic[T]):
     """ActionGroup class.
