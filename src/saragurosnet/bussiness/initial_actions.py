@@ -7,8 +7,8 @@ from src.common.logger import Logger
 from src.common.services import SaragurosNetService
 from src.config import Config
 from src.saragurosnet.bussiness.context import Context
-from src.saragurosnet.bussiness.types import MessageType
 from src.saragurosnet.cases import ClientUseCases, GetClientByPhone
+from src.saragurosnet.types import MessageType
 
 group = ActionGroup[Context]()
 
