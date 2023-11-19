@@ -136,3 +136,79 @@ class DecisionsTree(Generic[T]):
 
         Logger.info(f"Finished building and executing actions")
         return next_actions_to_execute  # Return the next actions to execute
+
+
+class ActionGroup(Generic[T]):
+    """ActionGroup class.
+
+    This class represents a group of actions to execute in a decisions tree.
+
+    Parameters:
+    context (T): The context to use in the actions
+    """
+
+    def __init__(self, context: Optional[T] = None) -> None:
+        self.tree = {}
+        self.context = context or cast(T, {})
+        self.preactions = []
+
+    @property
+    def tree(self) -> dict[str, Action[T]]:
+        return self.__tree
+
+    @tree.setter
+    def tree(self, tree: dict[str, Action[T]]) -> None:
+        self.__tree = tree
+
+    @property
+    def context(self) -> T:
+        return self.__context
+
+    @context.setter
+    def context(self, context: T) -> None:
+        self.__context = context
+
+    @property
+    def preactions(self) -> list[PreActionFunction[T]]:
+        return self.__preactions
+
+    @preactions.setter
+    def preactions(self, preactions: list[PreActionFunction[T]]) -> None:
+        self.__preactions = preactions
+
+    def add_preaction(self):
+        """Add a preaction to the tree.
+
+        The preaction is a function that will be executed before the actions.
+
+        Returns:
+        Callable[[PreActionFunction[T]], None]: The decorator to add the preaction
+        """
+
+        def inner_decorator(func: PreActionFunction[T]):
+            @wraps(func)
+            def wrapper():
+                self.preactions.append(func)
+
+            return wrapper()
+        return inner_decorator
+
+    def add_action(self, id: str, condition: Callable[[T], bool], end: bool = True, next: str | list[str] = []):
+        """Add an action to the tree.
+
+        The action is a function that will be executed if the condition is true.
+
+        Attributes:
+        id (str): The id of the action
+        condition (Callable[[T], bool]): The condition to execute the action
+        end (bool): If the action is the last one
+        next (str | list[str]): The next action to execute
+        """
+
+        def inner_decorator(func: ActionFunction[T]):
+            @wraps(func)
+            def wrapper():
+                self.tree[id] = Action(id, func, condition, end, next)
+
+            return wrapper()
+        return inner_decorator
