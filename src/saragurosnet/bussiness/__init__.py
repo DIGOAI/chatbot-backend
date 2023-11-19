@@ -5,6 +5,7 @@ from src.common.logger import Logger
 from src.common.services import TwilioService
 from src.config import Config
 from src.saragurosnet.bussiness.context import Context
+from src.saragurosnet.bussiness.errors import say_error
 from src.saragurosnet.bussiness.initial_actions import group as initial_group
 from src.saragurosnet.bussiness.preactions import group as pre_group
 from src.saragurosnet.types import MessageType, OptionType
@@ -13,17 +14,6 @@ tree = DecisionsTree[Context]()
 
 twilio = TwilioService(Config.TWILIO_SID, Config.TWILIO_TOKEN,
                        Config.TWILIO_SENDER, '')
-
-# === Util functions ===
-
-
-def say_error(ctx: Context):
-    Logger.error("Client is None")
-    MessageUseCases().send_message(MessageType.ERROR_CLIENT_NOT_FOUND, ctx.event_twilio.from_number, ctx.conversation.id)
-    # twilio.send_message(MessageType.ERROR_CLIENT_NOT_FOUND, receiver=ctx.event_twilio.from_number)
-    return False
-# === End util functions ===
-
 
 # === Pre actions ===
 tree.register_action_group(pre_group)
