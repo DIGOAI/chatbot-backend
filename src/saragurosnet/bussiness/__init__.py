@@ -7,7 +7,7 @@ from src.config import Config
 from src.saragurosnet.bussiness.context import Context
 from src.saragurosnet.bussiness.initial_actions import group as initial_group
 from src.saragurosnet.bussiness.preactions import group as pre_group
-from src.saragurosnet.bussiness.types import MediaUrlType, MessageType, OptionType
+from src.saragurosnet.types import MessageType, OptionType
 
 tree = DecisionsTree[Context]()
 
