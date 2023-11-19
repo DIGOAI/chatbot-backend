@@ -16,7 +16,6 @@ def say_welcome_client(ctx: Context, id_func: str):
 
     MessageUseCases().send_message(MessageType.WELCOME_CLIENT.format(
         name=fullname), ctx.event_twilio.from_number, ctx.conversation.id)
-    # twilio.send_message(MessageType.WELCOME_CLIENT.format(name=fullname), receiver="whatsapp:" + ctx.client.phone)
 
 
 @group.add_action("2.1", condition=lambda ctx: ctx.last_state == "2.0" and ctx.event_twilio.body == OptionType.STATUS)

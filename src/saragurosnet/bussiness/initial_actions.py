@@ -28,7 +28,6 @@ def load_context(ctx: Context, id_func: str):
     if not user:
         Logger.warn(f"User doesn't exists: {client_phone}")
         MessageUseCases().send_message(MessageType.ERROR_CLIENT_NOT_FOUND, ctx.event_twilio.from_number, ctx.conversation.id)
-        # twilio.send_message(MessageType.ERROR_CLIENT_NOT_FOUND, receiver=ctx.event_twilio.from_number)
 
         return False
 
@@ -45,7 +44,7 @@ def load_context(ctx: Context, id_func: str):
 @group.add_action("0.1", condition=lambda ctx: ctx.last_state == None or ctx.last_state == "3.1", next="0.2")
 def say_welcome(ctx: Context, id_func: str):
     MessageUseCases().send_message(MessageType.SAY_HELLO, ctx.event_twilio.from_number, ctx.conversation.id)
-    # twilio.send_message(MessageType.SAY_HELLO, receiver=ctx.event_twilio.from_number)
+
     ctx.last_state = id_func
 
 
@@ -92,13 +91,11 @@ def search_saraguros_client(ctx: Context, id_func: str):
     except ValueError as e:
         Logger.warn(str(e))
         MessageUseCases().send_message(MessageType.ERROR_INVALID_CI, ctx.event_twilio.from_number, ctx.conversation.id)
-        # twilio.send_message(MessageType.ERROR_INVALID_CI, receiver=ctx.event_twilio.from_number)
 
         ctx.last_state = None
 
     except (KeyError, IndexError) as e:
         Logger.error(f'Error getting client data from SaragurosNet API: {e} key | index')
         MessageUseCases().send_message(MessageType.ERROR_CLIENT_NOT_FOUND, ctx.event_twilio.from_number, ctx.conversation.id)
-        # twilio.send_message(MessageType.ERROR_CLIENT_NOT_FOUND, receiver=ctx.event_twilio.from_number)
 
         ctx.last_state = None

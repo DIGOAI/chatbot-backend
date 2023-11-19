@@ -18,7 +18,7 @@ def end_conversation(ctx: Context, id_func: str):
 
     MessageUseCases().send_message(MessageType.END_CONVERSATION.format(
         name=fullname), ctx.event_twilio.from_number, ctx.conversation.id)
-    # twilio.send_message(MessageType.END_CONVERSATION.format(name=fullname), receiver="whatsapp:" + ctx.client.phone)
+
     ctx.last_state = id_func
 
 
@@ -28,7 +28,6 @@ def say_goodbye(ctx: Context, id_func: str):
         return say_error(ctx)
 
     MessageUseCases().send_message(MessageType.SAY_GOODBAY, ctx.event_twilio.from_number, ctx.conversation.id)
-    # twilio.send_message(MessageType.SAY_GOODBAY, receiver="whatsapp:" + ctx.client.phone)
 
     # TODO: End conversation and update th db
     conversation = ConversationUseCases().end_conversation(ctx.conversation)

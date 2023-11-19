@@ -14,7 +14,6 @@ def say_welcome_unknown(ctx: Context, id_func: str):
 
     MessageUseCases().send_message(MessageType.WELCOME_UNKNOW.format(
         name="Cliente"), ctx.event_twilio.from_number, ctx.conversation.id)
-    # twilio.send_message(MessageType.WELCOME_UNKNOW.format(name="Cliente"), receiver="whatsapp:" + ctx.client.phone)
 
     ctx.last_state = id_func
 
@@ -27,12 +26,6 @@ def send_promotions(ctx: Context, id_func: str):
     MessageUseCases().send_message(MessageType.PROMOTIONS, ctx.event_twilio.from_number,
                                    ctx.conversation.id, media_url=MediaUrlType.PROMOTIONS)
 
-    # twilio.send_message(MessageType.PROMOTIONS,
-    #                     receiver="whatsapp:" + ctx.client.phone,
-    #                     media_url=MediaUrlType.PROMOTIONS)
-
-    # fullname = format_fullname(ctx.client.names, ctx.client.lastnames)
-    # say_goodbye(fullname, "whatsapp:" + ctx.client.phone)
     ctx.last_state = id_func
 
 
@@ -44,12 +37,6 @@ def send_coverages(ctx: Context, id_func: str):
     MessageUseCases().send_message(MessageType.COVERAGES, ctx.event_twilio.from_number,
                                    ctx.conversation.id, media_url=MediaUrlType.COVERAGES)
 
-    # twilio.send_message(MessageType.COVERAGES,
-    #                     receiver="whatsapp:" + ctx.client.phone,
-    #                     media_url=MediaUrlType.COVERAGES)
-
-    # fullname = format_fullname(ctx.client.names, ctx.client.lastnames)
-    # say_goodbye(fullname, "whatsapp:" + ctx.client.phone)
     ctx.last_state = id_func
 
 
@@ -62,7 +49,6 @@ def talk_with_agent(ctx: Context, id_func: str):
 
     MessageUseCases().send_message(MessageType.CONNECT_AGENT.format(
         name=fullname), ctx.event_twilio.from_number, ctx.conversation.id)
-    # twilio.send_message(MessageType.CONNECT_AGENT.format(name=fullname), receiver="whatsapp:" + ctx.client.phone)
 
     # TODO: Generar ticket de atencion al cliente
     # TODO: Crear nuevo usuario en microwisp para tener su ID
