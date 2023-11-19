@@ -5,10 +5,10 @@ from src.chatbot.decisions_tree import DecisionsTree
 from src.chatbot.utils import format_fullname, get_ci_or_ruc, get_phone_and_service
 from src.common.cases import ConversationUseCases, MessageUseCases
 from src.common.logger import Logger
-from src.common.models import MessageInsert
 from src.common.services import SaragurosNetService, TwilioService
 from src.config import Config
 from src.saragurosnet.bussiness.context import Context
+from src.saragurosnet.bussiness.preactions import group as pre_group
 from src.saragurosnet.bussiness.types import MediaUrlType, MessageType, OptionType
 from src.saragurosnet.cases import ClientUseCases, GetClientByPhone
 
@@ -29,34 +29,7 @@ def say_error(ctx: Context):
 
 
 # === Pre actions ===
-@tree.add_preaction()
-def pre_action(ctx: Context):
-    Logger.info(f"Pre action: {ctx.last_state}")
-
-    sender_phone, _ = get_phone_and_service(ctx.event_twilio.from_number)
-    receiver_phone, _ = get_phone_and_service(ctx.event_twilio.to_number)
-
-    # Save the message in the database
-    message_cases = MessageUseCases()
-    new_message = MessageInsert(
-        id=ctx.event_twilio.message_sid,
-        sender=sender_phone,
-        receiver=receiver_phone,
-        message=ctx.event_twilio.body,
-        media_url=ctx.event_twilio.media_url,
-        conversation_id=ctx.conversation.id
-    )
-
-    message_saved = message_cases.add_new_message(new_message)
-
-    if message_saved:
-        Logger.info(f"Message saved: {new_message.id}")
-
-        # Update the conversation last message id
-        conversation_cases = ConversationUseCases()
-        conversation_updated = conversation_cases.update_last_message_id(ctx.conversation, new_message.id)
-
-        ctx.conversation = conversation_updated
+tree.register_action_group(pre_group)
 # === End pre actions ===
 
 
