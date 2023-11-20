@@ -1,13 +1,13 @@
 from src.chatbot import ActionGroup, format_fullname
 from src.common.cases import MessageUseCases
 from src.saragurosnet.bussiness.context import Context
-from src.saragurosnet.bussiness.errors import say_error
+from src.saragurosnet.bussiness.utils import say_error, verify_button
 from src.saragurosnet.types import MediaUrlType, MessageType, OptionType
 
 group = ActionGroup[Context]()
 
 
-@group.add_action("1.0", condition=lambda ctx: ctx.last_state == "0.2" and ctx.client != None and ctx.client.saraguros_id == None, next=["1.1", "1.2", "1.3"])
+@group.add_action("1.0", condition=lambda ctx: ctx.last_state == "0.2" and ctx.client != None, next=["1.1", "1.2", "1.3"])
 def say_welcome_unknown(ctx: Context, id_func: str):
     if ctx.client is None:
         return say_error(ctx)
@@ -18,7 +18,7 @@ def say_welcome_unknown(ctx: Context, id_func: str):
     ctx.last_state = id_func
 
 
-@group.add_action("1.1", condition=lambda ctx: ctx.last_state == "1.0" and ctx.client != None and ctx.client.saraguros_id == None and (ctx.event_twilio.button_text == OptionType.PROMOTIONS or ctx.event_twilio.body == OptionType.PROMOTIONS), end=False, next="3.0")
+@group.add_action("1.1", condition=lambda ctx: ctx.last_state == "1.0" and ctx.client != None and verify_button(ctx, OptionType.PROMOTIONS), end=False, next="3.0")
 def send_promotions(ctx: Context, id_func: str):
     if ctx.client is None:
         return say_error(ctx)
@@ -29,7 +29,7 @@ def send_promotions(ctx: Context, id_func: str):
     ctx.last_state = id_func
 
 
-@group.add_action("1.2", condition=lambda ctx: ctx.last_state == "1.0" and ctx.client != None and ctx.client.saraguros_id == None and (ctx.event_twilio.button_text == OptionType.COVERAGES or ctx.event_twilio.body == OptionType.COVERAGES), end=False, next="3.0")
+@group.add_action("1.2", condition=lambda ctx: ctx.last_state == "1.0" and ctx.client != None and verify_button(ctx, OptionType.COVERAGES), end=False, next="3.0")
 def send_coverages(ctx: Context, id_func: str):
     if ctx.client is None:
         return say_error(ctx)
@@ -40,7 +40,7 @@ def send_coverages(ctx: Context, id_func: str):
     ctx.last_state = id_func
 
 
-@group.add_action("1.3", condition=lambda ctx: ctx.last_state == "1.0" and ctx.client != None and ctx.client.saraguros_id == None and (ctx.event_twilio.button_text == OptionType.AGENT or ctx.event_twilio.body == OptionType.AGENT))
+@group.add_action("1.3", condition=lambda ctx: ctx.last_state == "1.0" and ctx.client != None and verify_button(ctx, OptionType.AGENT))
 def talk_with_agent(ctx: Context, id_func: str):
     if ctx.client is None:
         return say_error(ctx)
