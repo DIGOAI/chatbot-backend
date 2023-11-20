@@ -122,15 +122,15 @@ class DecisionsTree(Generic[T]):
 
                 # Execute the action
                 action = self._tree[id]
-                ended, status = action(self.context)
+                ended, status, next_actions_from_f = action(self.context)
 
                 # If the action is ended or executed, set the next actions to execute
                 if ended or status == ActionStatus.EXECUTED:
-                    next_actions_to_execute = action.next
+                    next_actions_to_execute = next_actions_from_f
                     break
 
                 # Set the next actions to execute
-                next_actions_to_execute = action.next
+                next_actions_to_execute = next_actions_from_f
 
             next_actions = next_actions_to_execute
 
