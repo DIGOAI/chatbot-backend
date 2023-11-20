@@ -24,6 +24,15 @@ class ClientBase(BaseModel):
     email: Optional[EmailStr] = Field(None)
     saraguros_id: Optional[int] = Field(None)
 
+    def get_fullname(self) -> str:
+        """Get the fullname of the client.
+
+        Returns:
+        str: The fullname of the client
+        """
+
+        return f"{self.names or ''} {self.lastnames or ''}".strip()
+
     model_config = {
         "from_attributes": True,
     }
