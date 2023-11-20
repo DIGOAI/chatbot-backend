@@ -1,11 +1,13 @@
 from enum import Enum
-from typing import Callable, Generic, Literal, TypeVar, cast
+from typing import Callable, Generic, TypeVar, cast
 
 from typing_extensions import Protocol
 
 from src.common.logger import Logger
 
 T = TypeVar('T', contravariant=True)
+
+ActionFunctionReturnType = None | list[str] | str | bool | tuple[str, bool] | tuple[list[str], bool]
 
 
 class ActionStatus(Enum):
@@ -19,7 +21,7 @@ class PreActionFunction(Generic[T], Protocol):
 
 
 class ActionFunction(Generic[T], Protocol):
-    def __call__(self, ctx: T, id_func: str) -> None | Literal[False]:
+    def __call__(self, ctx: T, id_func: str) -> ActionFunctionReturnType:
         ...
 
 
@@ -58,18 +60,25 @@ class Action(Generic[T]):
     def next(self, next: str | list[str]) -> None:
         self.__next = next
 
-    def __call__(self, context: T) -> tuple[bool, ActionStatus]:
+    def __call__(self, context: T) -> tuple[bool, ActionStatus, list[str] | str]:
         if self._condition(context):
             func_name = cast(Callable[[T], None], self._func).__name__
             Logger.info(f"Executing action {self.id} - {func_name}")
 
-            ended = self._func(context, self.id)
+            res = self._func(context, self.id)
 
-            if ended is not None:
-                return ended, ActionStatus.EXECUTED
+            if isinstance(res, tuple):
+                next_actions, continue_ = res
+                return continue_, ActionStatus.EXECUTED, next_actions
 
-            return self._end, ActionStatus.EXECUTED
+            if isinstance(res, bool):
+                return res, ActionStatus.EXECUTED, self.next
+
+            if isinstance(res, str) or isinstance(res, list):
+                return self._end, ActionStatus.EXECUTED, res
+
+            return self._end, ActionStatus.EXECUTED, self.next
 
         else:
             Logger.info(f"Condition is False, skipping action {self.id}")
-            return False, ActionStatus.SKIPPED
+            return False, ActionStatus.SKIPPED, self.next
