@@ -2,7 +2,7 @@ from src.chatbot import ActionGroup
 from src.chatbot.utils import format_fullname
 from src.common.cases import ConversationUseCases, MessageUseCases
 from src.saragurosnet.bussiness.context import Context
-from src.saragurosnet.bussiness.errors import say_error
+from src.saragurosnet.bussiness.utils import say_error
 from src.saragurosnet.types import MessageType, OptionType
 
 group = ActionGroup[Context]()
