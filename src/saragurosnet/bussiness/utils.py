@@ -8,3 +8,7 @@ def say_error(ctx: Context):
     Logger.error("Client is None")
     MessageUseCases().send_message(MessageType.ERROR_CLIENT_NOT_FOUND, ctx.event_twilio.from_number, ctx.conversation.id)
     return False
+
+
+def verify_button(ctx: Context, option: str):
+    return ctx.event_twilio.button_text == option or ctx.event_twilio.body == option
