@@ -1,4 +1,4 @@
-from src.chatbot import ActionGroup, format_fullname
+from src.chatbot import ActionGroup
 from src.common.cases import MessageUseCases
 from src.saragurosnet.bussiness.context import Context
 from src.saragurosnet.bussiness.utils import say_error, verify_button
@@ -45,7 +45,7 @@ def talk_with_agent(ctx: Context, id_func: str):
     if ctx.client is None:
         return say_error(ctx)
 
-    fullname = format_fullname(ctx.client.names, ctx.client.lastnames)
+    fullname = ctx.client.get_fullname()
 
     MessageUseCases().send_message(MessageType.CONNECT_AGENT.format(
         name=fullname), ctx.event_twilio.from_number, ctx.conversation.id)
