@@ -56,8 +56,7 @@ def search_saraguros_client(ctx: Context, id_func: str):
         client_phone, _ = get_phone_and_service(ctx.event_twilio.from_number)
 
         # Instace the services
-        client_cases = ClientUseCases()
-        user = client_cases.get_client_by_ci(client_ci, client_phone)
+        user = ClientUseCases().get_client_by_ci(client_ci, client_phone)
 
         # If the user is not a saraguros client then search in the SaragurosNet API
         if user.saraguros_id is None:
