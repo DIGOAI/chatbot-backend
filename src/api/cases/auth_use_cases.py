@@ -1,3 +1,5 @@
+from typing import TypedDict
+
 from fastapi import status as STATUS
 
 from src.api.utils import decrypt, signJWT
@@ -13,8 +15,15 @@ from src.common.models.user import SystemRole
 from src.db.repositories import UserRepository
 
 
+class TokenPayload(TypedDict):
+    user_id: str
+    role: str
+    keyType: str
+    exp_time_sec: int
+
+
 def create_token_data(user: User) -> TokenSchema:
-    payload = {
+    payload: TokenPayload = {
         "user_id": str(user.email),
         "role": user.system_role.value,
         "keyType": "PRIVATE",
@@ -41,7 +50,7 @@ def create_token_data(user: User) -> TokenSchema:
     access_token, _ = signJWT(
         user_id=user.email,
         keyType=payload["keyType"],
-        role=payload["role"],  # type: ignore
+        role=payload["role"],
         exp_time_sec=payload["exp_time_sec"]
     )
 

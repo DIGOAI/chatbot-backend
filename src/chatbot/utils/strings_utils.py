@@ -3,6 +3,7 @@ from typing import Optional
 
 SERVICE_PHONE_PATTERN = r'^(whatsapp:)(\+\d{12})'
 CI_RUC_PATTERN = r"^(0[1-9]|1\d|2[1-4])\d{8}(001)?$"
+EMAIL_PATTERN = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
 
 
 def get_phone_and_service(text: str) -> tuple[str, str]:
@@ -54,3 +55,22 @@ def format_fullname(names: Optional[str], lastnames: Optional[str]):
     names = names or ''
     lastnames = lastnames or ''
     return f"{names} {lastnames}".strip()
+
+
+def get_email(text: str) -> str:
+    """Get the email from a text
+
+    Parameters:
+    text (str): The text to parse
+
+    Returns:
+    str: The email
+    """
+    matcher = re.compile(EMAIL_PATTERN)
+
+    match = matcher.search(text.strip())
+
+    if not match:
+        raise ValueError("The text doesn't match a email")
+
+    return match.string

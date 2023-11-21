@@ -2,7 +2,8 @@ from typing import Generic, Literal, Optional, TypeVar
 
 from fastapi import status as STATUS
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
+
+from src.common.models.base import BaseModel
 
 T = TypeVar("T")
 
@@ -30,5 +31,5 @@ def create_response(data: Optional[T],  # type: ignore
 
     return JSONResponse(
         status_code=status_code,
-        content=GenericResponse[T](message=message, status=status, data=data).model_dump(),
+        content=GenericResponse[T](message=message, status=status, data=data).model_dump(mode="json"),
     )

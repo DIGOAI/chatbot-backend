@@ -3,7 +3,9 @@ from enum import Enum
 from typing import Any, Optional
 from uuid import UUID
 
-from pydantic import BaseModel, Field, field_serializer
+from pydantic import Field
+
+from src.common.models.base import BaseModel
 
 
 class MassiveTemplateType(str, Enum):
@@ -34,10 +36,6 @@ class MassiveTemplateResume(BaseModel):
     name: str
     description: Optional[str]
     type: MassiveTemplateType
-
-    @field_serializer("id")
-    def serialize_id(self, id: UUID, _info: Any) -> str:
-        return str(id)
 
     model_config = {
         "from_attributes": True,
@@ -119,14 +117,6 @@ class MassiveTemplate(MassiveTemplateBase):
     id: UUID
     created_at: datetime
     updated_at: datetime
-
-    @field_serializer("id")
-    def serialize_id(self, id: UUID, _info: Any) -> str:
-        return str(id)
-
-    @field_serializer("created_at", "updated_at")
-    def serialize_dt(self, dt: datetime, _info: Any) -> float:
-        return dt.timestamp()
 
     model_config = {
         "from_attributes": True,

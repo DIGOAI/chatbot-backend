@@ -24,7 +24,7 @@ class LoggerHandler(BaseHTTPMiddleware):
         status_code = response.status_code
 
         # Get content length
-        content_length = int(response.headers.get("content-length", "0"))
+        content_length = float(response.headers.get("content-length", "0"))
 
         # Get content length magnitude
         content_length_mag = "B"

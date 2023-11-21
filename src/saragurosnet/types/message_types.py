@@ -16,3 +16,11 @@ class MessageType():
     PAYMENT_METHOD: Final[str] = "Selecciona el método de pago que más te convenga:\n*TRANSFERENCIA*: _Deberas subir una imagen del comprobante._\n*TARJETA*: _Pago mediante tarjeta de crédito o débito._\n*PUNTO DE PAGO*: _Pago en efectivo en nuestros puntos de pago._"
     END_CONVERSATION: Final[str] = "Estimado {name},\nAgradecemos su tiempo. Si desea continuar explorando nuestros servicios o tiene más preguntas, seleccione *TENGO MÁS DUDAS* y estaremos encantados de ayudarle. Caso contrario, seleccione *FINALIZAR CONSULTA*."
     SAY_GOODBAY: Final[str] = "Gracias por contactarnos. ¡Hasta pronto!"
+
+    TELL_ME_YOUR_NAMES: Final[str] = "Estimado {name}, por favor ingresa tus nombres. _ejm: Juan Carlos_"
+    TELL_ME_YOUR_LASTNAMES: Final[str] = "Estimado {name}, por favor ingresa tus apellidos. _ejm: Pérez López_"
+    TELL_ME_YOUR_EMAIL: Final[str] = "Estimado {name}, por favor ingresa tu correo electrónico. _ejm: example@email.com_"
+
+    ERROR_INVALID_NAMES: Final[str] = "Estimado {name}, el nombre ingresado no es válido. Por favor intenta nuevamente."
+    ERROR_INVALID_LASTNAMES: Final[str] = "Estimado {name}, el apellido ingresado no es válido. Por favor intenta nuevamente."
+    ERROR_INVALID_EMAIL: Final[str] = "Estimado {name}, el correo electrónico ingresado no es válido. Por favor intenta nuevamente."
