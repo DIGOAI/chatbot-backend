@@ -14,7 +14,7 @@ uvicorn = {extras = ["standard"], version = "==0.23.2"}
 sqlalchemy = "==2.0.21"
 colorama = "==0.4.6"
 passlib = {extras = ["bcrypt"], version = "==1.7.4"}
-pydantic = {extras = ["email"], version = "==2.3.0"}
+pydantic = {extras = ["email"], version = "==2.5.1"}
 python-multipart = "==0.0.6"
 python-socketio = "==5.10.0"
 schedule = "==1.2.1"
