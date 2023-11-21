@@ -1,7 +1,7 @@
 from src.common.cases import UseCaseBase
 from src.common.models import Client, ClientInsert
 from src.db.models import Client as ClientModel
-from src.db.repositories import BaseRepository, ClientRepository
+from src.db.repositories import BaseRepository
 
 
 class ClientUseCases(UseCaseBase):
@@ -19,12 +19,12 @@ class ClientUseCases(UseCaseBase):
 
     def get_client_by_phone(self, client_phone: str):
         with self._session() as session:
-            client_repository = ClientRepository(session)
-            client = client_repository.get_client_by_phone(client_phone)
+            client_repo = BaseRepository(ClientModel, Client, session)
+            client = client_repo.filter(ClientModel.phone == client_phone, first=True)
 
             if not client:
                 # Create a new client
                 new_client = ClientInsert.model_validate({"phone": client_phone})
-                client = client_repository.add_client(new_client)
+                client = client_repo.add(new_client.model_dump())
 
         return client
