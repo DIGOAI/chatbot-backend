@@ -1,3 +1,5 @@
+from collections import Counter
+from datetime import datetime, timedelta
 from uuid import UUID
 
 from sqlalchemy import select
@@ -16,6 +18,26 @@ class TicketUseCase(UseCaseBase):
             tickets = repository.list(offset, limit)
 
         return tickets
+
+    def get_tickets_kpi(self):
+        with self._session() as session:
+            repository = BaseRepository(db_model=TicketModel, py_model=Ticket, session=session)
+            current_datetime = datetime.now()
+            first_day_month = current_datetime.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            next_month = current_datetime + timedelta(days=32)
+            first_next_month = next_month.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+            repository_month = repository.filter(TicketModel.created_at.between(
+                first_day_month, first_next_month))
+
+            status_counts = Counter(ticket.status for ticket in repository_month)
+
+            return {
+                TicketStatus.ATTENDING.name: status_counts.get(TicketStatus.ATTENDING, 0),
+                TicketStatus.CLOSED.name: status_counts.get(TicketStatus.CLOSED, 0),
+                TicketStatus.WAITING.name: status_counts.get(TicketStatus.WAITING, 0),
+                TicketStatus.UNSOLVED.name: status_counts.get(TicketStatus.UNSOLVED, 0)
+            }
 
     def get_ticket(self, item_id: UUID):
         with self._session() as session:
