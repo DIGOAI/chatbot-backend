@@ -1,10 +1,11 @@
 from datetime import datetime
 from enum import Enum
-from typing import Any, Optional
+from typing import Optional
 from uuid import UUID
 
-from pydantic import BaseModel, EmailStr, Field, field_serializer
+from pydantic import EmailStr, Field
 
+from src.common.models.base import BaseModel
 from src.common.utils import PASSWORD_PATTERN
 
 
@@ -44,10 +45,6 @@ class User(BaseModel):
     active: bool
     created_at: datetime
     updated_at: datetime
-
-    @field_serializer("created_at", "updated_at")
-    def serialize_dt(self, dt: datetime, _info: Any) -> float:
-        return dt.timestamp()
 
     model_config = {
         "from_attributes": True
