@@ -2,7 +2,7 @@ from src.chatbot import ActionGroup, get_phone_and_service
 from src.common.cases import ConversationUseCases, MessageUseCases
 from src.common.logger import Logger
 from src.common.models import MessageInsert
-from src.saragurosnet.bussiness import Context
+from src.saragurosnet.bussiness.context import Context
 
 group = ActionGroup[Context]()
 

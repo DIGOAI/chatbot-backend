@@ -8,7 +8,7 @@ from src.socket.routers import router as socketio_router_v1
 
 class FastAPIWithSIO(ASGIApp):
 
-    sio: AsyncServer  # type: ignore
+    sio: AsyncServer
 
     def __init__(self,  socketio_server, other_asgi_app=None,  # type: ignore
                  static_files=None, socketio_path='socket.io',  # type: ignore

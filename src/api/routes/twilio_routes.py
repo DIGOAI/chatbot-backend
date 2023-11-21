@@ -7,7 +7,9 @@ from src.chatbot.utils import get_phone_and_service
 from src.common.cases import ConversationUseCases
 from src.common.logger import Logger
 from src.common.models import Client, Conversation, ConversationStatus, TwilioWebHook
-from src.saragurosnet.bussiness import Context, tree
+from src.common.models.responses import create_response
+from src.saragurosnet.bussiness import tree
+from src.saragurosnet.bussiness.context import Context
 
 router = APIRouter(prefix="/twilio", tags=["Twilio"])
 
@@ -63,4 +65,4 @@ def twilio_hook(webhook: Annotated[TwilioWebHook, Depends()]):
 def show_cache():
     global conversations_cache
 
-    return conversations_cache
+    return create_response(conversations_cache, "Actual conversation cache")
