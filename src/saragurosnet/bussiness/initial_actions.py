@@ -2,12 +2,11 @@ from datetime import datetime, timezone
 from typing import Any, cast
 
 from src.chatbot import ActionGroup, get_ci_or_ruc, get_phone_and_service
-from src.common.cases import ConversationUseCases, MessageUseCases
+from src.common.cases import ClientUseCases, ConversationUseCases, MessageUseCases
 from src.common.logger import Logger
 from src.common.services import SaragurosNetService
 from src.config import Config
 from src.saragurosnet.bussiness.context import Context
-from src.saragurosnet.cases import ClientUseCases
 from src.saragurosnet.types import MessageType
 
 group = ActionGroup[Context]()
