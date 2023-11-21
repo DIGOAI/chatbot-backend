@@ -1,13 +1,13 @@
 from fastapi import APIRouter
 
-from src.common.models.ocr import MakeOCRForm
+from src.common.models.ocr import MakeOCRForm, MakeOCRResponse
 from src.ocr import apply_ocr
 
 #
 router = APIRouter(prefix="/ocr", tags=["OCR"])
 
 
-@router.post("/")
+@router.post("/", response_model=MakeOCRResponse)
 def make_ocr(form: MakeOCRForm):
     data, draw = apply_ocr(form.image,
                            remove_bg=True,
