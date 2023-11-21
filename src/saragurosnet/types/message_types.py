@@ -20,3 +20,7 @@ class MessageType():
     TELL_ME_YOUR_NAMES: Final[str] = "Estimado {name}, por favor ingresa tus nombres. _ejm: Juan Carlos_"
     TELL_ME_YOUR_LASTNAMES: Final[str] = "Estimado {name}, por favor ingresa tus apellidos. _ejm: Pérez López_"
     TELL_ME_YOUR_EMAIL: Final[str] = "Estimado {name}, por favor ingresa tu correo electrónico. _ejm: example@email.com_"
+
+    ERROR_INVALID_NAMES: Final[str] = "Estimado {name}, el nombre ingresado no es válido. Por favor intenta nuevamente."
+    ERROR_INVALID_LASTNAMES: Final[str] = "Estimado {name}, el apellido ingresado no es válido. Por favor intenta nuevamente."
+    ERROR_INVALID_EMAIL: Final[str] = "Estimado {name}, el correo electrónico ingresado no es válido. Por favor intenta nuevamente."
