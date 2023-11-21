@@ -7,7 +7,7 @@ from src.common.logger import Logger
 from src.common.services import SaragurosNetService
 from src.config import Config
 from src.saragurosnet.bussiness.context import Context
-from src.saragurosnet.cases import ClientUseCases, GetClientByPhone
+from src.saragurosnet.cases import ClientUseCases
 from src.saragurosnet.types import MessageType
 
 group = ActionGroup[Context]()
@@ -17,13 +17,10 @@ group = ActionGroup[Context]()
 def load_context(ctx: Context, id_func: str):
     Logger.info("Loading context")
 
-    # Instace the services
-    get_client_by_phone = GetClientByPhone()
-
     # Get the client phone number in +5939XXXXXXXXX format and service name exp: twilio
     client_phone, _ = get_phone_and_service(ctx.event_twilio.from_number)
 
-    user = get_client_by_phone(client_phone)
+    user = ClientUseCases().get_client_by_phone(client_phone)
 
     if not user:
         Logger.warn(f"User doesn't exists: {client_phone}")
