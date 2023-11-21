@@ -44,7 +44,7 @@ def say_welcome(ctx: Context, id_func: str):
     ctx.last_state = id_func
 
 
-@group.add_action("0.2", condition=lambda ctx: ctx.last_state == "0.1", end=False, next=["1.0", "2.0"])
+@group.add_action("0.2", condition=lambda ctx: ctx.last_state == "0.1" or ctx.last_state == "0.2", end=False, next=["1.0", "2.0"])
 def search_saraguros_client(ctx: Context, id_func: str):
     Logger.info("Searching if the client is a saraguros client")
 
@@ -88,7 +88,9 @@ def search_saraguros_client(ctx: Context, id_func: str):
         Logger.warn(str(e))
         MessageUseCases().send_message(MessageType.ERROR_INVALID_CI, ctx.event_twilio.from_number, ctx.conversation.id)
 
-        ctx.last_state = None
+        ctx.last_state = "0.2"
+
+        return "0.2", True
 
     except (KeyError, IndexError) as e:
         Logger.error(f'Error getting client data from SaragurosNet API: {e} key | index')

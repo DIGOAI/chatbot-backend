@@ -8,7 +8,7 @@ from src.saragurosnet.types import MessageType, OptionType
 group = ActionGroup[Context]()
 
 
-@group.add_action("3.0", condition=lambda ctx: ctx.last_state in ["1.1", "1.2"], next="3.1")
+@group.add_action("3.0", condition=lambda ctx: ctx.last_state in ["1.1", "1.2", "1.3"], next="3.1")
 def end_conversation(ctx: Context, id_func: str):
     if ctx.client is None:
         return say_error(ctx)
