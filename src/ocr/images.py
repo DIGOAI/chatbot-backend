@@ -205,13 +205,13 @@ def has_white_background(image: Image.Image, tolerance: int = 10, white_pixel_pe
         white_pixel_percentage_threshold (0 - 100)
     """
     image = image.convert("L")
-    image = image.filter(ImageFilter.GaussianBlur(radius=5))
+    image = image.filter(ImageFilter.GaussianBlur(radius=11))
     img_array = np.array(image)
     threshold = 255 - tolerance
     # white_pixels = (img_array[:, :, 0] > threshold) & (
     #     img_array[:, :, 1] > threshold) & (img_array[:, :, 2] > threshold)
     white_pixels = (img_array > threshold)
     white_pixel_percentage = (np.sum(white_pixels) / img_array.size) * 100
-    print("white percentage: ", white_pixel_percentage, img_array.min(),
-          img_array.max(), img_array.mean(), np.median(img_array))
+    # print("white percentage: ", white_pixel_percentage, img_array.min(),
+    #       img_array.max(), img_array.mean(), np.median(img_array))
     return white_pixel_percentage >= white_pixel_percentage_threshold

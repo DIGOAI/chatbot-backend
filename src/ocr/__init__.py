@@ -47,7 +47,7 @@ def apply_ocr(
         else:
             image = base64_to_image(image)
 
-    has_white_bg = has_white_background(image, tolerance=127, white_pixel_percentage_threshold=70)
+    has_white_bg = has_white_background(image, tolerance=50, white_pixel_percentage_threshold=70)
 
     if remove_bg:
         if auto_remove_bg and not has_white_bg:
