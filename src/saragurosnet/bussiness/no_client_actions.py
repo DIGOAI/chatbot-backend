@@ -1,4 +1,4 @@
-from src.chatbot import ActionGroup
+from src.chatbot import ActionGroup, get_email
 from src.common.cases import ClientUseCases, MessageUseCases
 from src.saragurosnet.bussiness.context import Context
 from src.saragurosnet.bussiness.utils import say_error, verify_button
@@ -57,7 +57,7 @@ def talk_with_agent(ctx: Context, id_func: str):
 
         if body and not verify_button(ctx, OptionType.AGENT):
             # TODO: Verify if the message is a correct name
-            ctx.client.names = body
+            ctx.client.names = body.strip()
             last_value = body
             # ClientUseCases().update_client(ctx.client)
             pass
@@ -73,7 +73,7 @@ def talk_with_agent(ctx: Context, id_func: str):
 
         if body and not verify_button(ctx, OptionType.AGENT) and last_value != body:
             # TODO: Verify if the message is a correct lastname
-            ctx.client.lastnames = body
+            ctx.client.lastnames = body.strip()
             last_value = body
             pass
         else:
@@ -88,9 +88,18 @@ def talk_with_agent(ctx: Context, id_func: str):
 
         if body and not verify_button(ctx, OptionType.AGENT) and last_value != body:
             # TODO: Verify if the message is a correct email
-            ctx.client.email = body
-            last_value = body
-            pass
+            try:
+                email = get_email(body)
+                ctx.client.email = email
+                last_value = email
+                pass
+            except ValueError:
+                MessageUseCases().send_message(MessageType.ERROR_INVALID_EMAIL.format(
+                    name=ctx.client.get_fullname()), ctx.event_twilio.from_number, ctx.conversation.id)
+
+                ctx.last_state = "1.3"
+                return "1.3", True
+
         else:
             MessageUseCases().send_message(MessageType.TELL_ME_YOUR_EMAIL.format(
                 name=ctx.client.get_fullname()), ctx.event_twilio.from_number, ctx.conversation.id)
