@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "573a82042074ff3c5da7af30adc44f5be73a741b4105a60651b45aecf4c19073"
+            "sha256": "ec3bc03721aa04b98a9fb3f6831721414dee7899fdf0365d37955ca62585ef3d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -1130,7 +1130,7 @@
                 "sha256:6f3d1f7b8a31ba32b73917cefc1f28cc660562f39aea8646d30bd6eff21f7bae",
                 "sha256:b0efb6516fd4fb07b45949053826a62fa4cb353db5be2bbb4a7aa1fdd1e345fb"
             ],
-            "markers": "sys_platform == 'win32' and python_version >= '3.8'",
+            "markers": "python_version >= '3.8' and sys_platform == 'win32'",
             "version": "==3.4.1"
         },
         "pytesseract": {
@@ -2537,6 +2537,15 @@
             ],
             "index": "pypi",
             "version": "==1.7.7.13"
+        },
+        "types-pillow": {
+            "hashes": [
+                "sha256:131078ffa547bf9a201d39ffcdc65633e108148085f4f1b07d4647fcfec6e923",
+                "sha256:525c1c5ee67b0ac1721c40d2bc618226ef2123c347e527e14e05b920721a13b9"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.7'",
+            "version": "==10.1.0.2"
         },
         "types-pytz": {
             "hashes": [
