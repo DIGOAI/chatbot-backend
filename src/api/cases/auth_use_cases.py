@@ -4,7 +4,8 @@ from src.api.utils import decrypt, signJWT
 from src.common.cases import UseCaseBase
 from src.common.models import LoginSchema, RegisterSchema, TokenSchema, User
 from src.common.models.user import SystemRole
-from src.db.repositories import UserRepository
+from src.db.models import User as UserModel
+from src.db.repositories.base_repository import BaseRepository
 
 
 class TokenPayload(TypedDict):
@@ -53,16 +54,16 @@ class UserUseCases(UseCaseBase):
 
     def register_user(self, new_user: RegisterSchema):
         with self._session() as session:
-            user_repository = UserRepository(session)
-            user = user_repository.create(new_user)
+            user_repository = BaseRepository(UserModel, User, session)
+            user = user_repository.add(new_user.model_dump())
 
         token_data = _create_token_data(user)
         return token_data
 
     def login_user(self, login: LoginSchema):
         with self._session() as session:
-            user_repository = UserRepository(session)
-            user = user_repository.get_user_by_email(login.email)
+            user_repository = BaseRepository(UserModel, User, session)
+            user = user_repository.filter(UserModel.email == login.email, first=True)
 
         if user is None or not decrypt(login.password, user.password):
             return None
