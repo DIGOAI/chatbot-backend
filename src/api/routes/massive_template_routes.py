@@ -2,7 +2,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, status
 
-from src.api.cases import MassiveTemplateUseCases
+from src.common.cases import MassiveTemplateUseCases
 from src.common.models import (
     GenericResponse,
     MassiveTemplate,
