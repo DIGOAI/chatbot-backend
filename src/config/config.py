@@ -47,7 +47,7 @@ class Config:
         self.SMTP_PASSWORD: str = os.environ.get("SMTP_PASSWORD", "")
         self.SMTP_SENDER: str = os.environ.get("SMTP_SENDER", self.SMTP_USER or "")
 
-        self.OPENAI_KEY = os.environ.get("OPENAI_KEY")
+        self.OPENAI_KEY = os.environ.get("OPENAI_KEY", "")
 
         try:
             self._verify()

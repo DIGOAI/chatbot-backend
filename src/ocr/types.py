@@ -1,4 +1,4 @@
-from typing import Optional, TypedDict
+from typing import Any, Optional, TypedDict
 
 from pydantic import BaseModel, Field
 
@@ -24,3 +24,4 @@ class OCRPayload(BaseModel):
 class OCRResponse(BaseModel):
     text: str = Field(examples=["A text result from the OCR"])
     image: Optional[str] = Field(examples=["A base64 image"])
+    gpt: dict[str, Any]
