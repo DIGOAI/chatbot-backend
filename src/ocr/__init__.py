@@ -1,8 +1,8 @@
-from typing import Any, Union
+from typing import Literal, overload
 
-import pytesseract
+import pytesseract  # type: ignore
 from PIL import Image
-from pytesseract import Output
+from pytesseract import Output  # type: ignore
 
 from src.ocr.background import remove_bg_image
 from src.ocr.images import (
@@ -13,14 +13,43 @@ from src.ocr.images import (
     image_to_base64,
     preprocess,
 )
+from src.ocr.types import OCRData, TesseractData
 
 
-def _get_text_from_image(image: Image.Image):
-    return pytesseract.image_to_string(image)
+@overload
+def apply_ocr(
+    image: Image.Image | str,
+    remove_bg: bool = True,
+    auto_remove_bg: bool = True,
+    draw_boxes_on_image: bool = False,
+    contrast: float = 1.5,
+    brightness: float = 1.0,
+    smooth: bool = True,
+    smooth_factor: int = 3,
+    apply_grayscale: bool = True,
+    sharpness: float = 1.0,
+    confidence_threshold: int = 40,
+    to_base64: Literal[False] = False
+) -> tuple[OCRData, Image.Image | None]:
+    ...
 
 
-def _get_data_from_image(image: Image.Image):
-    return pytesseract.image_to_data(image, output_type=Output.DICT)
+@overload
+def apply_ocr(
+    image: Image.Image | str,
+    remove_bg: bool = True,
+    auto_remove_bg: bool = True,
+    draw_boxes_on_image: bool = False,
+    contrast: float = 1.5,
+    brightness: float = 1.0,
+    smooth: bool = True,
+    smooth_factor: int = 3,
+    apply_grayscale: bool = True,
+    sharpness: float = 1.0,
+    confidence_threshold: int = 40,
+    to_base64: Literal[True] = True
+) -> tuple[OCRData, str | None]:
+    ...
 
 
 def apply_ocr(
@@ -36,10 +65,7 @@ def apply_ocr(
     sharpness: float = 1.0,
     confidence_threshold: int = 40,
     to_base64: bool = False
-) -> tuple[dict[str, Any], Image.Image | str | None]:
-
-    if not isinstance(image, Image.Image | str):
-        raise ValueError("`image` type is not valid!")
+):
 
     if isinstance(image, str):
         if image.startswith("http"):
@@ -49,30 +75,22 @@ def apply_ocr(
 
     has_white_bg = has_white_background(image, tolerance=50, white_pixel_percentage_threshold=70)
 
-    if remove_bg:
-        if auto_remove_bg and not has_white_bg:
-            image = remove_bg_image(image)
+    if remove_bg or (auto_remove_bg and not has_white_bg):
+        image = remove_bg_image(image)
 
-        if not auto_remove_bg:
-            image = remove_bg_image(image)
+    image = preprocess(image, apply_grayscale, contrast, brightness, smooth, smooth_factor,  sharpness)
 
-    image = preprocess(
-        image,
-        contrast=contrast,
-        brightness=brightness,
-        smooth=smooth,
-        smooth_factor=smooth_factor,
-        apply_grayscale=apply_grayscale,
-        sharpness=sharpness
-    )
-
-    data = _get_data_from_image(image)
-
-    draw = None
+    data: TesseractData = pytesseract.image_to_data(image, output_type=Output.DICT)  # type: ignore
+    draw: Image.Image | str | None = None
 
     if draw_boxes_on_image:
-        draw = draw_boxes(image, data, confidence_threshold=confidence_threshold)
+        draw = draw_boxes(image, data, confidence_threshold=confidence_threshold)  # type: ignore
+
         if to_base64:
             draw = image_to_base64(draw)
-    data["string"] = " ".join(data.get('text'))
-    return data, draw
+
+    new_data: OCRData = {
+        "text": " ".join(data.get('text'))
+    }
+
+    return new_data, draw
