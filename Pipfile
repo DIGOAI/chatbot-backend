@@ -32,6 +32,7 @@ alembic-postgresql-enum = "==0.1.8"
 types-passlib = "==1.7.7.13"
 types-requests = "==2.31.0.10"
 types-pytz = "==2023.3.1.1"
+types-pillow = "==10.1.0.2"
 
 [scripts]
 dev = "uvicorn main:app --reload --port 8000 --no-access-log"

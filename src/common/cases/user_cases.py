@@ -1,18 +1,11 @@
 from typing import TypedDict
 
-from fastapi import status as STATUS
-
 from src.api.utils import decrypt, signJWT
 from src.common.cases import UseCaseBase
-from src.common.models import (
-    LoginSchema,
-    RegisterSchema,
-    TokenSchema,
-    User,
-    create_response,
-)
+from src.common.models import LoginSchema, RegisterSchema, TokenSchema, User
 from src.common.models.user import SystemRole
-from src.db.repositories import UserRepository
+from src.db.models import User as UserModel
+from src.db.repositories.base_repository import BaseRepository
 
 
 class TokenPayload(TypedDict):
@@ -22,7 +15,7 @@ class TokenPayload(TypedDict):
     exp_time_sec: int
 
 
-def create_token_data(user: User) -> TokenSchema:
+def _create_token_data(user: User) -> TokenSchema:
     payload: TokenPayload = {
         "user_id": str(user.email),
         "role": user.system_role.value,
@@ -57,31 +50,23 @@ def create_token_data(user: User) -> TokenSchema:
     return TokenSchema(access_token=access_token)
 
 
-class RegisterNewUser(UseCaseBase):
+class UserUseCases(UseCaseBase):
 
-    def __call__(self, new_user: RegisterSchema):
+    def register_user(self, new_user: RegisterSchema):
         with self._session() as session:
-            user_repository = UserRepository(session)
-            user = user_repository.create(new_user)
+            user_repository = BaseRepository(UserModel, User, session)
+            user = user_repository.add(new_user.model_dump())
 
-        token_data = create_token_data(user)
+        token_data = _create_token_data(user)
+        return token_data
 
-        return create_response(token_data, "User registered", status_code=STATUS.HTTP_201_CREATED)
-
-
-class LoginUser(UseCaseBase):
-
-    def __call__(self, login: LoginSchema):
+    def login_user(self, login: LoginSchema):
         with self._session() as session:
-            user_repository = UserRepository(session)
-            user = user_repository.get_user_by_email(login.email)
+            user_repository = BaseRepository(UserModel, User, session)
+            user = user_repository.filter(UserModel.email == login.email, first=True)
 
-        if user is None:
-            return create_response(None, "User not found", status_code=STATUS.HTTP_404_NOT_FOUND, status="error")
+        if user is None or not decrypt(login.password, user.password):
+            return None
 
-        if not decrypt(login.password, user.password):
-            return create_response(None, "Wrong password", status_code=STATUS.HTTP_401_UNAUTHORIZED, status="error")
-
-        token_data = create_token_data(user)
-
-        return create_response(token_data, "User logged", status_code=STATUS.HTTP_200_OK)
+        token_data = _create_token_data(user)
+        return token_data
