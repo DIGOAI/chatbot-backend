@@ -4,6 +4,7 @@ from src.common.cases.conversation_cases import ConversationUseCases
 from src.common.cases.email_cases import EmailUseCases
 from src.common.cases.message_cases import MessageUseCases
 from src.common.cases.options_cases import OptionsUseCases
+from src.common.cases.ticket_cases import TicketUseCases
 
 __all__ = [
     "ClientUseCases",
@@ -11,5 +12,6 @@ __all__ = [
     "EmailUseCases",
     "MessageUseCases",
     "OptionsUseCases",
+    "TicketUseCases",
     "UseCaseBase",
 ]

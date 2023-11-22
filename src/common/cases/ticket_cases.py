@@ -11,7 +11,7 @@ from src.db.repositories import BaseRepository
 from src.db.repositories.base_repository import IdNotFoundError
 
 
-class TicketUseCase(UseCaseBase):
+class TicketUseCases(UseCaseBase):
     def get_tickets(self, limit: int = 30, offset: int = 0):
         with self._session() as session:
             repository = BaseRepository(TicketModel, Ticket, session)
