@@ -22,7 +22,7 @@ class TokenPayload(TypedDict):
     exp_time_sec: int
 
 
-def create_token_data(user: User) -> TokenSchema:
+def _create_token_data(user: User) -> TokenSchema:
     payload: TokenPayload = {
         "user_id": str(user.email),
         "role": user.system_role.value,
@@ -57,21 +57,18 @@ def create_token_data(user: User) -> TokenSchema:
     return TokenSchema(access_token=access_token)
 
 
-class RegisterNewUser(UseCaseBase):
+class UserUseCases(UseCaseBase):
 
-    def __call__(self, new_user: RegisterSchema):
+    def register_user(self, new_user: RegisterSchema):
         with self._session() as session:
             user_repository = UserRepository(session)
             user = user_repository.create(new_user)
 
-        token_data = create_token_data(user)
+        token_data = _create_token_data(user)
 
         return create_response(token_data, "User registered", status_code=STATUS.HTTP_201_CREATED)
 
-
-class LoginUser(UseCaseBase):
-
-    def __call__(self, login: LoginSchema):
+    def login_user(self, login: LoginSchema):
         with self._session() as session:
             user_repository = UserRepository(session)
             user = user_repository.get_user_by_email(login.email)
@@ -82,6 +79,6 @@ class LoginUser(UseCaseBase):
         if not decrypt(login.password, user.password):
             return create_response(None, "Wrong password", status_code=STATUS.HTTP_401_UNAUTHORIZED, status="error")
 
-        token_data = create_token_data(user)
+        token_data = _create_token_data(user)
 
         return create_response(token_data, "User logged", status_code=STATUS.HTTP_200_OK)
