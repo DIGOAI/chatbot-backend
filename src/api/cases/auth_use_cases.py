@@ -1,16 +1,8 @@
 from typing import TypedDict
 
-from fastapi import status as STATUS
-
 from src.api.utils import decrypt, signJWT
 from src.common.cases import UseCaseBase
-from src.common.models import (
-    LoginSchema,
-    RegisterSchema,
-    TokenSchema,
-    User,
-    create_response,
-)
+from src.common.models import LoginSchema, RegisterSchema, TokenSchema, User
 from src.common.models.user import SystemRole
 from src.db.repositories import UserRepository
 
@@ -65,20 +57,15 @@ class UserUseCases(UseCaseBase):
             user = user_repository.create(new_user)
 
         token_data = _create_token_data(user)
-
-        return create_response(token_data, "User registered", status_code=STATUS.HTTP_201_CREATED)
+        return token_data
 
     def login_user(self, login: LoginSchema):
         with self._session() as session:
             user_repository = UserRepository(session)
             user = user_repository.get_user_by_email(login.email)
 
-        if user is None:
-            return create_response(None, "User not found", status_code=STATUS.HTTP_404_NOT_FOUND, status="error")
-
-        if not decrypt(login.password, user.password):
-            return create_response(None, "Wrong password", status_code=STATUS.HTTP_401_UNAUTHORIZED, status="error")
+        if user is None or not decrypt(login.password, user.password):
+            return None
 
         token_data = _create_token_data(user)
-
-        return create_response(token_data, "User logged", status_code=STATUS.HTTP_200_OK)
+        return token_data
