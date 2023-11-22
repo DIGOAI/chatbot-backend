@@ -1,11 +1,11 @@
 from typing import Any, Generic, List, Literal, Optional, Sequence, TypeVar, overload
 from uuid import UUID
 
-from pydantic import BaseModel
 from sqlalchemy import ColumnExpressionArgument, select, update
 from sqlalchemy.orm import Session
 from sqlalchemy.sql._typing import _DMLColumnKeyMapping  # type: ignore
 
+from src.common.models.base import BaseModel
 from src.db.models import Base
 
 DbModel = TypeVar('DbModel', bound=Base)
@@ -62,9 +62,6 @@ class BaseRepository(Generic[DbModel, PyModel]):
         return True
 
     def get(self, id: int | UUID) -> PyModel:
-        # stmt = select(self.db_model).where(self.db_model.id == id)
-        # model = self.session.scalars(stmt).first()
-        # return self.session.query(self.db_model).filter(self.db_model.id == id).first()
         model = self.session.get(self.db_model, id)
 
         if not model:
