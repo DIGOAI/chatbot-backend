@@ -8,4 +8,5 @@ class MakeOCRForm(BaseModel):
 
 class MakeOCRResponse(BaseModel):
     text: str
+    gpt: dict
     image: str = Field(examples=["a base64 image"])

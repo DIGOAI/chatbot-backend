@@ -3,6 +3,10 @@ from typing import Any, cast
 
 import openai
 
+from src.config import Config
+
+openai.api_key = Config.OPENAI_KEY
+
 PROMPT = """El siguiente es un mensaje de un cliente en un canal de sorpote:
 
 {message}.
@@ -117,3 +121,75 @@ class ChatGPTService(object):
         subject, department = res.split(", ")
 
         return subject, department
+
+
+def fix_chatgpt_response(text: str):
+    """Corrects the end of sentences with a final point."""
+    split = text.split(".")[:-1]
+    result = ".".join(split) + "."
+    return result
+
+
+def ask_to_chatgpt_v1(prompt: str,
+                      engine: str = "text-davinci-003",
+                      max_tokens: int = 500,
+                      fixed: bool = False):
+    """Talk with chatGPT."""
+    completion = openai.Completion.create(engine=engine,
+                                          prompt=prompt,
+                                          max_tokens=max_tokens)
+    response = completion.choices[0].text
+    if fixed:
+        response = fix_chatgpt_response(response)
+    return response
+
+
+def ask_to_chatgpt_v2(prompt: str,
+                      model: str = "gpt-3.5-turbo",
+                      max_tokens: int = 500,
+                      fixed: bool = False,
+                      history: list = None):
+    """Talk with chatGPT."""
+    current_message = [{"role": "user", "content": prompt}]
+    if history is not None and isinstance(history, list):
+        history.extend(current_message)
+        messages = history
+    else:
+        messages = current_message
+    completion = openai.ChatCompletion.create(model=model,
+                                              messages=messages,
+                                              max_tokens=max_tokens,
+                                              stream=False)
+    response = completion.choices[0].message["content"]
+    if fixed:
+        response = fix_chatgpt_response(response)
+    return response
+
+
+def ask_to_chatgpt(prompt: str,
+                   model: str = "gpt-3.5-turbo",
+                   engine: str = "text-davinci-003",
+                   max_tokens: int = 500,
+                   fixed: bool = False,
+                   history: list = None,
+                   api_version: int = 1
+                   ):
+    """ask to chatgpt."""
+    if api_version == 1:
+        response = ask_to_chatgpt_v1(
+            prompt=prompt,
+            engine=engine,
+            max_tokens=max_tokens,
+            fixed=fixed
+        )
+        return response
+
+    if api_version == 2:
+        response = ask_to_chatgpt_v2(
+            prompt=prompt,
+            model=model,
+            max_tokens=max_tokens,
+            history=history,
+            fixed=fixed
+        )
+        return response
