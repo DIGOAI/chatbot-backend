@@ -7,6 +7,7 @@ from src.common.cases.options_cases import OptionsUseCases
 from src.common.cases.template_cases import MassiveTemplateUseCases
 from src.common.cases.ticket_cases import TicketUseCases
 from src.common.cases.user_cases import UserUseCases
+from src.common.cases.whatsapp_cases import WhatsAppUseCase
 
 __all__ = [
     "ClientUseCases",
@@ -18,4 +19,5 @@ __all__ = [
     "TicketUseCases",
     "UseCaseBase",
     "UserUseCases",
+    "WhatsAppUseCase",
 ]
