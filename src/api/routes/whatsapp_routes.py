@@ -1,12 +1,9 @@
 from uuid import UUID
 
-from fastapi import APIRouter, BackgroundTasks, HTTPException
+from fastapi import APIRouter, BackgroundTasks
 
-#
-from src.api.cases.whatsapp_use_cases import WhatsAppUseCase
-from src.common.models import GenericResponse, create_response
-
-#
+from src.common.cases import WhatsAppUseCase
+from src.common.models import create_response
 from src.common.models.whatsapp import SendWhatsAppMessageForm
 
 router = APIRouter(prefix="/whatsapp", tags=["Whatsapp"])

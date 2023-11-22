@@ -1,10 +1,11 @@
 from datetime import datetime
 from enum import Enum
-from typing import Any, Optional
+from typing import Optional
 from uuid import UUID
 
-from pydantic import BaseModel, Field, field_serializer
+from pydantic import Field
 
+from src.common.models.base import BaseModel
 from src.common.models.client import Client
 from src.common.models.message import Message
 
@@ -54,12 +55,6 @@ class ConversationBase(BaseModel):
     status: Optional[ConversationStatus] = Field(default=ConversationStatus.OPENED)
     last_message_id: Optional[str] = Field(None)
     finished_at: Optional[datetime] = Field(None)
-
-    @field_serializer("finished_at")
-    def serialize_dt_none(self, dt: datetime | None, _info: Any) -> float | None:
-        if dt is None:
-            return None
-        return dt.timestamp()
 
     model_config = {
         "from_attributes": True,
@@ -112,14 +107,6 @@ class Conversation(ConversationBase):
     id: UUID
     created_at: datetime
     updated_at: datetime
-
-    @field_serializer("id", "client_id")
-    def serialize_id(self, id: UUID, _info: Any) -> str:
-        return str(id)
-
-    @field_serializer("created_at", "updated_at")
-    def serialize_dt(self, dt: datetime, _info: Any) -> float:
-        return dt.timestamp()
 
     model_config = {
         "from_attributes": True,

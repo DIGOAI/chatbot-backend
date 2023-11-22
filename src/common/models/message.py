@@ -1,9 +1,11 @@
 from datetime import datetime
 from enum import Enum
-from typing import Any, Optional
+from typing import Optional
 from uuid import UUID
 
-from pydantic import BaseModel, Field, field_serializer
+from pydantic import Field
+
+from src.common.models.base import BaseModel
 
 
 class MessageType(str, Enum):
@@ -26,10 +28,6 @@ class MessageBase(BaseModel):
         "from_attributes": True,
     }
 
-    @field_serializer("conversation_id")
-    def serialize_id(self, id: UUID, _info: Any) -> str:
-        return str(id)
-
 
 class Message(MessageBase):
     """Message class to handle the message model.
@@ -46,10 +44,6 @@ class Message(MessageBase):
     """
 
     created_at: datetime
-
-    @field_serializer("created_at")
-    def serialize_dt(self, dt: datetime, _info: Any) -> float:
-        return self.created_at.timestamp()
 
     model_config = {
         "from_attributes": True,
@@ -101,7 +95,3 @@ class MessageInsertWeb(BaseModel):
     receiver: str
     message: str
     conversation_id: UUID
-
-    @field_serializer("conversation_id")
-    def serialize_id(self, id: UUID, _info: Any) -> str:
-        return str(id)

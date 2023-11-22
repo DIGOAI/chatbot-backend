@@ -1,8 +1,10 @@
 from datetime import datetime
-from typing import Any, Optional
+from typing import Optional
 from uuid import UUID
 
-from pydantic import BaseModel, EmailStr, Field, field_serializer
+from pydantic import EmailStr, Field
+
+from src.common.models.base import BaseModel
 
 
 class ClientBase(BaseModel):
@@ -23,6 +25,15 @@ class ClientBase(BaseModel):
     phone: str = Field(min_length=10, max_length=13)
     email: Optional[EmailStr] = Field(None)
     saraguros_id: Optional[int] = Field(None)
+
+    def get_fullname(self) -> str:
+        """Get the fullname of the client.
+
+        Returns:
+        str: The fullname of the client
+        """
+
+        return f"{self.names or ''} {self.lastnames or ''}".strip()
 
     model_config = {
         "from_attributes": True,
@@ -74,14 +85,6 @@ class Client(ClientBase):
     id: UUID
     created_at: datetime
     updated_at: datetime
-
-    @field_serializer("id")
-    def serialize_id(self, id: UUID, _info: Any) -> str:
-        return str(id)
-
-    @field_serializer("created_at", "updated_at")
-    def serialize_dt(self, dt: datetime, _info: Any) -> float:
-        return self.created_at.timestamp()
 
     model_config = {
         "from_attributes": True,

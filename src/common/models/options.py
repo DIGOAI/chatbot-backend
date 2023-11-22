@@ -1,8 +1,10 @@
 from datetime import datetime, time
-from typing import Any, Optional
+from typing import Optional
 from uuid import UUID
 
-from pydantic import BaseModel, Field, field_serializer
+from pydantic import Field
+
+from src.common.models.base import BaseModel
 
 
 class OptionsBase(BaseModel):
@@ -19,10 +21,6 @@ class OptionsBase(BaseModel):
     cutting_hour: time = Field(...)
     data_reconciliation_interval: int = Field(..., ge=1, le=5)
     data_reconciliation_hour: time = Field(...)
-
-    @field_serializer("cutting_hour", "data_reconciliation_hour")
-    def serialize_time(self, t: time, _info: Any) -> str:
-        return t.strftime("%H:%M")
 
     model_config = {
         "from_attributes": True
@@ -73,14 +71,6 @@ class Options(OptionsBase):
     id: UUID
     created_at: datetime
     updated_at: datetime
-
-    @field_serializer("id")
-    def serialize_id(self, id: UUID, _info: Any) -> str:
-        return str(id)
-
-    @field_serializer("created_at", "updated_at")
-    def serialize_dt(self, dt: datetime, _info: Any) -> str:
-        return dt.isoformat()
 
     model_config = {
         "from_attributes": True,

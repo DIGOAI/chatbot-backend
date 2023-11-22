@@ -191,12 +191,15 @@ class SaragurosNetService:
         ```
         """
 
-        data = {
-            "estado": status
-        }
-
         if ci:
-            data["cedula"] = ci
+            data = {
+                "estado": status,
+                "cedula": ci
+            }
+        else:
+            data = {
+                "estado": status
+            }
 
         return self._make_request(MikrowispEndpoint.LIST_INSTALLS, data)
 

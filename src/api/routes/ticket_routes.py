@@ -3,8 +3,8 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends
 
-from src.api.cases.ticket_use_cases import TicketUseCase
 from src.api.middlewares.jwt_bearer import JWTBearer, Role
+from src.common.cases import TicketUseCases
 from src.common.models import GenericResponse, create_response
 from src.common.models.ticket import TicketWithClient
 
@@ -21,7 +21,7 @@ class TicketsKPIPayload:
     UNSOLVED: int
 
 
-controller = TicketUseCase()
+controller = TicketUseCases()
 
 
 @router.get("/", response_model=GenericResponse[list[TicketWithClient]])
