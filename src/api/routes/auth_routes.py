@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Body
 from fastapi import status as STATUS
 
-from src.api.cases import UserUseCases
+from src.common.cases import UserUseCases
 from src.common.models import (
     GenericResponse,
     LoginSchema,
