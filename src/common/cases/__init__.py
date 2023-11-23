@@ -1,4 +1,5 @@
 from src.common.cases.base_use_cases import UseCaseBase
+from src.common.cases.chatgpt_cases import ChatGPTUseCases
 from src.common.cases.client_cases import ClientUseCases
 from src.common.cases.conversation_cases import ConversationUseCases
 from src.common.cases.email_cases import EmailUseCases
@@ -11,6 +12,7 @@ from src.common.cases.user_cases import UserUseCases
 from src.common.cases.whatsapp_cases import WhatsAppUseCase
 
 __all__ = [
+    "ChatGPTUseCases",
     "ClientUseCases",
     "ConversationUseCases",
     "EmailUseCases",
