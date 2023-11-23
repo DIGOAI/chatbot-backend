@@ -82,14 +82,14 @@ class Logger:
         Logger._log(AlertType.INFO, msg, caller_name)
 
     @staticmethod
-    def error(msg: str, caller_name: str | None = None):
+    def error(msg: str, caller_name: str | None = None, traceback: str | None = None):
         """Log an `error` message in the console.
 
         Parameters:
         msg (str): The message to log
         """
 
-        Logger._log(AlertType.ERROR, msg, caller_name)
+        Logger._log(AlertType.ERROR, msg, caller_name, traceback)
 
     @staticmethod
     def warn(msg: str, caller_name: str | None = None):
@@ -122,7 +122,7 @@ class Logger:
         Logger._log(AlertType.DEBUG, msg, caller_name)
 
     @staticmethod
-    def _log(alert_type: AlertType, msg: str, caller_name: str | None = None):
+    def _log(alert_type: AlertType, msg: str, caller_name: str | None = None, traceback: str | None = None):
         """Log a message in the console.
 
         Parameters:
@@ -147,4 +147,6 @@ class Logger:
 
         # TODO: If alert_type is ERROR, WARNING or ALERT, save the log in a DB
 
-        print(f"[{alert_type:^5}][{caller_module_name:^{Logger._module_char_length}}]: {msg}")
+        traceback_str = f"\n{traceback}" if traceback else ""
+
+        print(f"[{alert_type:^5}][{caller_module_name:^{Logger._module_char_length}}]: {msg}{traceback_str}")
