@@ -44,17 +44,19 @@ El output debe ser estrictamente: "categoría sugerida, departamento sugerido"
 
 
 OCR_DATA_PROMPT = """
-        Extract data from the following text obtained from a receipt:
+        Below I will show you a set of tokens extracted from an OCR process to a bank payment receipt:
         
         {text_data}
+
+        Based on the tokens, I need you to extract the following information, the bank or financial institution that issues the receipt, the person or client who makes this payment, the date of the transaction, the time of the transaction, the type of currency, ( e.g. USD, EUR), and the amount or value of the payment.
         
-        Return a JSON as Follows:
+        Returns a Json with the following structure:
         {{
             "bank": "bank from text, put null if not found",
             "customer": "name of the customer from" or null,
-            "date": "date from text on format dd/MM/yyyy" or null,
-            "hour": "hour from text on format HH:mm" or null,
-            "currency": "currency from text" or null,
+            "date": "date from text on format YYYY-MM-DD" or null,
+            "hour": "hour from text on format HH:MM" or null,
+            "currency": "currency from text (USD, EUR)" or null,
             "total": <numeric value> or null
         }}
     """
