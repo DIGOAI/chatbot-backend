@@ -25,9 +25,24 @@ class ReceibeData(BaseModel):
     total (float): The total amount of the transaction.
     """
 
-    bank: Optional[str] = Field(examples=["Banco de Loja"])
-    customer: Optional[str] = Field(examples=["John Doe"])
-    date: Optional[datetime.date] = Field(examples=["01-01-2021"])
-    hour: Optional[datetime.time] = Field(examples=["12:00"])
-    currency: Optional[str] = Field(examples=["USD"])
-    total: Optional[float] = Field(examples=[100.0])
+    bank: Optional[str] = Field(...)
+    customer: Optional[str] = Field(...)
+    date: Optional[datetime.date] = Field(...)
+    hour: Optional[datetime.time] = Field(...)
+    currency: Optional[str] = Field(...)
+    total: Optional[float] = Field(...)
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "bank": "Banco de Loja",
+                    "customer": "John Doe",
+                    "date": "2021-01-01",
+                    "hour": "12:00",
+                    "currency": "USD",
+                    "total": 100.0,
+                }
+            ]
+        }
+    }
