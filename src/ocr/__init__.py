@@ -13,7 +13,7 @@ from src.ocr.images import (
     image_to_base64,
     preprocess,
 )
-from src.ocr.types import OCRData, TesseractData
+from src.ocr.types import OCRData, TesseractData, TextNotExtractedException
 
 
 @overload
@@ -89,8 +89,13 @@ def apply_ocr(
         if to_base64:
             draw = image_to_base64(draw)
 
+    text = [t.strip() for t in data.get("text") if t.strip() != ""]
+
+    if not text:
+        raise TextNotExtractedException()
+
     new_data: OCRData = {
-        "text": " ".join(data.get('text'))
+        "text": ", ".join(text)
     }
 
     return new_data, draw

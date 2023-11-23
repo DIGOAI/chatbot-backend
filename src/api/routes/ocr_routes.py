@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
+from src.common.cases import ChatGPTUseCases, OCRUseCases
 from src.common.models import GenericResponse, create_response
-from src.ocr import apply_ocr
 from src.ocr.types import OCRPayload, OCRResponse
 
 router = APIRouter(prefix="/ocr", tags=["OCR"])
@@ -9,16 +9,7 @@ router = APIRouter(prefix="/ocr", tags=["OCR"])
 
 @router.post("/", response_model=GenericResponse[OCRResponse])
 def make_ocr(form: OCRPayload):
-    data, draw = apply_ocr(form.image,
-                           remove_bg=True,
-                           draw_boxes_on_image=True,
-                           contrast=1.45,
-                           brightness=1.1,
-                           sharpness=3,
-                           smooth=False,
-                           smooth_factor=1,
-                           apply_grayscale=True,
-                           confidence_threshold=-1000, to_base64=True)
-    res = OCRResponse(text=data["text"], image=draw)
+    text, draw = OCRUseCases().extract_data_from_receibe(form.image)
+    data_extracted = ChatGPTUseCases().ask_receibe_data(text)
 
-    return create_response(data=res, message="OCR applied successfully")
+    return create_response(data=OCRResponse(extracted_text=text, image_with_boxes=draw, extracted_data=data_extracted), message="OCR applied successfully")

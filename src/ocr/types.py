@@ -2,6 +2,8 @@ from typing import Optional, TypedDict
 
 from pydantic import BaseModel, Field
 
+from src.common.services.chatgpt.types import ReceibeData
+
 
 class TesseractData(TypedDict):
     text: list[str]
@@ -22,5 +24,15 @@ class OCRPayload(BaseModel):
 
 
 class OCRResponse(BaseModel):
-    text: str = Field(examples=["A text result from the OCR"])
-    image: Optional[str] = Field(examples=["A base64 image"])
+    extracted_text: str = Field(examples=["A text result from the OCR"])
+    extracted_data: ReceibeData
+    image_with_boxes: Optional[str] = Field(examples=["A base64 image"])
+
+
+class TextNotExtractedException(Exception):
+    """The exception raised when the text cannot be extracted from the image."""
+
+    message: str = "The text could not be extracted from the image."
+
+    def __init__(self) -> None:
+        super().__init__(self.message)
