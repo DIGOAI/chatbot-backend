@@ -1,8 +1,10 @@
 import json
+from typing import Any
 
 from src.common.cases.base_use_cases import UseCaseBase
 from src.common.services import chatgpt
 from src.common.services.chatgpt import promps
+from src.common.services.chatgpt.types import InsuficientDataError, ReceibeData
 from src.config import Config
 
 _gpt_service = chatgpt.ChatGPTService(Config.OPENAI_KEY, chatgpt.ChatGPTModel.DAVINCI_TEXT_2)
@@ -28,7 +30,11 @@ class ChatGPTUseCases(UseCaseBase):
 
         response = completion["choices"][0]["text"]
 
-        return json.loads(response)
+        try:
+            data: dict[str, Any] = json.loads(response)
+            return ReceibeData(**data)
+        except Exception:
+            raise InsuficientDataError(data=response)
 
     def ask_ticket_type(self, msg: str) -> tuple[str, str]:
         """Ask ChatGPT for the category of the message.
