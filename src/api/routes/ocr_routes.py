@@ -12,4 +12,4 @@ def make_ocr(form: OCRPayload):
     text, draw = OCRUseCases().extract_data_from_receibe(form.image)
     data_extracted = ChatGPTUseCases().ask_receibe_data(text)
 
-    return create_response(data=OCRResponse(text=text, image=draw, gpt=data_extracted), message="OCR applied successfully")
+    return create_response(data=OCRResponse(extracted_text=text, image_with_boxes=draw, extracted_data=data_extracted), message="OCR applied successfully")
