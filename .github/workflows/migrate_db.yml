@@ -10,14 +10,23 @@ jobs:
   check_changes:
     runs-on: ubuntu-latest
     outputs:
-      changed_files: ${{ steps.verify.outputs.changed }}
+      changed_files: ${{ steps.set_output.outputs.changed }}
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-      - name: Check changes in migrations folder
-        id: verify
+      - name: Changed Files
+        id: changed_files
+        uses: tj-actions/changed-files@v40.1.1
+        with:
+          files: |
+            migrations/**
+
+      - name: Set output
+        id: set_output
         run: |
-          if [[ -n $(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep migrations/) ]]; then
+          if [[ -n "${{ steps.changed_files.outputs.modified_files }}" ]]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"
