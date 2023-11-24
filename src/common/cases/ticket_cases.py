@@ -5,7 +5,12 @@ from uuid import UUID
 from sqlalchemy import select
 
 from src.common.cases import UseCaseBase
-from src.common.models.ticket import Ticket, TicketStatus, TicketWithClient
+from src.common.models.ticket import (
+    Ticket,
+    TicketInsert,
+    TicketStatus,
+    TicketWithClient,
+)
 from src.db.models.ticket import Ticket as TicketModel
 from src.db.repositories import BaseRepository
 from src.db.repositories.base_repository import IdNotFoundError
@@ -80,3 +85,10 @@ class TicketUseCases(UseCaseBase):
             ticket_with_client = TicketWithClient.model_validate(ticket)
 
         return ticket_with_client
+
+    def create_ticket(self, ticket_data: TicketInsert):
+        with self._session() as session:
+            ticket_repo = BaseRepository(TicketModel, Ticket, session)
+            ticket = ticket_repo.add(ticket_data.model_dump())
+
+        return ticket
