@@ -82,7 +82,7 @@ class Logger:
         Logger._log(AlertType.INFO, msg, caller_name)
 
     @staticmethod
-    def error(msg: str, caller_name: str | None = None, err: Exception | None = None):
+    def error(msg: str | None = None, err: Exception | None = None, caller_name: str | None = None):
         """Log an `error` message in the console.
 
         Parameters:
@@ -92,8 +92,7 @@ class Logger:
         # TODO: If alert_type is ERROR, WARNING or ALERT, save the log in a DB
 
         # If the error is not None, get the message with the traceback
-        if err:
-            msg = Logger.get_message_with_traceback(msg, err)
+        msg = Logger.get_message_with_traceback(msg, err)
 
         Logger._log(AlertType.ERROR, msg, caller_name)
 
@@ -156,7 +155,7 @@ class Logger:
         print(f"[{alert_type:^5}][{caller_module_name:^{Logger._module_char_length}}]: {msg}")
 
     @staticmethod
-    def get_message_with_traceback(msg: str, ex: Exception):
+    def get_message_with_traceback(msg: str | None, ex: Exception | None):
         """Get the message of an exception with the traceback.
 
         Parameters:
@@ -166,7 +165,16 @@ class Logger:
         str: The message of the exception with the traceback
         """
 
+        if not ex:
+            return f"{msg}"
+
         import traceback
 
+        err_name = ex.__class__.__name__
+        err_msg = str(ex)
+        err_id = id(ex)
+
+        aditional_msg = f" | {msg}" if msg else ""
+
         traceback_str = traceback.format_exc() if hasattr(ex, "__traceback__") else None
-        return f"{msg}\n{traceback_str}"
+        return f"Error {err_id} | {err_name}: {err_msg}{aditional_msg}\n{traceback_str}"

@@ -18,9 +18,8 @@ class ErrorHandler(BaseHTTPMiddleware):
         except Exception as e:
             err_name = e.__class__.__name__
             err_msg = str(e)
-            err_id = id(e)
 
-            Logger.error(f"Error {err_id} | {err_name}: {err_msg}", "error-handler", e)
+            Logger.error(err=e, caller_name="error-handler")
 
             content = {
                 "status": "error",
