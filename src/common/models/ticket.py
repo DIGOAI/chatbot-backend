@@ -90,7 +90,7 @@ class TicketStatus(str, Enum):
 class TicketBase(BaseModel):
     subject: str
     shift: Optional[TicketShift] = Field(default=None)
-    department_id: str
+    department_id: Optional[str] = Field(default=None)
     status: TicketStatus = Field(default=TicketStatus.WAITING)
     client_id: UUID
     conversation_id: Optional[UUID] = None
