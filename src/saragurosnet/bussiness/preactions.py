@@ -9,7 +9,7 @@ group = ActionGroup[Context]()
 
 @group.add_preaction()
 def pre_action(ctx: Context):
-    Logger.info(f"Last action: {ctx.last_state}")
+    Logger.debug(f"Last action: {ctx.last_state}")
 
     sender_phone, _ = get_phone_and_service(ctx.event_twilio.from_number)
     receiver_phone, _ = get_phone_and_service(ctx.event_twilio.to_number)
@@ -28,7 +28,7 @@ def pre_action(ctx: Context):
     message_saved = message_cases.add_new_message(new_message)
 
     if message_saved:
-        Logger.info(f"Message saved: {new_message.id}")
+        Logger.debug(f"Message saved: {new_message.id}")
 
         # Update the conversation last message id
         conversation_cases = ConversationUseCases()

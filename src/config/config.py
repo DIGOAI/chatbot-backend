@@ -2,9 +2,6 @@ import os
 
 from src.common.logger import Logger
 
-Logger.add_func_names_to_ignore(["before_cursor_execute"])
-Logger.module_char_length = 25
-
 
 class Config:
     """Config class to load environment variables."""
@@ -21,6 +18,7 @@ class Config:
 
     def _load_config(self):
         """ Load environment variables. """
+        self.ENVIRONMENT = os.environ.get("ENVIRONMENT", "development")
 
         self.DATABASE_URL = os.environ.get("DATABASE_URL", "")
         self.BACKEND_URL = os.environ.get("RAILWAY_PUBLIC_DOMAIN", "")
@@ -58,16 +56,21 @@ class Config:
     def _verify(self):
         """ Verify that all required environment variables are set. """
 
+        if self.ENVIRONMENT == "development":
+            return
+
         ATTRIBUTES_TO_VERIFY = [
             "DATABASE_URL",
             "JWT_SECRET",
-            "OCR_LAMBDA_URL",
+            "OPENAI_KEY",
             "SARAGUROS_API_TOKEN",
             "SARAGUROS_API_URL",
             "TWILIO_SENDER",
             "TWILIO_SID",
             "TWILIO_TOKEN",
-            "X_API_KEY"
+            "SMTP_HOST",
+            "SMTP_USER",
+            "SMTP_PASSWORD",
         ]
 
         # Verify that all attributes are set

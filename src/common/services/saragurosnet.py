@@ -42,17 +42,17 @@ class SaragurosNetService:
         url = f"{self.base_url}/{endpoint.value}"
         data["token"] = self.token
 
-        Logger.info(f"Making request to {url} with data {data}")
+        Logger.debug(f"Making request to {url} with data {data}")
 
         response = requests.post(
             url, headers=self.headers, data=json.dumps(data))
 
         if response.status_code >= 400:
-            Logger.error(f"Error making request to {url} with data {data}")
+            Logger.warn(f"Error making request to {url} with data {data}")
             return None
 
         try:
-            Logger.info(f"Parsing response from {url}")
+            Logger.debug(f"Parsing response from {url}")
             return response.json()
         except BaseException:
             Logger.error(f"Error parsing response from {url}")
@@ -83,7 +83,7 @@ class SaragurosNetService:
 
         data = ticket.model_dump(by_alias=True)
 
-        Logger.info(f"Creating ticket with data {data}")
+        Logger.debug(f"Creating ticket with data {data}")
 
         return self._make_request(MikrowispEndpoint.NEW_TICKET, data)
 
