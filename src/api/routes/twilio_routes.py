@@ -42,7 +42,7 @@ def twilio_hook(webhook: Annotated[TwilioWebHook, Depends()]):
         conversation_cached = CacheConversationTuple(
             client=None, conversation=new_conversation, last_state=None, next_state=None)
 
-    Logger.info(f"Client cached: {webhook.from_number}")
+    Logger.debug(f"Client cached: {webhook.from_number}")
     tree.context = Context(webhook, conversation_cached.client,
                            conversation_cached.last_state, conversation_cached.conversation)
 
@@ -52,7 +52,7 @@ def twilio_hook(webhook: Annotated[TwilioWebHook, Depends()]):
     # Cache the client for the next request
     client_phone = client_phone
 
-    Logger.info(f"Caching client: {client_phone}")
+    Logger.debug(f"Caching client: {client_phone}")
     conversations_cache[client_phone] = CacheConversationTuple(
         conversation=tree.context.conversation,
         client=tree.context.client,

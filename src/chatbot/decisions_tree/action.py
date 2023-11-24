@@ -63,7 +63,7 @@ class Action(Generic[T]):
     def __call__(self, context: T) -> tuple[bool, ActionStatus, list[str] | str]:
         if self._condition(context):
             func_name = cast(Callable[[T], None], self._func).__name__
-            Logger.info(f"Executing action {self.id} - {func_name}")
+            Logger.debug(f"Executing action {self.id} - {func_name}")
 
             res = self._func(context, self.id)
 
@@ -80,5 +80,5 @@ class Action(Generic[T]):
             return self._end, ActionStatus.EXECUTED, self.next
 
         else:
-            Logger.info(f"Condition is False, skipping action {self.id}")
+            Logger.debug(f"Condition is False, skipping action {self.id}")
             return False, ActionStatus.SKIPPED, self.next

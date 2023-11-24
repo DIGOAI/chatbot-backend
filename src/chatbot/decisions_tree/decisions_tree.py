@@ -83,7 +83,7 @@ class DecisionsTree(Generic[T]):
         next_actions (str | list[str] | None): The next actions to execute
         """
 
-        Logger.info(f"Building and executing actions")
+        Logger.debug(f"Building and executing actions")
 
         ended = False
         preactions_executed = False
@@ -108,7 +108,7 @@ class DecisionsTree(Generic[T]):
             if not preactions_executed:
                 # Execute the preactions
                 for preaction in self._preactions:
-                    Logger.info(f"Executing preaction {preaction.__name__}")  # type: ignore
+                    Logger.debug(f"Executing preaction {preaction.__name__}")  # type: ignore
                     preaction(self.context)
 
                 # Set the preactions as executed
@@ -134,7 +134,7 @@ class DecisionsTree(Generic[T]):
 
             next_actions = next_actions_to_execute
 
-        Logger.info(f"Finished building and executing actions")
+        Logger.debug(f"Finished building and executing actions")
         return next_actions_to_execute  # Return the next actions to execute
 
     def register_action_group(self, action_group: 'ActionGroup[T]') -> None:
