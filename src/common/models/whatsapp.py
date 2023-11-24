@@ -6,6 +6,11 @@ from pydantic import BaseModel
 SendWhatsAppMessageType = Literal["massive"] | Literal["specific"]
 
 
+class PhoneWithData(BaseModel):
+    phone: str
+    name: str
+
+
 class SendWhatsAppMessageForm(BaseModel):
     type: SendWhatsAppMessageType
-    phones: Optional[list[str]]
+    clients: Optional[list[PhoneWithData]]
