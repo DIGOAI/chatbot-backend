@@ -16,27 +16,23 @@ class ErrorHandler(BaseHTTPMiddleware):
         try:
             return await call_next(request)
         except Exception as e:
-            error_title = f"Error {id(e)} | {e.__class__.__name__}: {str(e)}"
-            traceback_str = traceback.format_exc() if hasattr(e, "__traceback__") else None
+            err_name = e.__class__.__name__
+            err_msg = str(e)
+            err_id = id(e)
 
-            Logger.error(f"{error_title}", "error-handler", traceback_str)
+            Logger.error(f"Error {err_id} | {err_name}: {err_msg}", "error-handler", e)
+
+            content = {
+                "status": "error",
+                "type": err_name,
+                "message": err_msg
+            }
 
             if Config.ENVIRONMENT == "development":
-                return JSONResponse(
-                    status_code=500,
-                    content={
-                        "status": "error",
-                        "type": e.__class__.__name__,
-                        "message": str(e),
-                        "traceback": traceback.format_exc() if hasattr(e, "__traceback__") else None
-                    }
-                )
-            else:
-                return JSONResponse(
-                    status_code=500,
-                    content={
-                        "status": "error",
-                        "type": e.__class__.__name__,
-                        "message": str(e)
-                    }
-                )
+                traceback_str = traceback.format_exc() if hasattr(e, "__traceback__") else None
+                content["traceback"] = traceback_str  # type: ignore
+
+            return JSONResponse(
+                status_code=500,
+                content=content
+            )

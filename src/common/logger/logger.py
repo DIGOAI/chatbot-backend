@@ -82,14 +82,20 @@ class Logger:
         Logger._log(AlertType.INFO, msg, caller_name)
 
     @staticmethod
-    def error(msg: str, caller_name: str | None = None, traceback: str | None = None):
+    def error(msg: str, caller_name: str | None = None, err: Exception | None = None):
         """Log an `error` message in the console.
 
         Parameters:
         msg (str): The message to log
         """
 
-        Logger._log(AlertType.ERROR, msg, caller_name, traceback)
+        # TODO: If alert_type is ERROR, WARNING or ALERT, save the log in a DB
+
+        # If the error is not None, get the message with the traceback
+        if err:
+            msg = Logger.get_message_with_traceback(msg, err)
+
+        Logger._log(AlertType.ERROR, msg, caller_name)
 
     @staticmethod
     def warn(msg: str, caller_name: str | None = None):
@@ -122,7 +128,7 @@ class Logger:
         Logger._log(AlertType.DEBUG, msg, caller_name)
 
     @staticmethod
-    def _log(alert_type: AlertType, msg: str, caller_name: str | None = None, traceback: str | None = None):
+    def _log(alert_type: AlertType, msg: str, caller_name: str | None = None):
         """Log a message in the console.
 
         Parameters:
@@ -147,6 +153,20 @@ class Logger:
 
         # TODO: If alert_type is ERROR, WARNING or ALERT, save the log in a DB
 
-        traceback_str = f"\n{traceback}" if traceback else ""
+        print(f"[{alert_type:^5}][{caller_module_name:^{Logger._module_char_length}}]: {msg}")
 
-        print(f"[{alert_type:^5}][{caller_module_name:^{Logger._module_char_length}}]: {msg}{traceback_str}")
+    @staticmethod
+    def get_message_with_traceback(msg: str, ex: Exception):
+        """Get the message of an exception with the traceback.
+
+        Parameters:
+        ex (Exception): The exception
+
+        Returns:
+        str: The message of the exception with the traceback
+        """
+
+        import traceback
+
+        traceback_str = traceback.format_exc() if hasattr(ex, "__traceback__") else None
+        return f"{msg}\n{traceback_str}"
