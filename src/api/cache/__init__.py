@@ -1,3 +1,0 @@
-whatsapp = {
-    "sending": False
-}
