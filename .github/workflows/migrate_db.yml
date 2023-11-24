@@ -2,7 +2,10 @@ name: Apply migrations to dev DB if migrations folder changed
 
 on:
   push:
+    branches:
+      - development
   pull_request:
+    types: [closed]
     branches:
       - development
 
