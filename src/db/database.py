@@ -21,7 +21,7 @@ _NAME = "database"
 
 url = make_url(_database_url)
 
-Logger.warn(f"{_database_url}")
+Logger.debug(f"{_database_url}", caller_name=_NAME)
 
 Logger.info(f"Database in {url.host} with name {url.database}", caller_name=_NAME)
 engine = create_engine(_database_url, echo=False)
@@ -35,7 +35,7 @@ def before_cursor_execute(conn: Connection,
                           context: ExecutionContext,
                           executemany: bool):
     formatted_statement = statement.replace('\n', '') % parameters
-    Logger.info(f"Query: {formatted_statement}", caller_name=_NAME)
+    Logger.debug(f"Query: {formatted_statement}", caller_name=_NAME)
 
 
 Session = sessionmaker(bind=engine)

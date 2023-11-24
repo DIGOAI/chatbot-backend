@@ -21,7 +21,7 @@ try:
                             hour=options.data_reconciliation_hour.strftime("%H:%M"))
 
 except Exception as e:
-    Logger.error(f"Error on crons init: {e}")
+    Logger.error(err=e)
 
 __all__ = [
     "ScheduleManager",
