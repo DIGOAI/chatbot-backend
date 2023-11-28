@@ -24,3 +24,6 @@ class MessageType():
     ERROR_INVALID_NAMES: Final[str] = "Estimado {name}, el nombre ingresado no es válido. Por favor intenta nuevamente."
     ERROR_INVALID_LASTNAMES: Final[str] = "Estimado {name}, el apellido ingresado no es válido. Por favor intenta nuevamente."
     ERROR_INVALID_EMAIL: Final[str] = "Estimado {name}, el correo electrónico ingresado no es válido. Por favor intenta nuevamente."
+
+    TELL_ME_YOUR_SUBJECT: Final[str] = "Estimado {name}, por favor ingresa el asunto de tu consulta.\n_ejm: Consulta sobre planes de internet_"
+    ERROR_UNKNOW: Final[str] = "Lo sentimos, ha ocurrido un error inesperado.\nPor favor intenta nuevamente."
