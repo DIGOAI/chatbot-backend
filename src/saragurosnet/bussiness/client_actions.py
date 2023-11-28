@@ -7,7 +7,7 @@ from src.saragurosnet.types import MessageType, OptionType
 group = ActionGroup[Context]()
 
 
-@group.add_action("2.0", condition=lambda ctx: ctx.last_state == "0.2" and ctx.client != None and ctx.client.saraguros_id != None)
+@group.add_action("2.0", condition=lambda ctx: ctx.last_state in ["0.2", "3.2"] and ctx.client != None and ctx.client.saraguros_id != None)
 def say_welcome_client(ctx: Context, id_func: str):
     if ctx.client is None:
         return say_error(ctx)

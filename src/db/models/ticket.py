@@ -44,7 +44,7 @@ class Ticket(Base, IUuidPk, ITimeControl):
     subject: Mapped[str] = mapped_column(String(255), nullable=False)
     shift: Mapped[Optional[TicketShift]] = mapped_column(EnumType(TicketShift), default=None, nullable=True)
     department_id: Mapped[str] = mapped_column(
-        ForeignKey("departments.id", ondelete="CASCADE"), nullable=False)
+        ForeignKey("departments.id", ondelete="CASCADE"), nullable=True)
     status: Mapped[TicketStatus] = mapped_column(EnumType(TicketStatus), default=TicketStatus.WAITING, nullable=False)
     client_id: Mapped[UUID] = mapped_column(ForeignKey("clients.id", ondelete="CASCADE"), nullable=False)
     asigned_to: Mapped[Optional[UUID]] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=True)
