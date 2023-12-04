@@ -40,8 +40,11 @@ def twilio_hook(webhook: Annotated[TwilioWebHook, Depends()]):
         return
 
     Logger.debug(f"Client cached: {webhook.from_number}")
-    tree.context = Context(webhook, conversation_cached.client,
-                           conversation_cached.last_state, cast(Conversation, conversation_cached.conversation))
+    tree.context = Context(webhook,
+                           conversation_cached.client,
+                           conversation_cached.last_state,
+                           cast(Conversation, conversation_cached.conversation),
+                           conversation_cached.waithing_for)
 
     # Execute the tree actions with the context setted
     next_state = tree(conversation_cached.next_state)
@@ -50,12 +53,16 @@ def twilio_hook(webhook: Annotated[TwilioWebHook, Depends()]):
     client_phone = client_phone
 
     Logger.debug(f"Caching client: {client_phone}")
-    conversations_cache[client_phone] = CacheConversationTuple(
+
+    conversation_cache_updated = CacheConversationTuple(
         conversation=tree.context.conversation,
         client=tree.context.client,
         last_state=tree.context.last_state,
         next_state=next_state,
+        waithing_for=tree.context.waiting_for
     )
+
+    ConversationCache().add_to_cache(client_phone, conversation_cache_updated)
 
 
 @router.get("/show-cache")

@@ -96,3 +96,9 @@ def search_saraguros_client(ctx: Context, id_func: str):
         MessageUseCases().send_message(MessageType.ERROR_CLIENT_NOT_FOUND, ctx.event_twilio.from_number, ctx.conversation.id)
 
         ctx.last_state = None
+
+
+@group.add_action("0.3", condition=lambda ctx: ctx.waiting_for == "attending_ticket")
+def talk_in_ticket(ctx: Context, id_func: str):
+    ctx.last_state = id_func
+    return id_func, True
