@@ -59,3 +59,16 @@ def another_question(ctx: Context, id_func: str):
     else:
         # Return to say_welcome_unknown
         return "1.0", False
+
+
+@group.add_action("3.3", condition=lambda ctx: True)
+def attend_ticket(ctx: Context, id_func: str):
+    if ctx.client is None:
+        return say_error(ctx)
+
+    # Close actual conversation
+    ConversationUseCases().end_conversation(ctx.conversation)
+
+    ctx.conversation = None
+    ctx.waiting_for = "attend_ticket"
+    ctx.last_state = id_func

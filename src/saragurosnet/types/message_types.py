@@ -27,3 +27,6 @@ class MessageType():
 
     TELL_ME_YOUR_SUBJECT: Final[str] = "Estimado {name}, por favor ingresa el asunto de tu consulta.\n_ejm: Consulta sobre planes de internet_"
     ERROR_UNKNOW: Final[str] = "Lo sentimos, ha ocurrido un error inesperado.\nPor favor intenta nuevamente."
+
+    WAIT_TO_BE_ATTENDED: Final[str] = "Estimado {name}, por favor aguarde un momento mientras lo atendemos."
+    IT_IS_BEING_ATTENDED_TO: Final[str] = "Estimado {name}, soy su asesor de atención virtual en Saraguros Net. ¿En qué le puedo ayudar?\nEscríbame en un mensaje su requerimiento, gracias."

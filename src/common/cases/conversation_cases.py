@@ -20,6 +20,13 @@ from src.db.repositories.base_repository import IdNotFoundError
 
 class ConversationUseCases(UseCaseBase):
 
+    def get_conversation(self, conversation_id: UUID):
+        with self._session() as session:
+            conversation_repo = BaseRepository(ConversationModel, Conversation, session)
+            conversation = conversation_repo.get(conversation_id)
+
+        return conversation
+
     def get_conversation_from_client_phone(self, client_phone: str):
         with self._session() as session:
             conversation_repo = BaseRepository(ConversationModel, Conversation, session)
@@ -93,7 +100,7 @@ class ConversationUseCases(UseCaseBase):
     def get_conversation_with_messages(self, conversation_id: UUID):
         with self._session() as session:
             stmt = select(ConversationModel).where(ConversationModel.id ==
-                                                   conversation_id).join(ConversationModel.messages)
+                                                   conversation_id).join(ConversationModel.messages, isouter=True)
             conversations = session.scalar(stmt)
 
             if conversations is None:

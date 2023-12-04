@@ -152,7 +152,9 @@ def talk_with_agent(ctx: Context, id_func: str):
         MessageUseCases().send_message(MessageType.CONNECT_AGENT, ctx.event_twilio.from_number, ctx.conversation.id)
         ctx.last_state = id_func
 
+        return "3.3", False
+
     except Exception as e:
         Logger.error("Chatbot error creating ticket", e)
         MessageUseCases().send_message(MessageType.ERROR_UNKNOW, ctx.event_twilio.from_number, ctx.conversation.id)
-        ctx.last_state = "1.3"
+        ctx.last_state = id_func
