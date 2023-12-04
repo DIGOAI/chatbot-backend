@@ -70,6 +70,7 @@ class TicketUseCases(UseCaseBase):
             assistant_phone, m_service = get_phone_and_service(Config.TWILIO_SENDER)
 
             conversation = ConversationUseCases().add_new_conversation(ticket.client.phone, assistant_phone)
+            conversation = ConversationUseCases().update_client_id(conversation, ticket.client)
 
             ticket = ticket_repo.update(item_id, status=TicketStatus.ATTENDING, conversation_id=conversation.id)
 
@@ -99,6 +100,14 @@ class TicketUseCases(UseCaseBase):
             raise Exception("Conversation id is None")
 
         conversation = ConversationUseCases().get_conversation(ticket.conversation_id)
+
+        _, m_service = get_phone_and_service(Config.TWILIO_SENDER)
+
+        MessageUseCases().send_message(
+            MessageType.TICKET_CLOSED.format(name="Cliente"),
+            f"{m_service}{conversation.client_phone}", conversation.id
+        )
+
         conversation = ConversationUseCases().end_conversation(conversation)
 
         conversation_cache = ConversationCache().get_from_cache(conversation.client_phone)

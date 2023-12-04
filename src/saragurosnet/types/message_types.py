@@ -31,3 +31,4 @@ class MessageType():
 
     WAIT_TO_BE_ATTENDED: Final[str] = "Estimado {name}, por favor aguarde un momento mientras lo atendemos."
     IT_IS_BEING_ATTENDED_TO: Final[str] = "Estimado {name}, soy su asesor de atención virtual en Saraguros Net. ¿En qué le puedo ayudar?\nEscríbame en un mensaje su requerimiento, gracias."
+    TICKET_CLOSED: Final[str] = "Estimado {name}, su requerimiento ha sido cerrado. Si desea continuar explorando nuestros servicios o tiene más preguntas, vuelva a escribir por este medio."
