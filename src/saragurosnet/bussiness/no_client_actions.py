@@ -1,6 +1,6 @@
 import time
 
-from src.chatbot import ActionGroup, get_email
+from src.chatbot import ActionGroup
 from src.common.cases import ClientUseCases, MessageUseCases, TicketUseCases
 from src.common.logger import Logger
 from src.common.models import TicketInsert, TicketStatus
@@ -52,84 +52,43 @@ def send_coverages(ctx: Context, id_func: str):
     ctx.last_state = id_func
 
 
-@group.add_action("1.3", condition=lambda ctx: (ctx.last_state == "1.0" and ctx.client != None and verify_button(ctx, OptionType.AGENT)) or ctx.last_state == "1.3", end=False, next="3.0")
+@group.add_action("1.3", condition=lambda ctx: (ctx.last_state == "1.0" and ctx.client != None and verify_button(ctx, OptionType.AGENT)) or ctx.last_state in ["1.3", "4.0", "4.1", "4.2", "4.3", "4.4"], end=False, next="3.0")
 def talk_with_agent(ctx: Context, id_func: str):
     if ctx.client is None:
         return say_error(ctx)
 
-    last_value: str = ""
-    last_data_request: str = ""
-    body = ctx.event_twilio.body
+    body = ctx.event_twilio.body  # Get the body of the message
 
-    # Verify if client has a name, lastname and email.
-    # If not, ask for it.
-    # If yes, continue to next state.
-
+    # Request the client data if it is not complete
     if ctx.client.names is None:
-        # TODO: Ask for names
+        ctx.last_state = id_func
+        ctx.event_twilio.body = ""
+        ctx.waiting_for = "names"
 
-        if body and not verify_button(ctx, OptionType.AGENT):
-            # TODO: Verify if the message is a correct name
-            ctx.client.names = body.strip()
-            last_value = body
-            last_data_request = "names"
-            # ClientUseCases().update_client(ctx.client)
-            pass
-        else:
-            MessageUseCases().send_message(MessageType.TELL_ME_YOUR_NAMES.format(
-                name='Cliente'), ctx.event_twilio.from_number, ctx.conversation.id)
-
-            ctx.last_state = "1.3"
-            return "1.3", True
+        return "4.0", False
 
     if ctx.client.lastnames is None:
-        # TODO: Ask for lastnames
+        ctx.last_state = id_func
+        ctx.event_twilio.body = ""
+        ctx.waiting_for = "lastnames"
 
-        if body and not verify_button(ctx, OptionType.AGENT) and last_value != body:
-            # TODO: Verify if the message is a correct lastname
-            ctx.client.lastnames = body.strip()
-            last_value = body
-            last_data_request = "lastnames"
-            pass
-        else:
-            MessageUseCases().send_message(MessageType.TELL_ME_YOUR_LASTNAMES.format(
-                name=ctx.client.names), ctx.event_twilio.from_number, ctx.conversation.id)
-
-            ctx.last_state = "1.3"
-            return "1.3", True
+        return "4.1", False
 
     if ctx.client.email is None:
-        # TODO: Ask for email
+        ctx.last_state = id_func
+        ctx.event_twilio.body = ""
+        ctx.waiting_for = "email"
 
-        if body and not verify_button(ctx, OptionType.AGENT) and last_value != body:
-            # TODO: Verify if the message is a correct email
-            try:
-                email = get_email(body)
-                ctx.client.email = email
-                last_value = body
-                last_data_request = "email"
-                pass
-            except ValueError:
-                MessageUseCases().send_message(MessageType.ERROR_INVALID_EMAIL.format(
-                    name=ctx.client.get_fullname()), ctx.event_twilio.from_number, ctx.conversation.id)
-
-                ctx.last_state = "1.3"
-                return "1.3", True
-
-        else:
-            MessageUseCases().send_message(MessageType.TELL_ME_YOUR_EMAIL.format(
-                name=ctx.client.get_fullname()), ctx.event_twilio.from_number, ctx.conversation.id)
-
-            ctx.last_state = "1.3"
-            return "1.3", True
+        return "4.2", False
 
     # Update the client data in the database if it was modified
-    if last_data_request != "":
+    if ctx.waiting_for == "update_data_client":
         client_updated = ClientUseCases().update_client(ctx.client)
         ctx.client = client_updated
         ctx.event_twilio.body = OptionType.AGENT
+        ctx.waiting_for = None
 
-    fullname = ctx.client.get_fullname()
+    fullname = ctx.client.get_fullname()  # Get the client fullname
 
     if body and verify_button(ctx, OptionType.AGENT):
         MessageUseCases().send_message(MessageType.TELL_ME_YOUR_SUBJECT.format(
