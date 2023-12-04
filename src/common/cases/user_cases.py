@@ -1,6 +1,6 @@
 from typing import TypedDict
 
-from src.api.utils import decrypt, signJWT
+from src.api.utils import decrypt, encrypt, signJWT
 from src.common.cases import UseCaseBase
 from src.common.models import LoginSchema, RegisterSchema, TokenSchema, User
 from src.common.models.user import SystemRole
@@ -53,6 +53,9 @@ def _create_token_data(user: User) -> TokenSchema:
 class UserUseCases(UseCaseBase):
 
     def register_user(self, new_user: RegisterSchema):
+
+        new_user.password = encrypt(new_user.password)
+
         with self._session() as session:
             user_repository = BaseRepository(UserModel, User, session)
             user = user_repository.add(new_user.model_dump())
