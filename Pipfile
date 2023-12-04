@@ -4,10 +4,40 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+twilio = "==8.9.0"
+requests = "==2.31.0"
+openai = "==0.28.0"
+typing-extensions = "==4.8.0"
+psycopg = {extras = ["binary"], version = "==3.1.10"}
+fastapi = "==0.103.1"
+uvicorn = {extras = ["standard"], version = "==0.23.2"}
+sqlalchemy = "==2.0.21"
+colorama = "==0.4.6"
+passlib = {extras = ["bcrypt"], version = "==1.7.4"}
+pydantic = {extras = ["email"], version = "==2.5.1"}
+python-multipart = "==0.0.6"
+python-socketio = "==5.10.0"
+schedule = "==1.2.1"
+pytesseract = "==0.3.10"
+pillow = "==10.1.0"
+rembg = "==2.0.52"
 
 [dev-packages]
-autopep8 = "*"
-packaging = "*"
+autopep8 = "==2.0.4"
+packaging = "==23.1"
+mypy = "==1.5.1"
+twilio-stubs = "==0.2.0"
+alembic = "==1.12.0"
+alembic-postgresql-enum = "==0.1.8"
+types-passlib = "==1.7.7.13"
+types-requests = "==2.31.0.10"
+types-pytz = "==2023.3.1.1"
+types-pillow = "==10.1.0.2"
+
+[scripts]
+dev = "uvicorn main:app --reload --port 8000 --no-access-log"
+migrate = "alembic upgrade head"
+make_migrations = "alembic revision --autogenerate -m"
 
 [requires]
 python_version = "3.11"

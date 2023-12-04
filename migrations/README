@@ -1,0 +1,13 @@
+### Alembic
+Database migrations controller.
+
+### Execute migrations
+```
+alembic upgrade head
+```
+
+### Create a New Migration
+```
+alembic revision -m "Add a column"
+```
+

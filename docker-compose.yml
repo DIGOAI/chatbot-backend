@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+    db:
+        image: postgres:latest
+        restart: always
+        env_file:
+            - .env
+        ports:
+            - 5252:5432
+        volumes:
+        - chatbotapi:/var/lib/postgresql/data
+
+volumes:
+  chatbotapi:

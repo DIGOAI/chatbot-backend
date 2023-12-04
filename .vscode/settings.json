@@ -1,11 +1,35 @@
 {
-  "python.analysis.typeCheckingMode": "basic",
+  "python.formatting.provider": "none",
+  "python.analysis.typeCheckingMode": "strict",
   "python.analysis.autoFormatStrings": true,
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.inlayHints.variableTypes": true,
+  "python.analysis.inlayHints.functionReturnTypes": true,
+  "python.analysis.inlayHints.callArgumentNames": "partial",
   "[python]": {
     "diffEditor.ignoreTrimWhitespace": false,
     "editor.formatOnType": false,
     "editor.wordBasedSuggestions": false,
     "editor.formatOnSave": true,
-    "editor.defaultFormatter": "ms-python.python"
+    "editor.defaultFormatter": "ms-python.autopep8",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    }
+  },
+  "isort.args": ["--profile", "black"],
+  "mypy-type-checker.reportingScope": "workspace",
+  "mypy-type-checker.preferDaemon": true,
+  "scm.alwaysShowActions": true,
+  "scm.experimental.showSyncView": true,
+  "debug.toolBarLocation": "commandCenter",
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/__pycache__": true,
+    "**/.mypy_cache": true
   }
 }
