@@ -20,12 +20,13 @@ class MessageType():
     TELL_ME_YOUR_NAMES: Final[str] = "Estimado {name}, por favor ingresa tus nombres.\n_ejm: Juan Carlos_"
     TELL_ME_YOUR_LASTNAMES: Final[str] = "Estimado {name}, por favor ingresa tus apellidos.\n_ejm: Pérez López_"
     TELL_ME_YOUR_EMAIL: Final[str] = "Estimado {name}, por favor ingresa tu correo electrónico.\n_ejm: example@email.com_"
+    TELL_ME_YOUR_SUBJECT: Final[str] = "Estimado {name}, por favor ingresa el asunto de tu consulta.\n_ejm: Consulta sobre planes de internet_"
+    TELL_ME_YOUR_PHONE: Final[str] = "Estimado {name}, por favor ingresa tu número de teléfono.\n_ejm: 0999999999 o +593999999999_"
 
     ERROR_INVALID_NAMES: Final[str] = "Estimado {name}, el nombre ingresado no es válido. Por favor intenta nuevamente."
     ERROR_INVALID_LASTNAMES: Final[str] = "Estimado {name}, el apellido ingresado no es válido. Por favor intenta nuevamente."
     ERROR_INVALID_EMAIL: Final[str] = "Estimado {name}, el correo electrónico ingresado no es válido. Por favor intenta nuevamente."
-
-    TELL_ME_YOUR_SUBJECT: Final[str] = "Estimado {name}, por favor ingresa el asunto de tu consulta.\n_ejm: Consulta sobre planes de internet_"
+    ERROR_INVALID_PHONE: Final[str] = "Estimado {name}, el número de teléfono ingresado no es válido. Por favor intenta nuevamente."
     ERROR_UNKNOW: Final[str] = "Lo sentimos, ha ocurrido un error inesperado.\nPor favor intenta nuevamente."
 
     WAIT_TO_BE_ATTENDED: Final[str] = "Estimado {name}, por favor aguarde un momento mientras lo atendemos."
