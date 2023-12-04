@@ -34,6 +34,10 @@ class ConversationCache:
         cls._conversations_cache[key] = value
 
     @classmethod
+    def get_from_cache(cls, key: str):
+        return cls._conversations_cache.get(key)
+
+    @classmethod
     def remove_from_cache(cls, key: str):
         if key in cls._conversations_cache:
             del cls._conversations_cache[key]
