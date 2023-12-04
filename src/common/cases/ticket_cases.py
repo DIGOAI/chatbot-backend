@@ -1,19 +1,24 @@
+import copy
 from collections import Counter
 from datetime import datetime, timedelta
 from uuid import UUID
 
 from sqlalchemy import select
 
-from src.common.cases import UseCaseBase
+from src.api.dependencies.cache import ConversationCache
+from src.chatbot.utils.strings_utils import get_phone_and_service
+from src.common.cases import ConversationUseCases, MessageUseCases, UseCaseBase
 from src.common.models.ticket import (
     Ticket,
     TicketInsert,
     TicketStatus,
     TicketWithClient,
 )
+from src.config import Config
 from src.db.models.ticket import Ticket as TicketModel
 from src.db.repositories import BaseRepository
 from src.db.repositories.base_repository import IdNotFoundError
+from src.saragurosnet.types.message_types import MessageType
 
 
 class TicketUseCases(UseCaseBase):
@@ -52,9 +57,36 @@ class TicketUseCases(UseCaseBase):
         return ticket
 
     def attend_ticket(self, item_id: UUID):
+
         with self._session() as session:
             ticket_repo = BaseRepository(TicketModel, Ticket, session)
-            ticket = ticket_repo.update(item_id, status=TicketStatus.ATTENDING)
+
+            stmt = select(TicketModel).where(TicketModel.id == item_id).join(TicketModel.client)
+            ticket = session.scalar(stmt)
+
+            if ticket is None:
+                raise IdNotFoundError(item_id)
+
+            assistant_phone, m_service = get_phone_and_service(Config.TWILIO_SENDER)
+
+            conversation = ConversationUseCases().add_new_conversation(ticket.client.phone, assistant_phone)
+
+            ticket = ticket_repo.update(item_id, status=TicketStatus.ATTENDING, conversation_id=conversation.id)
+
+        conversation_cache = ConversationCache().get_from_cache(conversation.client_phone)
+
+        if conversation_cache is None:
+            raise Exception("Conversation cache not found")
+
+        conversation_to_update = copy.copy(conversation_cache)
+        conversation_to_update.conversation = conversation
+        conversation_to_update.waithing_for = "attending_ticket"
+        conversation_to_update.next_state = "0.3"
+
+        ConversationCache().add_to_cache(conversation.client_phone, conversation_to_update)
+
+        MessageUseCases().send_message(MessageType.IT_IS_BEING_ATTENDED_TO.format(
+            name="Cliente"), f"{m_service}{conversation.client_phone}", conversation.id)
 
         return ticket
 
@@ -62,6 +94,23 @@ class TicketUseCases(UseCaseBase):
         with self._session() as session:
             ticket_repo = BaseRepository(TicketModel, Ticket, session)
             ticket = ticket_repo.update(item_id, status=TicketStatus.CLOSED)
+
+        if ticket.conversation_id is None:
+            raise Exception("Conversation id is None")
+
+        conversation = ConversationUseCases().get_conversation(ticket.conversation_id)
+        conversation = ConversationUseCases().end_conversation(conversation)
+
+        conversation_cache = ConversationCache().get_from_cache(conversation.client_phone)
+
+        if conversation_cache is None:
+            raise Exception("Conversation cache not found")
+
+        conversation_to_update = copy.copy(conversation_cache)
+        conversation_to_update.conversation = None
+        conversation_to_update.waithing_for = None
+        conversation_to_update.next_state = None
+        conversation_to_update.last_state = None
 
         return ticket
 
