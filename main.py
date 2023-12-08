@@ -1,5 +1,5 @@
 from src import api, chatbot, socket
-from src.socket import FastAPIWithSIO, SocketServer
+from src.socket import FastAPIWithSIO
 
 api_app = api.create_app(
     title="ChatbotAPI | DIGO",
@@ -12,7 +12,6 @@ sio_app = socket.create_socket()
 
 app = FastAPIWithSIO(sio_app, api_app, 'socket.io')
 
-SocketServer.set_socket_server(app)
 
 if __name__ == "__main__":
     import uvicorn

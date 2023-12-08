@@ -104,7 +104,7 @@ def search_saraguros_client(ctx: Context, id_func: str):
 @group.add_action("0.3", condition=lambda ctx: ctx.waiting_for == "attending_ticket")
 def talk_in_ticket(ctx: Context, id_func: str):
 
-    asyncio.run(SocketServer.socket().emit(SIOEvent.SERVER_NOTIFY_FRONTEND))  # type: ignore
+    asyncio.run(SocketServer.Instance().socket.emit(SIOEvent.SERVER_NOTIFY_FRONTEND))  # type: ignore
 
     ctx.last_state = id_func
     return id_func, True

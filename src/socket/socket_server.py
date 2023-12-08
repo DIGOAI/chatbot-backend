@@ -1,32 +1,25 @@
-from typing import Self
+from typing import TYPE_CHECKING
 
-from fastapi import FastAPI
-from socketio import ASGIApp, AsyncServer  # type: ignore
+from socketio import ASGIApp  # type: ignore
+
+from src.utils.singleton import Singleton
+
+if TYPE_CHECKING:
+    from fastapi import FastAPI
+    from socketio import AsyncServer  # type: ignore
 
 
 class FastAPIWithSIO(ASGIApp):
 
-    def __init__(self,  socketio_server: AsyncServer, other_asgi_app: FastAPI | None = None, socketio_path: str = 'socket.io'):
+    def __init__(self,  socketio_server: "AsyncServer", other_asgi_app: "FastAPI", socketio_path: str = 'socket.io'):
         super().__init__(socketio_server, other_asgi_app, socketio_path=socketio_path)  # type: ignore
-
-    def get_sio(self) -> AsyncServer:
-        return self.engineio_server
+        SocketServer.Instance().set_socket(socketio_server)
 
 
+@Singleton
 class SocketServer:
-    _instance: Self | None = None
-    _socket_server: FastAPIWithSIO
+    def __init__(self):
+        self.socket: "AsyncServer"
 
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-
-        return cls._instance
-
-    @classmethod
-    def socket(cls):
-        return cls._socket_server.get_sio()
-
-    @classmethod
-    def set_socket_server(cls, socket_server: FastAPIWithSIO):
-        cls._socket_server = socket_server
+    def set_socket(self, socket_server: "AsyncServer"):
+        self.socket = socket_server
