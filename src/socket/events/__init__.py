@@ -1,3 +1,11 @@
-from src.socket.events import events as sio_events
+from enum import StrEnum
 
-__all__ = ["sio_events"]
+
+class SIOEvent(StrEnum):
+    """SocketIO events"""
+
+    CLIENT_SEND_MESSAGE = "FRONTEND_SEND_MESSAGE_EVENT"
+    SERVER_NOTIFY_FRONTEND = "SERVER_NOTIFY_FRONTEND_NEW_MESSAGE_EVENT"
+
+
+__all__ = ["SIOEvent"]
