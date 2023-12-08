@@ -1,27 +1,25 @@
 import os
+from typing import Final
 
 from src.common.logger import Logger
+from src.utils.singleton import Singleton
 
 
+@Singleton
 class Config:
     """Config class to load environment variables."""
 
-    _instance = None
-    _NAME = "config"
+    _NAME: Final = "config"
 
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-            Logger.info("Loading config", caller_name=cls._NAME)
-            cls._instance._load_config()
-        return cls._instance
+    def __init__(self):
+        Logger.info("Loading config", caller_name=self._NAME)
+        self._load_config()
 
     def _load_config(self):
         """ Load environment variables. """
         self.ENVIRONMENT = os.environ.get("ENVIRONMENT", "development")
 
         self.DATABASE_URL = os.environ.get("DATABASE_URL", "")
-        self.BACKEND_URL = os.environ.get("RAILWAY_PUBLIC_DOMAIN", "")
 
         self.SARAGUROS_API_URL = os.environ.get("SARAGUROS_API_URL", "")
         self.SARAGUROS_API_TOKEN = os.environ.get("SARAGUROS_API_TOKEN", "")
