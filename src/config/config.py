@@ -24,8 +24,6 @@ class Config:
         self.SARAGUROS_API_URL = os.environ.get("SARAGUROS_API_URL", "")
         self.SARAGUROS_API_TOKEN = os.environ.get("SARAGUROS_API_TOKEN", "")
 
-        self.OCR_LAMBDA_URL = os.environ.get("OCR_LAMBDA_URL", "")
-
         self.TWILIO_SID = os.environ.get("TWILIO_SID", "")
         self.TWILIO_TOKEN = os.environ.get("TWILIO_TOKEN", "")
         self.TWILIO_SENDER: str = os.environ.get("TWILIO_SENDER", "")

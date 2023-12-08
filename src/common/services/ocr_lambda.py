@@ -5,14 +5,14 @@ from typing import Any, cast
 import requests
 
 from src.common.models.receipt import Receipt
-from src.config import Config
 
 
+# TODO: Refactor this class when the OCR Lambda service is ready
 class OCRLambdaService(object):
     """Class to manage the OCR Lambda service."""
 
     def __init__(self):
-        self.base_url = Config.OCR_LAMBDA_URL
+        self.base_url = ""
         self.headers = {"Content-Type": "application/json"}
 
     def _make_request(self, data: dict[str, Any]) -> dict[str, Any]:
