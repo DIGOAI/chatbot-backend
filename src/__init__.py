@@ -1,3 +1,3 @@
-from src import api, chatbot
+from src import api, chatbot, socket
 
-__all__ = ["api", "chatbot"]
+__all__ = ["api", "chatbot", "socket"]

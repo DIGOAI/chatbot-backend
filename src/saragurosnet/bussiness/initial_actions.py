@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime, timezone
 from typing import Any, cast
 
@@ -8,6 +9,8 @@ from src.common.services import SaragurosNetService
 from src.config import Config
 from src.saragurosnet.bussiness.context import Context
 from src.saragurosnet.types import MessageType
+from src.socket import SIOEvent
+from src.socket.socket_server import SocketServer
 
 group = ActionGroup[Context]()
 
@@ -100,5 +103,8 @@ def search_saraguros_client(ctx: Context, id_func: str):
 
 @group.add_action("0.3", condition=lambda ctx: ctx.waiting_for == "attending_ticket")
 def talk_in_ticket(ctx: Context, id_func: str):
+
+    asyncio.run(SocketServer.Instance().socket.emit(SIOEvent.SERVER_NOTIFY_FRONTEND))  # type: ignore
+
     ctx.last_state = id_func
     return id_func, True
