@@ -34,27 +34,6 @@ def service_payment(ctx: Context, id_func: str):
     pass
 
 
-@group.add_action("2.2.1", condition=lambda ctx: ctx.last_state == "2.2" and ctx.event_twilio.body == OptionType.TRANSACTION)
-def payment_transaction(ctx: Context, id_func: str):
-    if ctx.client is None:
-        return say_error(ctx)
-    pass
-
-
-@group.add_action("2.2.2", condition=lambda ctx: ctx.last_state == "2.2" and ctx.event_twilio.body == OptionType.CARD)
-def payment_card(ctx: Context, id_func: str):
-    if ctx.client is None:
-        return say_error(ctx)
-    pass
-
-
-@group.add_action("2.2.3", condition=lambda ctx: ctx.last_state == "2.2" and ctx.event_twilio.body == OptionType.CASH)
-def payment_cash(ctx: Context, id_func: str):
-    if ctx.client is None:
-        return say_error(ctx)
-    pass
-
-
 @group.add_action("2.3", condition=lambda ctx: ctx.last_state == "2.0" and ctx.event_twilio.body == OptionType.SUPPORT)
 def service_support(ctx: Context, id_func: str):
     if ctx.client is None:
