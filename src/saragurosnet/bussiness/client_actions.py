@@ -12,10 +12,11 @@ def say_welcome_client(ctx: Context, id_func: str):
     if ctx.client is None:
         return say_error(ctx)
 
-    fullname = format_fullname(ctx.client.names, ctx.client.lastnames)
+    client_fullname = format_fullname(ctx.client.names, ctx.client.lastnames)
 
-    MessageUseCases().send_message(MessageType.WELCOME_CLIENT.format(
-        name=fullname), ctx.event_twilio.from_number, ctx.conversation.id)
+    MessageUseCases().send_message(MessageType.WELCOME_CLIENT.format(name=client_fullname),
+                                   ctx.event_twilio.from_number,
+                                   ctx.conversation.id)
 
 
 @group.add_action("2.1", condition=lambda ctx: ctx.last_state == "2.0" and ctx.event_twilio.body == OptionType.STATUS)
