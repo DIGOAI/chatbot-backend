@@ -11,7 +11,7 @@ from src.saragurosnet.types import MediaUrlType, MessageType, OptionType
 group = ActionGroup[Context]()
 
 
-@group.add_action("1.0", condition=lambda ctx: ctx.last_state in ["0.2", "3.2"] and ctx.client != None, next=["1.1", "1.2", "1.3"])
+@group.add_action("1.0", condition=lambda ctx: ctx.last_state in ["0.2", "3.2"] and ctx.client != None and ctx.client.saraguros_id == None, next=["1.1", "1.2", "1.3"])
 def say_welcome_unknown(ctx: Context, id_func: str):
     if ctx.client is None:
         return say_error(ctx)
