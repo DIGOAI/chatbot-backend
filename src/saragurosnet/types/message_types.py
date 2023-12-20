@@ -17,6 +17,13 @@ class MessageType():
     END_CONVERSATION: Final[str] = "Estimado {name},\nAgradecemos su tiempo. Si desea continuar explorando nuestros servicios o tiene más preguntas, seleccione *TENGO MÁS DUDAS* y estaremos encantados de ayudarle. Caso contrario, seleccione *FINALIZAR CONSULTA*."
     SAY_GOODBAY: Final[str] = "Gracias por contactarnos. ¡Hasta pronto!"
 
+    PLEASE_SEND_YOUR_INVOICE: Final[str] = "Estimado {name}, por favor envía una foto del comprobante de pago."
+    PLEASE_SEND_CORRECT_INVOICE_FORMAT: Final[str] = "Estimado {name}, solo se aceptan imágenes.\nPor favor envía una foto del comprobante de pago."
+    YOUR_INVOICE_IS_BEING_PROCESSED: Final[
+        str] = "Estimado {name}, su comprobante de pago está siendo procesado.\nPor favor aguarde un momento mientras lo verificamos."
+    YOUR_INVOICE_IS_INVALID: Final[str] = "Estimado {name}, su comprobante de pago no es válido.\nPor favor envíe una foto del comprobante de pago nuevamente."
+    YOUR_INVOICE_IS_VALID: Final[str] = "Estimado {name}, gracias por esperar.\nSu comprobante de pago ha sido verificado correctamente.\nEl servicio ha sido activado correctamente por 3 días, mientras nuestro equipo de soporte verifica su pago."
+
     TELL_ME_YOUR_NAMES: Final[str] = "Estimado {name}, por favor ingresa tus nombres.\n_ejm: Juan Carlos_"
     TELL_ME_YOUR_LASTNAMES: Final[str] = "Estimado {name}, por favor ingresa tus apellidos.\n_ejm: Pérez López_"
     TELL_ME_YOUR_EMAIL: Final[str] = "Estimado {name}, por favor ingresa tu correo electrónico.\n_ejm: example@email.com_"

@@ -20,6 +20,8 @@ class ChatGPTResponseType(TypedDict):
 class ChatGPTModel(str, Enum):
     """The models available for ChatGPT.
 
+    DEPRECATED models at 2024, see https://platform.openai.com/docs/deprecations
+
     Attributes:
     DAVINCI_CODE (str): The base model for code completion tasks.
     DAVINCI_TEXT_1 (str): The InstructGPT model based on code-davinci-002.
@@ -27,10 +29,10 @@ class ChatGPTModel(str, Enum):
     DAVINCI_TURBO (str): An improvement on text-davinci-003, optimized for chat.
     """
 
-    DAVINCI_CODE = "code-davinci-002"
-    DAVINCI_TEXT_1 = "text-davinci-002"
-    DAVINCI_TEXT_2 = "text-davinci-003"
-    DAVINCI_TURBO = "gpt-3.5-turbo-0301"
+    DAVINCI_CODE = "code-davinci-002"  # DEPRECATED at 2023-03-23 | Chat model replace with gpt-4
+    DAVINCI_TEXT_1 = "text-davinci-002"  # DEPRECATED at 2024-01-04 | Chat model replace with gpt-3.5-turbo-instruct
+    DAVINCI_TEXT_2 = "text-davinci-003"  # DEPRECATED at 2024-01-04 | Chat model replace with gpt-3.5-turbo-instruct
+    DAVINCI_TURBO = "gpt-3.5-turbo-0301"  # DEPRECATED at 2024-06-13 | Chat model replace with gpt-3.5-turbo-0613
 
 
 class ChatGPTService(object):
