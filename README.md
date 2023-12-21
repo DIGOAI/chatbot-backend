@@ -1,3 +1,5 @@
+[![Apply migrations to dev DB if migrations folder changed](https://github.com/DIGOAI/chatbot-backend/actions/workflows/migrate_db.yml/badge.svg)](https://github.com/DIGOAI/chatbot-backend/actions/workflows/migrate_db.yml)
+
 ### 🤖💬 Chatbot
 Backend API, for managing some business logic related of an internet provider called `SARAGUROS NET`. 
 
